@@ -4,6 +4,14 @@
 
 //FF_REMOVED_GA ga_screenview('Backup View');
 
+/**
+ * Description for EntrysLoader.
+ * @param {*}    treeModel    Description.
+ * @param {*}    treeId    Description.
+ * @param {*}    userId    Description.
+ * @param {*}    entrysCdidsListInOrderOfAppearence    Description.
+ * @param {*}    entrysCdidsToNodesMap    Description.
+ */
 function EntrysLoader(treeModel, treeId, userId, entrysCdidsListInOrderOfAppearence, entrysCdidsToNodesMap) {
     this.treeId                             = treeId;
     this.userId                             = userId;
@@ -12,17 +20,33 @@ function EntrysLoader(treeModel, treeId, userId, entrysCdidsListInOrderOfAppeare
     this.entrysCdidsToNodesMap              = entrysCdidsToNodesMap;
 
 }
+/**
+ * Description for EntrysLoader.prototype.requestEntrysByRev.
+ * @param {*}    rev    Description.
+ */
 EntrysLoader.prototype.requestEntrysByRev = function(rev) {
     this._requestEntrys("/render_entrys?userId="+this.userId+"&treeId="+this.treeId+"&rev="+rev);
 };
 
+/**
+ * Description for EntrysLoader.prototype.requestTreeByRev.
+ * @param {*}    rev    Description.
+ */
 EntrysLoader.prototype.requestTreeByRev = function(rev) {
     this._requestTree("/render_knots?userId="+this.userId+"&treeId="+this.treeId+"&rev="+rev);
 };
 
+/**
+ * Description for EntrysLoader.prototype.requestTreeByTime.
+ * @param {*}    utcTimestamp    Description.
+ */
 EntrysLoader.prototype.requestTreeByTime = function(utcTimestamp) {
     this._requestTree("/render_knots?userId="+this.userId+"&treeId="+this.treeId+"&utcTimestamp="+utcTimestamp);
 };
+/**
+ * Description for EntrysLoader.prototype._entrysReady.
+ * @param {*}    entrysDict    Description.
+ */
 EntrysLoader.prototype._entrysReady = function(entrysDict) {
     var entrysCdidsArray = [];
     for(var cdid in entrysDict) {
@@ -36,6 +60,10 @@ EntrysLoader.prototype._entrysReady = function(entrysDict) {
 
     var _this = this;
 
+    /**
+     * Description for scheduleEntrysBatchInsert.
+     * @param {*}    entrysToInsertInOneBatch    Description.
+     */
     function scheduleEntrysBatchInsert(entrysToInsertInOneBatch) {
         setTimeout( function insertEntrysInBatch() {
             // let activeSessionTreeScrollableContainer = document.getElementById("ID_activeSessionTreeScrollableContainer");
@@ -60,10 +88,18 @@ EntrysLoader.prototype._entrysReady = function(entrysDict) {
     }
 };
 
+/**
+ * Description for EntrysLoader.prototype._knotsReady.
+ * @param {*}    treeData    Description.
+ */
 EntrysLoader.prototype._knotsReady = function(treeData) {
     renderTree(treeData, window.document);
 };
 
+/**
+ * Description for EntrysLoader.prototype._requestEntrys.
+ * @param {*}    url    Description.
+ */
 EntrysLoader.prototype._requestEntrys = function(url) {
 
     var xmlhttp = new XMLHttpRequest();
@@ -75,6 +111,9 @@ EntrysLoader.prototype._requestEntrys = function(url) {
     xmlhttp.onreadystatechange = onreadystatechange; // TODO in case of network errors this might not give reliable results, see also (& TEST!!) onabort, onerror, ontimeout, onloadend
 
     var _entrysReady = this._entrysReady.bind(this);
+    /**
+     * Description for onreadystatechange.
+     */
     function onreadystatechange() {
         if(this.readyState == this.DONE) {
             if(this.status == 200 && this.responseText != null) {
@@ -91,6 +130,10 @@ EntrysLoader.prototype._requestEntrys = function(url) {
     // this._entrysReady({"28h": "[7,{\"height\":1136,\"id\":10,\"left\":1,\"top\":1,\"type\":\"popup\",\"width\":400}]", "28j": "[4,{\"active\":true,\"favIconUrl\":\"chrome-extension://ohbcdlnedmchfcehpcokfgpncomdefoe/img/favicon.png\",\"highlighted\":true,\"id\":11,\"selected\":true,\"title\":\"Tabs Outliner\",\"url\":\"chrome-extension://ohbcdlnedmchfcehpcokfgpncomdefoe/activesessionview.html?type=main&focusNodeId=tab2&altFocusNodeId=win1&scrollToViewWinId=1\",\"windowId\":10}]", "2f6": "[4,{\"active\":true,\"favIconUrl\":\"http://localhost:8080/favicon.ico\",\"highlighted\":true,\"id\":19,\"selected\":true,\"title\":\"localhost:8080/test_render_entrys?userId=185804764220139124118&treeId=1372831422963.6628&rev=550\",\"url\":\"http://localhost:8080/test_render_entrys?userId=185804764220139124118&treeId=1372831422963.6628&rev=550\",\"windowId\":18}]", "2es": "[4,{\"active\":true,\"favIconUrl\":\"https://www.google.com.ua/favicon.ico\",\"highlighted\":true,\"id\":26,\"selected\":true,\"title\":\"safasf - Google Search\",\"url\":\"https://www.google.com.ua/search?q=safasf&oq=safasf&aqs=chrome..69i57j0l3.1824j0&sourceid=chrome&ie=UTF-8\",\"windowId\":25}]", "2": "[1,{\"treeId\":\"1372831422963.6628\",\"nextDId\":311,\"nonDumpedDId\":1}]", "2fg": "[4,{\"active\":true,\"favIconUrl\":\"http://localhost:8080/static/img/favicon.png\",\"highlighted\":true,\"id\":23,\"selected\":true,\"title\":\"Tabs Outliner Tree (rev:561)\",\"url\":\"http://localhost:8080/test_render_tree?userId=185804764220139124118&treeId=1372831422963.6628&startingDid=1\",\"windowId\":18}]", "28z": "[4,{\"active\":true,\"favIconUrl\":\"http://localhost:8080/favicon.ico\",\"highlighted\":true,\"id\":2,\"selected\":true,\"title\":\"Account Page\",\"url\":\"http://localhost:8080/profile?t=ag9kZXZ-dGFtbnViYXRlc3RyPgsSC1VzZXJQcm9maWxlIhUxODU4MDQ3NjQyMjAxMzkxMjQxMTgMCxILQWN0aW9uVG9rZW4YgICAgIDQuwoM&action=impart_state\",\"windowId\":1}]", "296": "[7,{\"focused\":true,\"height\":1106,\"id\":18,\"left\":515,\"top\":0,\"type\":\"normal\",\"width\":1226}]", "2ea": "[7,{\"focused\":true,\"height\":1106,\"id\":25,\"left\":632,\"top\":0,\"type\":\"normal\",\"width\":1226}]", "293": "[8,{\"focused\":true,\"height\":1106,\"id\":1,\"left\":350,\"top\":14,\"type\":\"normal\",\"width\":1226}]"})
 };
 
+/**
+ * Description for EntrysLoader.prototype._requestTree.
+ * @param {*}    url    Description.
+ */
 EntrysLoader.prototype._requestTree = function(url) {
 
     var xmlhttp = new XMLHttpRequest();
@@ -102,6 +145,9 @@ EntrysLoader.prototype._requestTree = function(url) {
     xmlhttp.onreadystatechange = onreadystatechange; // TODO in case of network errors this might not give reliable results, see also (& TEST!!) onabort, onerror, ontimeout, onloadend
 
     var _knotsReady = this._knotsReady.bind(this);
+    /**
+     * Description for onreadystatechange.
+     */
     function onreadystatechange() {
         if(this.readyState == this.DONE) {
             if(this.status == 200 && this.responseText != null) {
@@ -137,6 +183,12 @@ EntrysLoader.prototype._requestTree = function(url) {
 //     }
 // };
 
+/**
+ * Description for renderTree.
+ * @param {*}    treeData    Description.
+ * @param {*}    treeBackupFileData    Description.
+ * @param {*}    document    Description.
+ */
 function renderTree(treeData, treeBackupFileData, document) {
     window.treeData = treeData;
     document.title = treeData.treeTitle + " (Rev:" + treeData.treeRev + " Time:"+ (new Date(treeData.treeUtcTimestamp)).toLocaleString()+")";
@@ -200,6 +252,9 @@ function renderTree(treeData, treeBackupFileData, document) {
     prepareDomForSavedAsHtmlMode__()
 }
 
+/**
+ * Description for prepareDomForSavedAsHtmlMode__.
+ */
 function prepareDomForSavedAsHtmlMode__() {
     document.styleSheets[0].addRule('a:hover','text-decoration: underline; cursor:pointer;');
     document.styleSheets[0].addRule('.node_text','cursor: auto;');
@@ -209,6 +264,9 @@ function prepareDomForSavedAsHtmlMode__() {
     //RR replaceChromeFaviconUrls__();
 }
 
+/**
+ * Description for replaceChromeFaviconUrls__.
+ */
 function replaceChromeFaviconUrls__() {
     var images = document.images;
     for (var i = 0; i < images.length; i++){
@@ -217,6 +275,10 @@ function replaceChromeFaviconUrls__() {
     }
 }
 
+/**
+ * Description for isChromeUrl.
+ * @param {*}    url    Description.
+ */
 function isChromeUrl(url) {
     return url.indexOf("chrome:") == 0;
 }
@@ -246,21 +308,36 @@ var treeData = {
     treeTitle         : 'Tabs Outliner Backup File'
 };
 
+/**
+ * Description for ThrotleEvent.
+ * @param {*}    action    Description.
+ */
 function ThrotleEvent(action) {
     this.interval = 1000;
     this.timerId = null;
     this.action = action;
     this.event = null;
 }
+/**
+ * Description for ThrotleEvent.prototype._fireAction.
+ */
 ThrotleEvent.prototype._fireAction = function _fireAction() {
     this.action(this.event);
     this.event = null;
 };
+/**
+ * Description for ThrotleEvent.prototype.eventListener.
+ * @param {*}    event    Description.
+ */
 ThrotleEvent.prototype.eventListener = function eventListener(event) {
     this.event = event;
     clearTimeout(this.timerId);
     this.timerId = setTimeout(ThrotleEvent.prototype._fireAction.bind(this), this.interval);
 };
+/**
+ * Description for throtleEvent.
+ * @param {*}    action    Description.
+ */
 function throtleEvent(action) {
     return ThrotleEvent.prototype.eventListener.bind( new ThrotleEvent( action ) );
 }
@@ -271,11 +348,19 @@ function throtleEvent(action) {
 
 //document.getElementById('revDateTime').onkeyup = onRevDateTimeEnter;
 
+/**
+ * Description for showAjaxSpiner.
+ * @param {*}    isVisible    Description.
+ */
 function showAjaxSpiner(isVisible) {
     document.getElementById("ajaxSpiner").style.display = isVisible ? "block" : "none";
 }
 
 
+/**
+ * Description for onRevDateTimeRequest.
+ * @param {*}    event    Description.
+ */
 function onRevDateTimeRequest(event) {
     if(!event.target.value) return; // Can be "" if user click reset btn in date control
 
@@ -285,6 +370,10 @@ function onRevDateTimeRequest(event) {
     showAjaxSpiner(true);
 }
 
+/**
+ * Description for onRevClick.
+ * @param {*}    event    Description.
+ */
 function onRevClick(event) {
     var requestedRev = event.target.value;
     if(requestedRev == window.treeData.treeRev) return;
@@ -295,12 +384,20 @@ function onRevClick(event) {
     showAjaxSpiner(true);
 }
 
+/**
+ * Description for getUrlParameters.
+ */
 function getUrlParameters() {
     var queryDict = {};
     location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
     return queryDict;
 }
 
+/**
+ * Description for openTreeFromUrl.
+ * @param {*}    downloadUrl    Description.
+ * @param {*}    treeData    Description.
+ */
 function openTreeFromUrl(downloadUrl, treeData) {
     //Google bug fix
     downloadUrl = downloadUrl.replace('content.google','www.google'); // Fix for not being able to open backup, url changes - https://issuetracker.google.com/issues/150193301
@@ -344,10 +441,17 @@ function openTreeFromUrl(downloadUrl, treeData) {
     });
 }
 
+/**
+ * Description for rewokeToken.
+ */
 function rewokeToken() {
     backgroundport.postMessage({request:"request2bkg_authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews"});
 }
 
+/**
+ * Description for updateProgress.
+ * @param {*}    oEvent    Description.
+ */
 function updateProgress(oEvent) {
   if (oEvent.lengthComputable) {
         var percentComplete = 100*(oEvent.loaded / oEvent.total);
@@ -358,10 +462,17 @@ function updateProgress(oEvent) {
   }
 }
 
+/**
+ * Description for getJSON.
+ * @param {*}    url    Description.
+ */
 function getJSON(url) {
   return ajax(url).then(JSON.parse);
 }
 
+/**
+ * Description for AuthorizationError.
+ */
 function AuthorizationError() {
     this.name = "AuthorizationError";
     this.message = "Authorization Error";
@@ -371,6 +482,12 @@ AuthorizationError.prototype.constructor = AuthorizationError; // Not sure why t
 
 var Promise = Promise || function(){alert('Error:Promises is not supported')}// Просто чтоб красным не подсвечивало в редакторе
 
+/**
+ * Description for ajax.
+ * @param {*}    url    Description.
+ * @param {*}    authToken    Description.
+ * @param {*}    progresseventhandler    Description.
+ */
 function ajax(url, authToken, progresseventhandler) {
     return new Promise(function(resolve, reject) {
         // Do the usual XHR stuff
@@ -380,6 +497,9 @@ function ajax(url, authToken, progresseventhandler) {
 
         xhr.addEventListener("progress", progresseventhandler, false);
 
+        /**
+         * Description for xhr.onload.
+         */
         xhr.onload = function() {
             // This is called even on 404 etc
             // so check the status
@@ -401,6 +521,9 @@ function ajax(url, authToken, progresseventhandler) {
         };
 
         // Handle network errors
+        /**
+         * Description for xhr.onerror.
+         */
         xhr.onerror = function() {
           reject(Error("A network error occurred, and the download could not be completed. Check you Internet connection."));
         };
@@ -412,9 +535,17 @@ function ajax(url, authToken, progresseventhandler) {
 
 
 // Даже если файла нет или любая проблема мы вызовем callback.
+/**
+ * Description for readSessionDataFromFile.
+ * @param {*}    filename    Description.
+ */
 function readSessionDataFromFile(filename, callback/*(fileData or error)*/) {
     webkitRequestFileSystem(PERSISTENT, 1024*1024, fsReady, callback /*fsErrorHandler*/);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs) {
       fs.root.getFile(filename, {create: false}, function(fileEntry) {
         fileEntry.file( function(file) { readJsonOperationsFromFile(file, callback) }, callback /*errorCallback*/);
@@ -424,6 +555,11 @@ function readSessionDataFromFile(filename, callback/*(fileData or error)*/) {
 
 // ----------------------------------------------------------------------------------------------
 // Function to read the content of the file from the temporary filesystem
+/**
+ * Description for readSessionDataFromUserSelectedFile.
+ * @param {*}    path    Description.
+ * @param {*}    callback    Description.
+ */
 function readSessionDataFromUserSelectedFile(path, callback) {
 
     // path = 'selectedFile'; // Hardcoded 
@@ -454,6 +590,10 @@ function readSessionDataFromUserSelectedFile(path, callback) {
     }, fsErrorHandler);
     
     // Error handling function for the filesystem
+    /**
+     * Description for fsErrorHandler.
+     * @param {*}    error    Description.
+     */
     function fsErrorHandler(error) {
         console.log('Filesystem Error:', error);
     }
@@ -464,8 +604,17 @@ function readSessionDataFromUserSelectedFile(path, callback) {
 //     readJsonOperationsFromFile(userSelectedFileToOpen, callback);
 // }
 
+/**
+ * Description for readJsonOperationsFromFile.
+ * @param {*}    file    Description.
+ * @param {*}    callback    Description.
+ */
 function readJsonOperationsFromFile(file, callback) {
     var reader = new FileReader();
+    /**
+     * Description for reader.onloadend.
+     * @param {*}    e    Description.
+     */
     reader.onloadend = function(e) {
         try { 
             var operations = JSON.parse(e.target.result); 
@@ -476,6 +625,10 @@ function readJsonOperationsFromFile(file, callback) {
         }
         callback(operations);
     };
+    /**
+     * Description for reader.onerror.
+     * @param {*}    error    Description.
+     */
     reader.onerror = function fsErrorHandler(error) {
         console.error('Filesystem Error:', error);
         callback(error);
@@ -485,12 +638,22 @@ function readJsonOperationsFromFile(file, callback) {
     //reader.readAsArrayBuffer(file);
 }
 
+/**
+ * Description for openTreeFromFilesystem.
+ * @param {*}    path    Description.
+ * @param {*}    treeData    Description.
+ */
 function openTreeFromFilesystem(path, treeData){
     readSessionDataFromFile(path, function(backupData) {
         renderTree(treeData, backupData, document);
     });
 }
 
+/**
+ * Description for openTreeFromUserInput.
+ * @param {*}    path    Description.
+ * @param {*}    treeData    Description.
+ */
 function openTreeFromUserInput(path, treeData){
     readSessionDataFromUserSelectedFile(path, function(backupData) {
         renderTree(treeData, backupData, document);
@@ -544,6 +707,9 @@ setTimeout( function() { // Отложено просто потому что к
 
 var favIconSourceDatasetName = (window.location.href.indexOf('activesessionview.html') < 0) ? 'nodeIconForHtmlExport' : 'iconSrcDefferedLoad';
 
+/**
+ * Description for loadVisibleIcons.
+ */
 function loadVisibleIcons() {
     //console.time('loadVisibleIcons');
 
@@ -571,6 +737,9 @@ function loadVisibleIcons() {
 }
 
 var lastVisibleImageIndex = -1;
+/**
+ * Description for getVisibleFavicons.
+ */
 function getVisibleFavicons() {
     // console.time('getImages');
     var images = document.images;
@@ -645,6 +814,10 @@ function getVisibleFavicons() {
 // It is utterly important that you attach your image position determining process on document load event and not
 // the usually use DOM ready, because you have to wait for the document to load in order for your images to have
 // final positions.
+/**
+ * Description for isElementVerticalProjectionInViewport.
+ * @param {*}    el    Description.
+ */
 function isElementVerticalProjectionInViewport (el) {
     if(!el) return false;
 
@@ -658,6 +831,11 @@ function isElementVerticalProjectionInViewport (el) {
         // && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
     );
 }
+/**
+ * Description for getNextSearchIntervalForVisibleElement.
+ * @param {*}    el    Description.
+ * @param {*}    beg_index_end    Description.
+ */
 function getNextSearchIntervalForVisibleElement (el, beg_index_end) {
     var beg = beg_index_end[0];
     var index = beg_index_end[1];

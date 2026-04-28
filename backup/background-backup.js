@@ -2,6 +2,10 @@
 
 var backupOperationInitiatorId_ = null;
 var rapidClicksChecker_seriesStartTime;
+/**
+ * Description for performGdriveBackup.
+ * @param {*}    backupOperationInitiatorId    Description.
+ */
 function performGdriveBackup(backupOperationInitiatorId){
     backupOperationInitiatorId_ = backupOperationInitiatorId; //if null then it's automaticaly initiated backup from background page
 
@@ -21,6 +25,9 @@ function performGdriveBackup(backupOperationInitiatorId){
 
 
 //ExtIdentityApi Auth Flow
+/**
+ * Description for setAuthToken_backupTreeToGdrive.
+ */
 function setAuthToken_backupTreeToGdrive() {
     chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
         if(token) {
@@ -49,9 +56,16 @@ function setAuthToken_backupTreeToGdrive() {
 
 }
 
+/**
+ * Description for getTreeDataForGdriveBackup.
+ */
 function getTreeDataForGdriveBackup() {
     return JSON.stringify( serializeActiveSessionToOperations() ); // Tcnm to` serializeHierarchyAsJSO() и просто serialize() и они работают быстрее
 }
+/**
+ * Description for backupTreeToGdrive.
+ * @param {*}    isBackupUserInitiated    Description.
+ */
 function backupTreeToGdrive(isBackupUserInitiated) {
     console.log("Start GDrive backup");
 
@@ -60,6 +74,9 @@ function backupTreeToGdrive(isBackupUserInitiated) {
     });
 }
 
+/**
+ * Description for authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews.
+ */
 function authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews(){
     chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
         if(token)
@@ -73,6 +90,9 @@ function authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews(){
     });
 }
 
+/**
+ * Description for maxNumberOfBackupFilesToKeep.
+ */
 function maxNumberOfBackupFilesToKeep() {
     // var maxNumberOfBackupFilesToKeep = Number(localStorage['numberOfBackupsOnGdriveToKeep']);
     // if(!maxNumberOfBackupFilesToKeep || maxNumberOfBackupFilesToKeep < 0) {
@@ -84,14 +104,27 @@ function maxNumberOfBackupFilesToKeep() {
     return 30;
 }
 
+/**
+ * Description for isTabsOutlinerBackupFile.
+ * @param {*}    item    Description.
+ */
 function isTabsOutlinerBackupFile(item) {
     return item['title'].indexOf(BACKUP_FILENAME) >= 0;
 }
 
+/**
+ * Description for by_modifiedDate.
+ * @param {*}    a    Description.
+ * @param {*}    b    Description.
+ */
 function by_modifiedDate(a, b) {
     return (new Date(b['modifiedDate'])).getTime() - (new Date(a['modifiedDate'])).getTime();
 }
 
+/**
+ * Description for getAuthToken.
+ * @async
+ */
 async function getAuthToken() {
     return new Promise((resolve, reject) => {
       chrome.identity.getAuthToken({ interactive: false }, function(token) {
@@ -106,6 +139,11 @@ async function getAuthToken() {
 }
   
   
+/**
+ * Description for listFile.
+ * @async
+ * @param {*}    callback    Description.
+ */
 async function listFile(callback) {
     try {
       const token = await getAuthToken();
@@ -151,6 +189,13 @@ async function listFile(callback) {
 }
 
 
+/**
+ * Description for insertFileInApplicationDataFolderOnGdrive.
+ * @async
+ * @param {*}    fileIdToOverwrite    Description.
+ * @param {*}    data    Description.
+ * @param {*}    isBackupUserInitiated    Description.
+ */
 async function insertFileInApplicationDataFolderOnGdrive(fileIdToOverwrite, data, isBackupUserInitiated) {
     callBackupStarted_ForAllViews(true);
   
@@ -327,6 +372,10 @@ async function insertFileInApplicationDataFolderOnGdrive(fileIdToOverwrite, data
 //     );
 // }
 
+/**
+ * Description for onGdriveOperationError.
+ * @param {*}    reason    Description.
+ */
 function onGdriveOperationError(reason) {
     // reason in case we disconect cable during upload
     //    body: "{"error":{"code":-1,"message":"A network error occurred, and the request could not be completed."}}"
@@ -363,6 +412,9 @@ function onGdriveOperationError(reason) {
 // --------------------------------------------------------------------
 var isGdriveBackupSchedulerActive = false;
 
+/**
+ * Description for activateGdriveBackupScheduler.
+ */
 function activateGdriveBackupScheduler() {
     // We come here on every key check, so we must ensure that we run only one scheduler
     if(isGdriveBackupSchedulerActive) return;
@@ -371,6 +423,9 @@ function activateGdriveBackupScheduler() {
     runGdriveBackupScheduler();
 }
 
+/**
+ * Description for runGdriveBackupScheduler.
+ */
 function runGdriveBackupScheduler() {
     if(!isGdriveBackupSchedulerActive) return;
 
@@ -381,6 +436,10 @@ function runGdriveBackupScheduler() {
     updatePassedTimeFromLastSuccesfulBackupIndicators();
 }
 
+/**
+ * Description for isTimeForNextAutomaticGdriveBackup.
+ * @async
+ */
 async function isTimeForNextAutomaticGdriveBackup() {
     var backupFrequence = (24 * 60 * 60 * 1000/*24h*/);
     
@@ -389,6 +448,9 @@ async function isTimeForNextAutomaticGdriveBackup() {
     return Date.now() >= (lastBackupToDriveTime + backupFrequence);
 }
 
+/**
+ * Description for updatePassedTimeFromLastSuccesfulBackupIndicators.
+ */
 function updatePassedTimeFromLastSuccesfulBackupIndicators() {
     chrome.storage.local.get('gdriveLastSuccessfulBackupTime')
     .then((data) => {
@@ -398,31 +460,58 @@ function updatePassedTimeFromLastSuccesfulBackupIndicators() {
 }
 
 //------------------------------------------------------------------------
+/**
+ * Description for callUpdateBackupIndicator_ForAllViews.
+ * @param {*}    gdriveLastSuccessfulBackupTime    Description.
+ */
 function callUpdateBackupIndicator_ForAllViews(gdriveLastSuccessfulBackupTime) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_updateBackupIndicator_backgroundPageCall', gdriveLastSuccessfulBackupTime:gdriveLastSuccessfulBackupTime});
     //callOnAllViews('updateBackupIndicator_backgroundPageCall', gdriveLastSuccessfulBackupTime);
 }
+/**
+ * Description for callBackupSucceeded_ForAllViews.
+ */
 function callBackupSucceeded_ForAllViews() {
     viewsCommunicationInterface.postMessageToAllViews({command: 'msg2view_onBackupSucceeded_backgroundPageCall'});
     //callOnAllViews('onBackupSucceeded_backgroundPageCall');
 }
+/**
+ * Description for callOnGdriveAccessRewoked_ForAllViews.
+ */
 function callOnGdriveAccessRewoked_ForAllViews() {
     viewsCommunicationInterface.postMessageToAllViews({command: 'msg2view_onGdriveAccessRewoked_backgroundPageCall'});
     //callOnAllViews('onGdriveAccessRewoked_backgroundPageCall');
 }
+/**
+ * Description for callOnAuthorizationTokenGranted_ForAllViews.
+ */
 function callOnAuthorizationTokenGranted_ForAllViews() {
     viewsCommunicationInterface.postMessageToAllViews({command: 'msg2view_onAuthorizationTokenGranted_backgroundPageCall'});
     //callOnAllViews('onAuthorizationTokenGranted_backgroundPageCall');
 }
+/**
+ * Description for callBackupStarted_ForAllViews.
+ * @param {*}    isUploadStartedPhase    Description.
+ */
 function callBackupStarted_ForAllViews(isUploadStartedPhase) {
     viewsCommunicationInterface.postMessageToAllViews({command: 'msg2view_backupStarted_backgroundPageCall', isUploadStartedPhase: isUploadStartedPhase});
     //callOnAllViews('backupStarted_backgroundPageCall', isUploadStartedPhase);
 }
 
+/**
+ * Description for callNoConnectionError_ForAllViews.
+ * @param {*}    userInitiatedOperation    Description.
+ */
 function callNoConnectionError_ForAllViews(userInitiatedOperation) {
     viewsCommunicationInterface.postMessageToAllViews({command: 'msg2view_noConnectionError_backgroundPageCall', userInitiatedOperation: userInitiatedOperation});
     //callOnAllViews('noConnectionError_backgroundPageCall', userInitiatedOperation);
 }
+/**
+ * Description for callBackupError_ForAllViews.
+ * @param {*}    userInitiatedOperation    Description.
+ * @param {*}    errorCode    Description.
+ * @param {*}    errorMessage    Description.
+ */
 function callBackupError_ForAllViews(userInitiatedOperation, errorCode, errorMessage) {
     viewsCommunicationInterface.postMessageToAllViews({
         command: 'msg2view_backupError_backgroundPageCall',

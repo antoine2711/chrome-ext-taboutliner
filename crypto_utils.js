@@ -1,3 +1,7 @@
+/**
+ * Description for sha1_promise.
+ * @param {*}    str    Description.
+ */
 function sha1_promise(str) {
     // We transform the string into an arraybuffer.
     var buffer = new TextEncoder("utf-8").encode(str);
@@ -6,6 +10,10 @@ function sha1_promise(str) {
     });
 }
 
+/**
+ * Description for hex.
+ * @param {*}    buffer    Description.
+ */
 function hex(buffer) {
     var hexCodes = [];
     var view = new DataView(buffer);
@@ -25,6 +33,10 @@ function hex(buffer) {
 }
 
 
+/**
+ * Description for calculateSerialNumber_promise.
+ * @param {*}    email    Description.
+ */
 function calculateSerialNumber_promise(email) {
     return sha1_promise(email.toLowerCase()); // Chrome can actually return same email in different case, depending of how user reentered it
 }

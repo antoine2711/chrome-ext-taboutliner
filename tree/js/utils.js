@@ -2,6 +2,12 @@
 
 "use strict";
 
+/**
+ * Description for changecss.
+ * @param {*}    myclass    Description.
+ * @param {*}    element    Description.
+ * @param {*}    value    Description.
+ */
 function changecss(myclass,element,value) {
 	var CSSRules;
 	if (document.all) {

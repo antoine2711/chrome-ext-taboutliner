@@ -6,6 +6,12 @@
 // "cdId#sdId#sops"               - субноды закодированы в sdId + изменения
 // return [subnodesDids, subnodesBaseKnotDid if present, subnodesBaseKnotContent if present, cdid]
 // Полный аналог Python метода getKnotSubnodes - синхронить любые изменения
+/**
+ * Description for getKnotSubnodes.
+ * @param {*}    knotDidStr    Description.
+ * @param {*}    knotContent    Description.
+ * @param {*}    allKnots    Description.
+ */
 function getKnotSubnodes(knotDidStr, knotContent, allKnots) {
     var subnodesDids = [];
     var subnodesBaseKnotDid = null;
@@ -43,6 +49,14 @@ function getKnotSubnodes(knotDidStr, knotContent, allKnots) {
 }
 
 
+/**
+ * Description for restoreTreeStructure.
+ * @param {*}    rootDId    Description.
+ * @param {*}    dId    Description.
+ * @param {*}    allKnots    Description.
+ * @param {*}    ret_entrysCdidsListInOrderOfAppearence    Description.
+ * @param {*}    ret_entrysCdidsToNodesMap    Description.
+ */
 function restoreTreeStructure(rootDId, dId, allKnots, ret_entrysCdidsListInOrderOfAppearence, ret_entrysCdidsToNodesMap) {
     var knotContent = allKnots[dId];
 
@@ -66,6 +80,15 @@ function restoreTreeStructure(rootDId, dId, allKnots, ret_entrysCdidsListInOrder
 }
 
 // Полный аналог deserializeNode
+/**
+ * Description for deserializeKnot.
+ * @param {*}    rootDId    Description.
+ * @param {*}    knotDId    Description.
+ * @param {*}    knotContent    Description.
+ * @param {*}    cdId    Description.
+ * @param {*}    sdId    Description.
+ * @param {*}    sdIdKnot    Description.
+ */
 function deserializeKnot(rootDId, knotDId, knotContent, cdId, sdId, sdIdKnot){
     var serializedNodeData = {};
 
@@ -86,6 +109,10 @@ function deserializeKnot(rootDId, knotDId, knotContent, cdId, sdId, sdIdKnot){
 }
 
 // Функция обратная к serializeNodeBodyContent_forDiff
+/**
+ * Description for deserializeEntry.
+ * @param {*}    entryData    Description.
+ */
 function deserializeEntry(entryData) {
 //    var normalserialize = this.serialize(); // TODO фигня и куча лишнего
 ////           Тут проблема короче, сериалайз надо полностью переписывать на новый, с учотом таблиц элементов зареференсеных по внешним ключам
@@ -118,11 +145,28 @@ function deserializeEntry(entryData) {
 }
 
 var dummyTreePersistenceManager = {
+    /**
+     * Description for registerTree.
+     * @param {*}    tree    Description.
+     */
     registerTree:function(tree){},
+    /**
+     * Description for treeUpdated.
+     */
     treeUpdated:function(){},
+    /**
+     * Description for saveNow.
+     */
     saveNow:function(){}
 };
 
+/**
+ * Description for buildTreeModel.
+ * @param {*}    rootDid    Description.
+ * @param {*}    allKnots    Description.
+ * @param {*}    ret_entrysCdidsListInOrderOfAppearence    Description.
+ * @param {*}    ret_entrysCdidsToNodesMap    Description.
+ */
 function buildTreeModel(rootDid, allKnots, ret_entrysCdidsListInOrderOfAppearence, ret_entrysCdidsToNodesMap) {
     var rootNode = restoreTreeStructure(rootDid, rootDid, allKnots, ret_entrysCdidsListInOrderOfAppearence, ret_entrysCdidsToNodesMap );
     // var rootNode = new NodeSession();
@@ -132,6 +176,11 @@ function buildTreeModel(rootDid, allKnots, ret_entrysCdidsListInOrderOfAppearenc
     return extentToTreeModel([rootNode], dummyTreePersistenceManager);
 }
 
+/**
+ * Description for setEntry.
+ * @param {*}    node    Description.
+ * @param {*}    serializedEntryBody    Description.
+ */
 function setEntry(node, serializedEntryBody) {
     if(!node || !node.parent /*скипаем SESSION*/ /*TODO а почему скипаем?*/ ) return;
 
@@ -144,6 +193,13 @@ function setEntry(node, serializedEntryBody) {
     // replaceEntry_historyViewClient
 }
 
+/**
+ * Description for createTreeView.
+ * @param {*}    window_    Description.
+ * @param {*}    treeModel    Description.
+ * @param {*}    thisTreeTabIndex    Description.
+ * @param {*}    bottomMainPanelHeight    Description.
+ */
 function createTreeView(window_, treeModel, thisTreeTabIndex, bottomMainPanelHeight) {
     var treeView = new TreeView( window_, treeModel, thisTreeTabIndex, bottomMainPanelHeight, false/*enableContextMenu*/);
     return treeView.currentSessionRowDom;

@@ -43,9 +43,16 @@
   // The base Class implementation (does nothing)
 
   //RRwindow['Class'] = function(){};
+  /**
+   * Description for Class.
+   */
   let Class = function(){};
 
   // Create a new Class that inherits from this class
+  /**
+   * Description for Class.extend.
+   * @param {*}    prop    Description.
+   */
   Class.extend = function(prop) {
     var _super = this.prototype;
 
@@ -55,6 +62,11 @@
     var prototype = new this();
     initializing = false;
 
+    /**
+     * Description for makeWrapperFunctionToEnableSuper.
+     * @param {*}    name    Description.
+     * @param {*}    fn    Description.
+     */
     function makeWrapperFunctionToEnableSuper(name, fn) {
         return function() {
             var tmp = this._super;
@@ -83,6 +95,9 @@
     }
 
     // The dummy class constructor
+    /**
+     * Description for Class.
+     */
     function Class() {
       // All construction is actually done in the init method
       if ( !initializing && this.init )

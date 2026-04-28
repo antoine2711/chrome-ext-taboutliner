@@ -3,6 +3,12 @@
 "use strict";
 
 // if modalPromtId is given then get it by getElementById, then remove element from body and remeber it in closure
+/**
+ * Description for initModalDialog_.
+ * @param {*}    window_    Description.
+ * @param {*}    modalPromtId    Description.
+ * @param {*}    createModalDialogDom    Description.
+ */
 function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
     var modalElement = modalPromtId ? window_.document.getElementById(modalPromtId) : createModalDialogDom(window_.document);
 
@@ -29,6 +35,10 @@ function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
     removeModal(window_); // Убираем из DOM чтоб он там не мешался
 
     // TODO As window as document i can get from event listeners event object, when i call this method not need to closure them
+    /**
+     * Description for removeModal.
+     * @param {*}    window_    Description.
+     */
     function removeModal(window_) {
         delete window_['modalEditPromptActive'];
 
@@ -38,6 +48,13 @@ function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
 
     // TODO not need to closure modalBg & modalElement - i can pass them when calling this function, and before this i can just create them - not need to store them
     // Yet actualy - isnt it will just create more garbage? Most likely yes. Not need to closure them there anyway.
+    /**
+     * Description for showModal.
+     * @param {*}    window_    Description.
+     * @param {*}    defaultText    Description.
+     * @param {*}    serial    Description.
+     * @param {*}    customLabel    Description.
+     */
     function showModal(window_, defaultText, serial, customLabel) {
         window_['modalEditPromptActive'] = true; // document.defaultView - is the window
 
@@ -79,6 +96,10 @@ function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
             if(okBtn)      okBtn.addEventListener('click', onOkTouch, false );
         },1);
 
+        /**
+         * Description for removeEventListeners.
+         * @param {*}    window_    Description.
+         */
         function removeEventListeners(window_) {
             window_.document.removeEventListener('click', onCancellTouch, false );
             window_.document.removeEventListener('touchstart', onCancellTouch, false);
@@ -87,6 +108,10 @@ function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
             if(okBtn)      okBtn.removeEventListener('click', onOkTouch, false );
         }
 
+        /**
+         * Description for onWindowKeyDown.
+         * @param {*}    e    Description.
+         */
         function onWindowKeyDown(e) {
             if (e.keyCode == 27/*Esc*/)
                 onCancellTouch(e);
@@ -95,6 +120,10 @@ function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
                 onOkTouch(e);
         }
 
+        /**
+         * Description for onCancellTouch.
+         * @param {*}    e    Description.
+         */
         function onCancellTouch(e) {
             var window_ = e.target.ownerDocument.defaultView;
 
@@ -103,6 +132,10 @@ function initModalDialog_(window_, modalPromtId, createModalDialogDom) {
             removeModal(window_);
         }
 
+        /**
+         * Description for onOkTouch.
+         * @param {*}    e    Description.
+         */
         function onOkTouch(e) {
             var window_ = e.target.ownerDocument.defaultView;
 

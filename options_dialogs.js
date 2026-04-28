@@ -7,13 +7,27 @@ var activateBeforeIdentityAccessExplanationDialog = initBuyLicenseKeyDialog_befo
 
 
 
+/**
+ * Description for showEnterLicenseKeyDialog.
+ * @param {*}    userInfo    Description.
+ */
 function showEnterLicenseKeyDialog(userInfo) {
     activateEnterLicenseKeyDialog( userInfo.email,
                                    'OK: identity.email GRANTED & accessible. userInfo.email:' + userInfo.email + '; userInfo.id:' + userInfo.id,
+                                   /**
+                                    * Description for onOk.
+                                    */
                                    function onOk() {},
+                                   /**
+                                    * Description for onCancel.
+                                    */
                                    function onCancel() {} );
 }
 
+/**
+ * Description for initBuyLicenseKeyDialog_beforeIdentityAccess.
+ * @param {*}    window_    Description.
+ */
 function initBuyLicenseKeyDialog_beforeIdentityAccess(window_) {
     // Special ids recognized by dialog factory:
     //
@@ -36,6 +50,11 @@ function initBuyLicenseKeyDialog_beforeIdentityAccess(window_) {
 //    return initModalDialog_(window_, 'buyBeforeFastSpringDialog');
 //}
 
+/**
+ * Description for initEnterLicenseKeyDialog.
+ * @param {*}    window_    Description.
+ * @param {*}    modalPromtId    Description.
+ */
 function initEnterLicenseKeyDialog(window_, modalPromtId) {
     // Special ids recognized by dialog factory:
     //

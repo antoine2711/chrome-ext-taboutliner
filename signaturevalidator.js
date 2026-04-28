@@ -11,6 +11,10 @@ function _base64ToArrayBuffer(base64) {
 }
 
 
+/**
+ * Description for strToUTF8Arr.
+ * @param {*}    sDOMStr    Description.
+ */
 function strToUTF8Arr (sDOMStr) {
 
   var aBytes, nChr, nStrLen = sDOMStr.length, nArrLen = 0;
@@ -72,6 +76,11 @@ var SignatureValidator = {
     keyData: {"kty":"RSA","alg":"RS512","use":"sig","n":"4PyVoda4xUp2Yslx9pe3-hhOn_pr-QPyIVgJ3cKPDd6ZUgmax1pD9kEEbAfaNGcc1aFg399jDaPN_2j_ITy0kxe8q5XUlT680q5BJYV8XBFKQfKIYUcusG7MzCECjKrOOkC--aWK2JIYQWWDukS44hvxXTO78h82QE0uBDGY-qM","e":"AQAB"},
 
     // Returns as result to then(function(result)) true or false
+    /**
+     * Description for isMessageSignatureValid_promise.
+     * @param {*}    message    Description.
+     * @param {*}    signature_base64    Description.
+     */
     isMessageSignatureValid_promise: function(message, signature_base64) {
         return this._importKey_promise()
                .then(this._verify_promise.bind(this, message, signature_base64))
@@ -80,6 +89,12 @@ var SignatureValidator = {
                });
     },
 
+    /**
+     * Description for _verify_promise.
+     * @param {*}    message    Description.
+     * @param {*}    signature_base64    Description.
+     * @param {*}    key    Description.
+     */
     _verify_promise: function(message, signature_base64, key) {
         var signature       = _base64ToArrayBuffer( signature_base64 );
         var plaintext       = strToUTF8Arr( message );
@@ -92,6 +107,9 @@ var SignatureValidator = {
         );
     },
 
+    /**
+     * Description for _importKey_promise.
+     */
     _importKey_promise: function() {
         return  crypto.subtle.importKey(  "jwk", //json web key
                                                 this.keyData,

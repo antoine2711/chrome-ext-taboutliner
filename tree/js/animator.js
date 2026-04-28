@@ -30,6 +30,12 @@
 //	};
 //
 //}();
+/**
+ * Description for fadeIn.
+ * @param {*}    el    Description.
+ * @param {*}    total    Description.
+ * @param {*}    period    Description.
+ */
 function fadeIn(el, total, period) {
     var fps = 30,
         step= total/(period*fps),
@@ -44,6 +50,10 @@ function fadeIn(el, total, period) {
 }
 
 var doScrollAnimationStepSetTimeoutId = null;
+/**
+ * Description for scrollIntoViewAnimated.
+ * @param {*}    domObj    Description.
+ */
 var scrollIntoViewAnimated = function(domObj) {
     // Без анимации ----------------------------------------------------------------------------------------------------
     // domObj.scrollIntoView(true);
@@ -80,6 +90,9 @@ var scrollIntoViewAnimated = function(domObj) {
 
 };
 
+/**
+ * Description for _animatorDiv.
+ */
 var _animatorDiv = function() {
 	var r = document.createElement("div");
 	r.style.overflow = "hidden";	
@@ -91,12 +104,21 @@ var _animatorDiv = function() {
 	return r;
 }();
 
+/**
+ * Description for getAnimator.
+ * @param {*}    elem    Description.
+ */
 function getAnimator(elem)
 {
 	if(!elem.parentNode) return null;	
 	return elem.parentNode.thisIsAnimator ? elem.parentNode : null;
 }
 
+/**
+ * Description for addIfNotPresentAndAnimateExpand.
+ * @param {*}    mainnode    Description.
+ * @param {*}    subnodes    Description.
+ */
 function addIfNotPresentAndAnimateExpand(mainnode, subnodes)
 {
 	var animator = getAnimator(subnodes);
@@ -111,6 +133,10 @@ function addIfNotPresentAndAnimateExpand(mainnode, subnodes)
 	animator.addEventListener("webkitTransitionEnd", onExpandCollapseTransitionEnd /*must be same as in Collase!*/, false);
 }
 
+/**
+ * Description for animateCollapseThenRemove.
+ * @param {*}    elem    Description.
+ */
 function animateCollapseThenRemove(elem)
 {
 	var animator = getAnimator(elem);
@@ -122,6 +148,9 @@ function animateCollapseThenRemove(elem)
 	animator.addEventListener("webkitTransitionEnd", onExpandCollapseTransitionEnd /*must be same as in Expand!*/, false );
 }
 
+/**
+ * Description for onExpandCollapseTransitionEnd.
+ */
 function onExpandCollapseTransitionEnd()
 {
 	var isFullyCollapsed = parseInt(this.style.height) == 0; // parseInt to trim "px", "em", "%", ... sufixes
@@ -132,11 +161,19 @@ function onExpandCollapseTransitionEnd()
 		replaceElementByFirstChild(this);
 }
 
+/**
+ * Description for removeElementAndAllChilds.
+ * @param {*}    elem    Description.
+ */
 function removeElementAndAllChilds(elem)
 {
 	elem.parentNode.removeChild(elem);
 }
 
+/**
+ * Description for replaceElementByFirstChild.
+ * @param {*}    elem    Description.
+ */
 function replaceElementByFirstChild(elem)
 {
 	var parent = elem.parentNode;
@@ -144,6 +181,11 @@ function replaceElementByFirstChild(elem)
 	parent.replaceChild(innernode, elem);
 }
 
+/**
+ * Description for suroundByAnimator.
+ * @param {*}    elem    Description.
+ * @param {*}    initHeight    Description.
+ */
 function suroundByAnimator(elem, initHeight)
 {
 	// Create new animator --------------------------------------------

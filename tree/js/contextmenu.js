@@ -3,6 +3,10 @@
 /** @preserve Copyright 2012, 2013, 2014, 2015 by Vladyslav Volovyk. All Rights Reserved. */
 
 function initContextMenu(window_/*, contextMenuId*/) {
+    /**
+     * Description for createContextMenu.
+     * @param {*}    document    Description.
+     */
     function createContextMenu(document) {
         // USE 3 spaces to separate Title from Shortcuts (we split by 3 spaces)
         var goProWarning = '<div id="noteGoProContextMenuWarning" class="goProAlertBlock">' +
@@ -112,6 +116,12 @@ function initContextMenu(window_/*, contextMenuId*/) {
         //    --><input id=modalEditPrompt-editField class="form_input" type="text" value="Initial Value" tabindex=0 placeholder="Enter Node Text" ><!--
         //    --><button id=modalEditPrompt-cancellBtn class="form_btn btn_cancell" tabindex=-1>Cancel</button> <button id=modalEditPrompt-okBtn class="form_btn btn_ok" tabindex=-1>OK</button><!--
         //--></div>
+        /**
+         * Description for createElement.
+         * @param {*}    tag    Description.
+         * @param {*}    id    Description.
+         * @param {*}    className    Description.
+         */
         function createElement(tag, id, className) {
             var r = document.createElement(tag);
             if(id)r.id               = id;
@@ -121,16 +131,29 @@ function initContextMenu(window_/*, contextMenuId*/) {
         var contextMenuElement = createElement('ul', 'treeContextMenu' , 'contextMenu');
         contextMenuElement.style.display   = 'none';
 
+        /**
+         * Description for getEntryClass.
+         * @param {*}    entryId    Description.
+         */
         function getEntryClass(entryId) {
             var match = /^[a-z]*/.exec(entryId);
           	return match ? match[0] : "";
 
         }
 
+        /**
+         * Description for processEntryText.
+         * @param {*}    text    Description.
+         * @param {*}    isGroup    Description.
+         */
         function processEntryText(text, isGroup){
             if(!text) return '';
             var a = text.split(/\s\s\s+/);
             var titleClasses = isGroup ? 'contextMenu-grpTitle' : 'contextMenu-entryTitle';
+            /**
+             * Description for processShortcutsBorders.
+             * @param {*}    text    Description.
+             */
             function processShortcutsBorders(text) {
                 var r = text;
                 r = r.replace(/\[(.+?)\]/g, "<span class='shortCutKey'>$1</span>");
@@ -143,6 +166,11 @@ function initContextMenu(window_/*, contextMenuId*/) {
             return r;
         }
 
+        /**
+         * Description for processGroup.
+         * @param {*}    groupParentDomElement    Description.
+         * @param {*}    groupArray    Description.
+         */
         function processGroup(groupParentDomElement, groupArray) {
             groupArray.forEach(function(entry){
                 var entryId    = entry[0];
@@ -236,6 +264,10 @@ function initContextMenu(window_/*, contextMenuId*/) {
     removeModal(window_); // Убираем из DOM чтоб он там не мешался
 
     // TODO As window as document i can get from event listeners event object, when i call this method not need to closure them
+    /**
+     * Description for removeModal.
+     * @param {*}    window_    Description.
+     */
     function removeModal(window_) { // Глупо сюда окно передавать учитывая что мы и так тут держим modalBg & modalElement
         delete window_['modalContextMenuActive']; //####
 
@@ -243,6 +275,12 @@ function initContextMenu(window_/*, contextMenuId*/) {
         if(modalElement.parentNode) modalElement.parentNode.removeChild(modalElement);
     }
 
+    /**
+     * Description for connectGlobalEventListeners.
+     * @param {*}    window_    Description.
+     * @param {*}    okBtn    Description.
+     * @param {*}    cancellBtn    Description.
+     */
     function connectGlobalEventListeners(window_, okBtn, cancellBtn) {
         // on any edits dont forget to update removeEventListeners
 
@@ -253,6 +291,10 @@ function initContextMenu(window_/*, contextMenuId*/) {
         // okBtn.addEventListener('click', onOkTouch, false );
     }
 
+    /**
+     * Description for removeGlobalEventListeners.
+     * @param {*}    window_    Description.
+     */
     function removeGlobalEventListeners(window_) {
         window_.document.removeEventListener('click',      deactivatePopUp, false );
         window_.document.removeEventListener('touchstart', deactivatePopUp, false);
@@ -261,6 +303,10 @@ function initContextMenu(window_/*, contextMenuId*/) {
         // okBtn.removeEventListener('click', onOkTouch, false );
     }
 
+    /**
+     * Description for onWindowKeyDown.
+     * @param {*}    e    Description.
+     */
     function onWindowKeyDown(e) {
         if (e.keyCode == 27/*Esc*/)
             deactivatePopUp(e);
@@ -269,16 +315,36 @@ function initContextMenu(window_/*, contextMenuId*/) {
 //                onOkTouch(e);
     }
 
+    /**
+     * Description for onCancellTouch.
+     * @param {*}    e    Description.
+     */
     function onCancellTouch(e) {
         deactivatePopUp(e);
     }
 
+    /**
+     * Description for deactivatePopUp.
+     * @param {*}    e    Description.
+     */
     function deactivatePopUp(e) {
         removeGlobalEventListeners(e.target.ownerDocument.defaultView);
         removeModal(e.target.ownerDocument.defaultView);
         if(!e.ctrlKey) e.preventDefault(); // Prevent native context menu in case we right click on modalBg or modalelement, but still can be caled with CTRL pressed
     }
 
+    /**
+     * Description for showPopUpInPos.
+     * @param {*}    x    Description.
+     * @param {*}    y    Description.
+     * @param {*}    modalElement    Description.
+     * @param {*}    window_    Description.
+     * @param {*}    xPadding    Description.
+     * @param {*}    titleRect    Description.
+     * @param {*}    xMinLeftOverlapWithTitle    Description.
+     * @param {*}    xMinRightOverlapWithTitle    Description.
+     * @param {*}    isSubmenu    Description.
+     */
     function showPopUpInPos(x, y, modalElement, window_, xPadding, titleRect, xMinLeftOverlapWithTitle, xMinRightOverlapWithTitle, isSubmenu ) {
         xPadding = xPadding || 0; // Отступ вокруг курсора для показа субменю, чтоб не слишком рядом
         modalElement.style.display = "block";
@@ -329,6 +395,13 @@ function initContextMenu(window_/*, contextMenuId*/) {
 
     // TODO not need to closure modalBg & modalElement - i can pass them when calling this function, and before this i can just create them - not need to store them
     // Yet actualy - isnt it will just create more garbage? Most likely yes. Not need to closure them there anyway.
+    /**
+     * Description for showModal.
+     * @param {*}    x    Description.
+     * @param {*}    y    Description.
+     * @param {*}    window_    Description.
+     * @param {*}    isGoProBanerVisible    Description.
+     */
     function showModal(x, y, window_, isGoProBanerVisible) {
         window_['modalContextMenuActive'] = true; // document.defaultView - is the window  //####
 

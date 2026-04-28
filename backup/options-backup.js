@@ -13,24 +13,46 @@ var BACKUP_FILENAME = "tabsoutlinerbackup.json";
 
 
 // DOM Elements Manipulation utils -----------------------------------
+/**
+ * Description for insertAfter.
+ * @param {*}    referenceElement    Description.
+ * @param {*}    newElement    Description.
+ */
 function insertAfter(referenceElement, newElement)  {
     referenceElement.parentNode.insertBefore(newElement, referenceElement.nextSibling);
 }
 
+/**
+ * Description for getHtmlElementById.
+ * @param {*}    elementId    Description.
+ */
 function getHtmlElementById(elementId) {
     return document.getElementById(elementId);
 }
 
+/**
+ * Description for deleteChildNodes.
+ * @param {*}    elementId    Description.
+ */
 function deleteChildNodes(elementId) {
     var elem = document.getElementById(elementId);
     if(elem) elem.innerHTML = '';
 }
 
+/**
+ * Description for deleteElementFromPage.
+ * @param {*}    elementId    Description.
+ */
 function deleteElementFromPage(elementId) {
     var elem = document.getElementById(elementId);
     if(elem) elem.parentNode.removeChild(elem);
 }
 
+/**
+ * Description for createElement.
+ * @param {*}    type    Description.
+ * @param {*}    atributes    Description.
+ */
 function createElement(type, atributes) {
     var elem = document.createElement(type);
     for (a in atributes || {})
@@ -38,11 +60,19 @@ function createElement(type, atributes) {
     return elem;
 }
 
+/**
+ * Description for hideHtmlElement.
+ * @param {*}    elementId    Description.
+ */
 function hideHtmlElement(elementId) {
     var elem = getHtmlElementById(elementId);
     if(elem) elem.style.display = 'none';
 }
 
+/**
+ * Description for showHtmlElement.
+ * @param {*}    elementId    Description.
+ */
 function showHtmlElement(elementId) {
     var elem = getHtmlElementById(elementId);
     if(elem) elem.style.display = null;
@@ -68,10 +98,17 @@ const nullthrows = (v) => {
     return v;
 }
 
+/**
+ * Description for injectCode.
+ * @param {*}    src    Description.
+ */
 function injectCode(src) {
     const script = document.createElement('script');
     // This is why it works!
     script.src = src;
+    /**
+     * Description for script.onload.
+     */
     script.onload = function() {
         console.log("script injected");
         this.remove();
@@ -83,6 +120,9 @@ function injectCode(src) {
 }
 //injectCode(chrome.runtime.getURL('/myscript.js'));
 
+/**
+ * Description for addGapiScript_setAuthToken_listGdriveFiles.
+ */
 function addGapiScript_setAuthToken_listGdriveFiles() {
     // Тут когдато была кгтешьу загрузка GAPI скрипта с google CDN, после загрузки успешной вызывалось setAuthToken_listGdriveFiles();
     // но в manifest v3 такое больше нельзя, так что будем сами справляться, без GAPI library
@@ -90,6 +130,10 @@ function addGapiScript_setAuthToken_listGdriveFiles() {
     setAuthToken_listGdriveFiles(false);
 }
 
+/**
+ * Description for manualAuth_listGdriveFiles.
+ * @param {*}    event    Description.
+ */
 function manualAuth_listGdriveFiles(event) {
     event.target.innerText = "Please Wait For Authorize Popup and grant access..."; //i18n +
 
@@ -97,6 +141,10 @@ function manualAuth_listGdriveFiles(event) {
 }
 
 
+/**
+ * Description for setAuthToken_listGdriveFiles.
+ * @param {*}    interactive    Description.
+ */
 function setAuthToken_listGdriveFiles(interactive) {
     //FF_REMOVED_GA if(interactive) ga_event_access_states('Gdrive Access Request', null, null,'R');
 
@@ -131,21 +179,35 @@ function setAuthToken_listGdriveFiles(interactive) {
     });
 }
 
+/**
+ * Description for show401Error_showAuthorizeGdriveAccessControls.
+ */
 function show401Error_showAuthorizeGdriveAccessControls(){
     show401Error();
     showAuthorizeGdriveAccessControls();
     deleteChildNodes("gdriveBackupsListTable");
 }
 
+/**
+ * Description for showAuthorizeGdriveAccessControls.
+ */
 function showAuthorizeGdriveAccessControls() {
     document.getElementById("authorizeButton").innerText = originalAuthorizeButtonText;  // this clears "Please Wait..." after previous possible click
     showHtmlElement("authorizeDiv");
 }
 
+/**
+ * Description for hideAuthorizeGdriveAccessControls.
+ */
 function hideAuthorizeGdriveAccessControls() {
     hideHtmlElement("authorizeDiv");
 }
 
+/**
+ * Description for setAuthToken_deleteGdriveBackup.
+ * @param {*}    fileId    Description.
+ * @param {*}    continueCallback    Description.
+ */
 function setAuthToken_deleteGdriveBackup(fileId, continueCallback) {
     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
         if(token) {
@@ -157,6 +219,11 @@ function setAuthToken_deleteGdriveBackup(fileId, continueCallback) {
     });
 }
 
+/**
+ * Description for deleteGdriveBackup.
+ * @param {*}    fileId    Description.
+ * @param {*}    continueCallback    Description.
+ */
 function deleteGdriveBackup(fileId, continueCallback) {
     // WARNING Перед любой GAPI операцией, если менаджинг токена осуществляется не самой GAPI.auth (тоесть если мы ставим Access Token туда вручную через gapi.auth.setToken,
     // беря его из Identity.API к примеру) надо всегда выполнять повторный gapi.auth.setToken(). Так как у gapi нет Refresh Tokena чтоб получить новый Access Token
@@ -171,6 +238,10 @@ function deleteGdriveBackup(fileId, continueCallback) {
     async_deleteFile(fileId, continueCallback);
 }
 
+/**
+ * Description for async_getAuthToken.
+ * @async
+ */
 async function async_getAuthToken() {
     return new Promise((resolve, reject) => {
         chrome.identity.getAuthToken({ interactive: true }, function(token) {
@@ -183,6 +254,12 @@ async function async_getAuthToken() {
     });
 }
 
+/**
+ * Description for async_deleteFile.
+ * @async
+ * @param {*}    fileId    Description.
+ * @param {*}    continueCallback    Description.
+ */
 async function async_deleteFile(fileId, continueCallback) {
     try {
       const token = await async_getAuthToken();
@@ -206,6 +283,10 @@ async function async_deleteFile(fileId, continueCallback) {
     }
 }
   
+/**
+ * Description for async_listGdriveBackups.
+ * @async
+ */
 async function async_listGdriveBackups() {
     try {
         const token = await async_getAuthToken();
@@ -281,9 +362,18 @@ async function async_listGdriveBackups() {
 //     //});
 // }
 
+/**
+ * Description for isTabsOutlinerBackupFile.
+ * @param {*}    item    Description.
+ */
 function isTabsOutlinerBackupFile(item) {
     return item['title'].indexOf(BACKUP_FILENAME) >= 0
 }
+/**
+ * Description for byTimesaved.
+ * @param {*}    o1    Description.
+ * @param {*}    o2    Description.
+ */
 function byTimesaved(o1,o2) {
     return o2['timesaved'] - o1['timesaved']
 }
@@ -316,18 +406,35 @@ function renderGdriveBackupsList(items) {
 }
 
 
+/**
+ * Description for renderItems.
+ * @param {*}    items    Description.
+ * @param {*}    itemsListElement    Description.
+ */
 function renderItems(items, itemsListElement) {
     for (var i =0; i < items.length; i++) {
         var item = items[i];
 
+        /**
+         * Description for getMachineLabel.
+         * @param {*}    item    Description.
+         */
         function getMachineLabel(item) {
             var machineLabel;
             try{machineLabel = JSON.parse(item['description'])['machineLabel']}catch(e){}
             return machineLabel ? "[" + machineLabel + "] " : "";
         }
+        /**
+         * Description for getGdriveFileSizeLabel.
+         * @param {*}    item    Description.
+         */
         function getGdriveFileSizeLabel(item) {
            return item['fileSize'] ? " ("+Math.ceil(Number(item['fileSize'])/1024)+" KB)":"";
         }
+        /**
+         * Description for getAutoManualLabel.
+         * @param {*}    item    Description.
+         */
         function getAutoManualLabel(item) {
             var isManual;
             try{
@@ -337,6 +444,10 @@ function renderItems(items, itemsListElement) {
             return "";
         }
 
+        /**
+         * Description for makeBackupTitle.
+         * @param {*}    item    Description.
+         */
         function makeBackupTitle(item) {
             var timesaved = new Date(item['timesaved']);
             var r = getMachineLabel(item) +
@@ -387,21 +498,36 @@ function renderItems(items, itemsListElement) {
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for fsErrorHandler.
+ * @param {*}    err    Description.
+ */
 function fsErrorHandler(err){
     console.error('ERROR on file system access. FileError.code:', err['code']);
 }
 
 
 //Cut&Paste from background.js
+/**
+ * Description for listAllFiles.
+ * @param {*}    callback_listResults    Description.
+ */
 function listAllFiles(callback_listResults/*[entries]*/) {
     window.webkitRequestFileSystem(self.PERSISTENT, 1024*1024, onInitFs_listAllFiles, fsErrorHandler);
 
+    /**
+     * Description for onInitFs_listAllFiles.
+     * @param {*}    fs    Description.
+     */
     function onInitFs_listAllFiles(fs) {
 
       var dirReader = fs.root.createReader();
       var entries = [];
 
       // Call the reader.readEntries() until no more results are returned.
+      /**
+       * Description for readEntries.
+       */
       var readEntries = function() {
          dirReader.readEntries (function(results) {
           if (!results.length) {
@@ -418,6 +544,9 @@ function listAllFiles(callback_listResults/*[entries]*/) {
     }
 }
 
+/**
+ * Description for listLocalBackups.
+ */
 function listLocalBackups() {
     listAllFiles(function(entries){
         //TODO копипаста c deleteOlderBackups(), да и глупо что я время из названия беру
@@ -442,12 +571,22 @@ function listLocalBackups() {
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for saveSessionDataAsFile_fsErrorHandler.
+ * @param {*}    err    Description.
+ */
 function saveSessionDataAsFile_fsErrorHandler(err){
     console.error('ERROR on file system access. FileError.code:', err['code']);
     //window['treeWriteFail'] = true;
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for saveSessionDataAsFile.
+ * @param {*}    filename    Description.
+ * @param {*}    sessionData    Description.
+ * @param {*}    onwriteend    Description.
+ */
 function saveSessionDataAsFile(filename, sessionData, onwriteend) {
     console.log('saveSessionDataAsFile START', filename, new Date().toTimeString());
 
@@ -455,10 +594,17 @@ function saveSessionDataAsFile(filename, sessionData, onwriteend) {
     var exportDataBlob = new Blob([exportDataString]); // Теоретически строки будут как UTF-8 закодированы
     webkitRequestFileSystem(PERSISTENT/*TEMPORARY*/, exportDataBlob.size+100, fsReady, saveSessionDataAsFile_fsErrorHandler);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs){
         fs.root.getFile(filename, {create: true, exclusive: false}, function(fileEntry) {
             fileEntry.createWriter(function(fileWriter) {
                 fileWriter.truncate(0);
+                /**
+                 * Description for fileWriter.onwriteend.
+                 */
                 fileWriter.onwriteend = function() {
                     fileWriter.onwriteend = onwriteend || null;  // кстате будет рекурсия если onwriteend не переписать
                     fileWriter.write(exportDataBlob);
@@ -469,6 +615,14 @@ function saveSessionDataAsFile(filename, sessionData, onwriteend) {
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for performBackups.
+ * @param {*}    sessionDataAsOperations    Description.
+ * @param {*}    localStorageFieldForLastBackupTimestamp    Description.
+ * @param {*}    timeBetweenBackups    Description.
+ * @param {*}    backupFilePrefix    Description.
+ * @param {*}    howManyBackupsHandle    Description.
+ */
 function performBackups(sessionDataAsOperations, localStorageFieldForLastBackupTimestamp, timeBetweenBackups, backupFilePrefix, howManyBackupsHandle) {
     var lastBackupTime = Number(localStorage[localStorageFieldForLastBackupTimestamp] || 0); // 0 or 'time'
     if( Math.abs(Date.now() - lastBackupTime) > timeBetweenBackups ) {
@@ -481,6 +635,11 @@ function performBackups(sessionDataAsOperations, localStorageFieldForLastBackupT
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for deleteOlderBackups.
+ * @param {*}    backupFilePrefix    Description.
+ * @param {*}    howManyBackupsHandle    Description.
+ */
 function deleteOlderBackups(backupFilePrefix, howManyBackupsHandle) {
     listAllFiles(function(entries){
         var pattern = new RegExp(backupFilePrefix+"([\\d]*)-[\\d]*\\.json");
@@ -502,6 +661,11 @@ function deleteOlderBackups(backupFilePrefix, howManyBackupsHandle) {
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for deleteFileByFullPath.
+ * @param {*}    fullPath    Description.
+ * @param {*}    continuneCallback    Description.
+ */
 function deleteFileByFullPath(fullPath, continuneCallback) {
     continuneCallback = continuneCallback || function(){};
     webkitRequestFileSystem(PERSISTENT, 1024*1024 /*1MB*/, function(fs) {
@@ -512,10 +676,18 @@ function deleteFileByFullPath(fullPath, continuneCallback) {
 }
 
 //Cut&Paste from background.js
+/**
+ * Description for deleteLocalBackup.
+ * @param {*}    fullPath    Description.
+ * @param {*}    continueCallback    Description.
+ */
 function deleteLocalBackup(fullPath, continueCallback) {
     deleteFileByFullPath(fullPath, continueCallback);
 }
 
+/**
+ * Description for createBackupNowBtn.
+ */
 function createBackupNowBtn() {
     var r = document.createElement('div');
     r.id = 'backupNowBtn';
@@ -527,6 +699,10 @@ function createBackupNowBtn() {
     return r;
 }
 
+/**
+ * Description for viewBackup.
+ * @param {*}    event    Description.
+ */
 function viewBackup(event) {
     var item = this; // event.target; - нельзя юзать, гугле транслейт там два вложенных тега <font> вставляет вокруг лейбла
 
@@ -547,6 +723,14 @@ function viewBackup(event) {
     viewTree(path, timestamp, fileSize, isLocal, false);
 }
 
+/**
+ * Description for viewTree.
+ * @param {*}    path    Description.
+ * @param {*}    timestamp    Description.
+ * @param {*}    fileSize    Description.
+ * @param {*}    isLocal    Description.
+ * @param {*}    isUserSelectedFile    Description.
+ */
 function viewTree(path, timestamp, fileSize, isLocal, isUserSelectedFile) {
     // will open in new window
     chrome.windows.create({
@@ -555,6 +739,10 @@ function viewTree(path, timestamp, fileSize, isLocal, isUserSelectedFile) {
     }, null/*callback*/);
 }
 
+/**
+ * Description for deleteBackup.
+ * @param {*}    event    Description.
+ */
 function deleteBackup(event) {
     var element = this; // event.target; - нельзя юзать, гугле транслейт там два вложенных тега <font> вставляет вокруг лейбла
 
@@ -571,6 +759,9 @@ function deleteBackup(event) {
     }
 }
 
+/**
+ * Description for backupNow.
+ */
 function backupNow() {
     backgroundport.postMessage({request:"request2bkg_performGdriveBackup", backupOperationId_:Math.random()}); // performGdriveBackup() will call backupStarted_backgroundPageCall before connecting and then one more time before starting upload (if no error during connect)
 
@@ -587,6 +778,10 @@ function backupNow() {
 }
 
 
+/**
+ * Description for msg2view_backupStarted_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_backupStarted_backgroundPageCall(response) {
     let isUploadStartedPhase = response.isUploadStartedPhase;
     if (isUploadStartedPhase)
@@ -594,22 +789,42 @@ function msg2view_backupStarted_backgroundPageCall(response) {
     else
         switchBackupNowBtnToConnectingState(); // backup now btn will be switched back to normal state in onBackupComplete_backgroundPageCall or on Error
 }
+/**
+ * Description for msg2view_onAuthorizationTokenGranted_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_onAuthorizationTokenGranted_backgroundPageCall(response) {
     hide401Error();
 }
+/**
+ * Description for msg2view_onBackupSucceeded_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_onBackupSucceeded_backgroundPageCall(response) {
     setAuthToken_listGdriveFiles(false); // this will also clear backup spinner on BackupNowBtn
     // Всегда надо ставить токен перед самой операцией с gapi, так как тот что есть уже возможно заэкспайрился
 }
+/**
+ * Description for msg2view_onGdriveAccessRewoked_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_onGdriveAccessRewoked_backgroundPageCall(response) {
     show401Error_showAuthorizeGdriveAccessControls();
     switchBackupNowBtnToNormalState(); // Мы могли спаймать 401 в тот момент когда её нажали бо юзер отозвал permissions
 }
+/**
+ * Description for msg2view_noConnectionError_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_noConnectionError_backgroundPageCall(response) {
     let operationInitiatorId = response.operationInitiatorId;
     alertErrorMessageIfOurWindowIsOperationInitiator(operationInitiatorId, "Network Error"); // i18n +
     switchBackupNowBtnToNormalState();
 }
+/**
+ * Description for msg2view_backupError_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_backupError_backgroundPageCall(response) {
     let operationInitiatorId = response.operationInitiatorId;
     let errorCode = response.errorCode;
@@ -620,10 +835,18 @@ function msg2view_backupError_backgroundPageCall(response) {
 
 
 var backupOperationId_;
+/**
+ * Description for alertErrorMessageIfOurWindowIsOperationInitiator.
+ * @param {*}    operationInitiatorId    Description.
+ * @param {*}    errorMessage    Description.
+ */
 function alertErrorMessageIfOurWindowIsOperationInitiator(operationInitiatorId, errorMessage) {
     if(operationInitiatorId == backupOperationId_) setTimeout(function(){alert(errorMessage)},1); //setTimeout to not block background script
 }
 
+/**
+ * Description for switchBackupNowBtnToConnectingState.
+ */
 function switchBackupNowBtnToConnectingState() {
     var btn = document.getElementById('backupNowBtn');
     if(btn) {
@@ -632,6 +855,9 @@ function switchBackupNowBtnToConnectingState() {
     }
 }
 
+/**
+ * Description for switchBackupNowBtnToUploadingInProgressState.
+ */
 function switchBackupNowBtnToUploadingInProgressState() {
     var btn = document.getElementById('backupNowBtn');
     if(btn) {
@@ -640,6 +866,9 @@ function switchBackupNowBtnToUploadingInProgressState() {
     }
 }
 
+/**
+ * Description for switchBackupNowBtnToNormalState.
+ */
 function switchBackupNowBtnToNormalState() {
     var btn = getHtmlElementById('backupNowBtn');
     if(btn) { // Not always present, but sometimes this method is caled for example on onGdriveAccessRewoked_backgroundPageCall & other messages
@@ -649,6 +878,12 @@ function switchBackupNowBtnToNormalState() {
     }
 }
 
+/**
+ * Description for syncronizeInputFieldWithLocalStorage.
+ * @param {*}    fieldId    Description.
+ * @param {*}    defaultValue    Description.
+ * @param {*}    localStorageLabel    Description.
+ */
 function syncronizeInputFieldWithLocalStorage(fieldId, defaultValue, localStorageLabel) {
     var inputElem = getHtmlElementById(fieldId);
 
@@ -658,6 +893,10 @@ function syncronizeInputFieldWithLocalStorage(fieldId, defaultValue, localStorag
     }
 
     inputElem.value = (window.localStorage[localStorageLabel] || defaultValue);
+    /**
+     * Description for inputElem.oninput.
+     * @param {*}    event    Description.
+     */
     inputElem.oninput = function(event) {
         var newValue = event.srcElement.value.trim();
         if(newValue)

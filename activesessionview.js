@@ -96,10 +96,18 @@ backgroundport.onMessage.addListener(function getResp(response) {
 });
 
 
+/**
+ * Description for msg2view_onDragStartedInSomeView.
+ * @param {*}    response    Description.
+ */
 function msg2view_onDragStartedInSomeView(response) {
     treeView.onDragStartedInSomeView(response);
 }
 
+/**
+ * Description for msg2view_notifyObserver_onNodeUpdated.
+ * @param {*}    response    Description.
+ */
 function msg2view_notifyObserver_onNodeUpdated(response) {
     var observer = treeView.getRowDomByIdMVC(response.idMVC);
     if(!observer) {
@@ -115,9 +123,18 @@ function msg2view_notifyObserver_onNodeUpdated(response) {
 
 }
 
+/**
+ * Description for updateStatBlockAndProtectedOnCloseStatusForExistedInDomCollapsedParents.
+ * @param {*}    response    Description.
+ */
 function updateStatBlockAndProtectedOnCloseStatusForExistedInDomCollapsedParents(response) {
     if(!response.parentsUpdateData) return;
 
+    /**
+     * Description for updatedStatBlockAndProtectedOnCloseIfCollapsedAndExistInDom.
+     * @param {*}    idMVC    Description.
+     * @param {*}    updateData    Description.
+     */
     function updatedStatBlockAndProtectedOnCloseIfCollapsedAndExistInDom (idMVC, updateData) {
         if(!updateData.isCollapsed) return;
 
@@ -132,6 +149,10 @@ function updateStatBlockAndProtectedOnCloseStatusForExistedInDomCollapsedParents
 
 }
 
+/**
+ * Description for msg2view_notifyObserver.
+ * @param {*}    response    Description.
+ */
 function msg2view_notifyObserver(response) {
     var observer = treeView.getRowDomByIdMVC(response.idMVC);
     if(!observer) {
@@ -147,6 +168,10 @@ function msg2view_notifyObserver(response) {
         return;
     }
 
+    /**
+     * Description for obj2array.
+     * @param {*}    obj    Description.
+     */
     function obj2array(obj) { // Chrome convert array to objects like {0:"a", 1:"b"}; during message dispatching
         var r = [];
         for(var i=0;i in obj;i++)
@@ -182,30 +207,58 @@ function msg2view_notifyObserver(response) {
 
 }
 
+/**
+ * Description for msg2view_activateNodeWindowEditTextPrompt.
+ * @param {*}    response    Description.
+ */
 function msg2view_activateNodeWindowEditTextPrompt(response) {
     activateEnterTextPrompt(response, "request2bkg_onOkAfterSetNodeWindowTextPrompt");
 }
 
+/**
+ * Description for msg2view_activateNodeNoteEditTextPrompt.
+ * @param {*}    response    Description.
+ */
 function msg2view_activateNodeNoteEditTextPrompt(response) {
     activateEnterTextPrompt(response, "request2bkg_onOkAfterSetNodeNoteTextPrompt");
 }
 
+/**
+ * Description for msg2view_activateNodeTabEditTextPrompt.
+ * @param {*}    response    Description.
+ */
 function msg2view_activateNodeTabEditTextPrompt(response) {
     activateEnterTextPrompt(response, "request2bkg_onOkAfterSetNodeTabTextPrompt");
 }
 
+/**
+ * Description for msg2view_setCursorHere.
+ * @param {*}    response    Description.
+ */
 function msg2view_setCursorHere(response) {
     treeView.getRowDomByIdMVC(response.targetNodeIdMVC).setCursorHere(response.doNotScrollView);
 }
 
+/**
+ * Description for msg2view_continueToScrollUpToNextOpenWindow.
+ * @param {*}    response    Description.
+ */
 function msg2view_continueToScrollUpToNextOpenWindow(response) {
     continue_scrollUpToNextOpenWindow(response.allOpenWindowsIdMVCs);
 }
 
+/**
+ * Description for msg2view_requestScrollNodeToViewInAutoscrolledViews.
+ * @param {*}    response    Description.
+ */
 function msg2view_requestScrollNodeToViewInAutoscrolledViews(response) {
     scrollNodeToViewInAutoscrolledViews(response.idMVC);
 }
 
+/**
+ * Description for msg2view_initTreeView.
+ * @param {*}    response    Description.
+ */
 function msg2view_initTreeView(response) {
     console.time();
     var treeModel = [new NodeModelMVCDataTransferObject(response.rootNode_currentSession)]; // [rootNode_CurrentSession]
@@ -247,6 +300,11 @@ function msg2view_initTreeView(response) {
     window.addEventListener('actionCommand', window_onActionCommand, false);
 }
 
+/**
+ * Description for activateEnterTextPrompt.
+ * @param {*}    response    Description.
+ * @param {*}    onOkRequest2bkgMessageName    Description.
+ */
 function activateEnterTextPrompt(response, onOkRequest2bkgMessageName) {
     treeView.activatePrompt(response.defaultText, function onOk(newText){
         backgroundport.postMessage({request:onOkRequest2bkgMessageName,
@@ -256,15 +314,26 @@ function activateEnterTextPrompt(response, onOkRequest2bkgMessageName) {
     });
 }
 
+/**
+ * Description for scrollNodeToViewInAutoscrolledViews.
+ * @param {*}    idMVC    Description.
+ */
 function scrollNodeToViewInAutoscrolledViews(idMVC) {
     treeView.getRowDomByIdMVC(idMVC).fromModel_requestScrollNodeToViewInAutoscrolledViews();
 }
 
+/**
+ * Description for Global_onResize_UpdateScrollToLastNodeCompensator.
+ * @param {*}    event    Description.
+ */
 function Global_onResize_UpdateScrollToLastNodeCompensator(event) {
     clearTimeout(preventResizeOnEveryEvent_resizeTimeoutId);
     preventResizeOnEveryEvent_resizeTimeoutId = setTimeout(enablePossibilityToScrollLastWindowTitleToFirstVisibleLine, preventResizeOnEveryEvent_resizeTimeout);
 }
 
+/**
+ * Description for enablePossibilityToScrollLastWindowTitleToFirstVisibleLine.
+ */
 function enablePossibilityToScrollLastWindowTitleToFirstVisibleLine() {
     var h = window.innerHeight;
     // let activeSessionTreeScrollableContainer = document.getElementById("ID_activeSessionTreeScrollableContainer");
@@ -279,6 +348,12 @@ window.addEventListener('resize', Global_onResize_UpdateScrollToLastNodeCompensa
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Первые 2 параметра для курсора, 
+/**
+ * Description for selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick.
+ * @param {*}    focusTabId    Description.
+ * @param {*}    altFocusNodeId    Description.
+ * @param {*}    scrollToVieWinId    Description.
+ */
 function selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick(focusTabId, altFocusNodeId /*will be selected if focusNodeId is collapsed and invisble */, scrollToVieWinId) {
     //if(!treeView) return; // For rare cases we called from background page before initialization done
 
@@ -287,6 +362,10 @@ function selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick(focusTabId, altFo
     backgroundport.postMessage({request:"request2bkg_selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick", focusTabId:focusTabId, scrollToVieWinId:scrollToVieWinId }); // must result in initTreeView() call with data returned by response
 }
 
+/**
+ * Description for scrollToDefaultPageOffestForClonedViewsOnInitialOpen.
+ * @param {*}    sourceViewPageYOffset    Description.
+ */
 function scrollToDefaultPageOffestForClonedViewsOnInitialOpen(sourceViewPageYOffset) {
     //if(!treeView) return; // For rare cases we called from background page before initialization done
 
@@ -307,6 +386,10 @@ function scrollToDefaultPageOffestForClonedViewsOnInitialOpen(sourceViewPageYOff
 // Запрещаем селектинг - очень часто появляется селектинг на узлах при драге - он мешает и раздражает + его сложно убрать
 // Особенно при драге с меню к примеру.
 window.document.addEventListener('selectstart', preventSelection);
+/**
+ * Description for preventSelection.
+ * @param {*}    e    Description.
+ */
 function preventSelection(e) {
     // document.getSelection().removeAllRanges() - можно ещё юзать для надёжности, особенно после edit операций
     e.preventDefault(); // Просто return false не срабатывало почемуто (иногда)
@@ -315,6 +398,10 @@ function preventSelection(e) {
 
 // Баним горизонтальный скролинг (возникает при драге к примеру) потом сложно задрагать всё назад
 window.addEventListener('scroll', undoHorizontalScroling);
+/**
+ * Description for undoHorizontalScroling.
+ * @param {*}    e    Description.
+ */
 function undoHorizontalScroling (e) {
     if(window.pageXOffset != 0) { // Тут был странный баг без фигурных скобок вроде, при первом ресайзе эта штука срабатывала и скролила назад
         window.scrollTo(0, window.pageYOffset);
@@ -322,6 +409,9 @@ function undoHorizontalScroling (e) {
 }
 
 // CloneView functionality ---------------------------------------------------------------------------------------------
+/**
+ * Description for cloneView.
+ */
 function cloneView() {
     backgroundport.postMessage({request:"request2bkg_cloneTabsOutlinerView", 
         tabsOutlinerInitiatorWindow_outerWidth:window.outerWidth, 
@@ -340,17 +430,28 @@ var undoScroll_memorizerEnabled = true;
 
 var undoScroll_memorizedOffsets = [];
 
+/**
+ * Description for undoScroll_onScroll_pageOffsetsMemorizerScheduler.
+ * @param {*}    e    Description.
+ */
 function undoScroll_onScroll_pageOffsetsMemorizerScheduler (e) {
     clearTimeout(undoScroll_pageOffsetsMemorizerId);
     undoScroll_pageOffsetsMemorizerId = setTimeout(undoScroll_memorizeCurrentPageOffset , undoScroll_pageOffsetStableTimeoutToMemorizeIt);
 }
 
 
+/**
+ * Description for undoScroll_memorizeCurrentPageOffset.
+ */
 function undoScroll_memorizeCurrentPageOffset() {
     if(undoScroll_memorizerEnabled) // временно отключается в дико костыльной логике внутри scrollUpToNextOpenWindow() чтоб не портить undo очередь из-за кучи scroll вызовов
         undoScroll_memorizePageOffset(window.pageYOffset);
 }
 
+/**
+ * Description for undoScroll_memorizePageOffset.
+ * @param {*}    pageYOffsetToMemorize    Description.
+ */
 function undoScroll_memorizePageOffset(pageYOffsetToMemorize) {
     // Не запоминаем одинаковые значения
     if(undoScroll_memorizedOffsets.length > 0 && undoScroll_memorizedOffsets[undoScroll_memorizedOffsets.length-1] == pageYOffsetToMemorize)
@@ -365,6 +466,9 @@ function undoScroll_memorizePageOffset(pageYOffsetToMemorize) {
 var undoScroll_memorizedOffsets_undoSequenceCopy = null;
 var undoScroll_memorizedOffsets_undoSequenceCopy_lastUndoValue = 0;
 
+/**
+ * Description for undoScroll.
+ */
 function undoScroll() {
     if(!undoScroll_memorizedOffsets_undoSequenceCopy) // Делаем себе копию по которой и будем возвращать скролл до тех пор пока нового значения не прийдёт
         undoScroll_memorizedOffsets_undoSequenceCopy = undoScroll_memorizedOffsets.slice();
@@ -377,6 +481,9 @@ function undoScroll() {
 }
 // Expand All/Undo Exapnd All ------------------------------------------------------------------------------------------
 
+/**
+ * Description for expandBtnsAnimationEnd_ClearStyles.
+ */
 function expandBtnsAnimationEnd_ClearStyles() {
     document.getElementById("expandAllButton").removeEventListener("webkitAnimationEnd", expandBtnsAnimationEnd_ClearStyles);
     document.getElementById("undoExpandAllButton").removeEventListener("webkitAnimationEnd", expandBtnsAnimationEnd_ClearStyles);
@@ -391,18 +498,27 @@ function expandBtnsAnimationEnd_ClearStyles() {
     document.getElementById("undoExpandAllButton").classList.remove("face");
 }
 
+/**
+ * Description for flitToUndoAnimationEnd_performExpand.
+ */
 function flitToUndoAnimationEnd_performExpand() {
     document.getElementById("undoExpandAllButton").removeEventListener("webkitAnimationEnd", flitToUndoAnimationEnd_performExpand);
 
     expandAllNodesInTreeModel();
 }
 
+/**
+ * Description for flitToNormalAnimationEnd_performUndoExpand.
+ */
 function flitToNormalAnimationEnd_performUndoExpand() {
     document.getElementById("expandAllButton").removeEventListener("webkitAnimationEnd", flitToNormalAnimationEnd_performUndoExpand);
 
     undoExpandAllNodesInTreeModel();
 }
 
+/**
+ * Description for expandAllBtnAnimationEnd_flitToUndo.
+ */
 function expandAllBtnAnimationEnd_flitToUndo() {
     document.getElementById("expandAllButton").removeEventListener("webkitAnimationEnd", expandAllBtnAnimationEnd_flitToUndo);
 
@@ -414,6 +530,9 @@ function expandAllBtnAnimationEnd_flitToUndo() {
     document.getElementById("undoExpandAllButton").classList.add("flipIn");
 }
 
+/**
+ * Description for undoExpandAllButtonEnd_flipToNormal.
+ */
 function undoExpandAllButtonEnd_flipToNormal() {
     document.getElementById("undoExpandAllButton").removeEventListener("webkitAnimationEnd", undoExpandAllButtonEnd_flipToNormal);
 
@@ -426,12 +545,18 @@ function undoExpandAllButtonEnd_flipToNormal() {
 }
 
 
+/**
+ * Description for expandAll.
+ */
 function expandAll() {
     document.getElementById("expandAllButton").addEventListener("webkitAnimationEnd", expandAllBtnAnimationEnd_flitToUndo);
     document.getElementById("expandAllButton").classList.add("face");
     document.getElementById("expandAllButton").classList.add("flipOut");
 }
 
+/**
+ * Description for undoExpandAll.
+ */
 function undoExpandAll() {
     document.getElementById("undoExpandAllButton").addEventListener("webkitAnimationEnd", undoExpandAllButtonEnd_flipToNormal);
     document.getElementById("undoExpandAllButton").classList.add("face");
@@ -440,6 +565,9 @@ function undoExpandAll() {
 
 var undoExpandAllNodesList = null;
 
+/**
+ * Description for expandAllNodesInTreeModel.
+ */
 function expandAllNodesInTreeModel() {
     undoExpandAllNodesList = treeView.treeModel.getAllCollapsedNodes();
 
@@ -448,6 +576,9 @@ function expandAllNodesInTreeModel() {
     });
 }
 
+/**
+ * Description for undoExpandAllNodesInTreeModel.
+ */
 function undoExpandAllNodesInTreeModel() {
     if(!undoExpandAllNodesList) return;
 
@@ -460,6 +591,9 @@ function undoExpandAllNodesInTreeModel() {
 
 
 // Close All Open ------------------------------------------------------------------------------------------------------
+/**
+ * Description for closeAllOpenWindows.
+ */
 function closeAllOpenWindows() {
     if(confirm("Confirm close all open windows. \n\nClosed windows will be preserved in the tree as saved.")) { //i18n
         window.chrome.windows.getCurrent({'populate': false}, function (ourChromeWindowObj) {
@@ -469,10 +603,17 @@ function closeAllOpenWindows() {
 }
 
 // Scroll up to next open window ------------------------------------------------------------------------------------------
+/**
+ * Description for scrollUpToNextOpenWindow.
+ */
 function scrollUpToNextOpenWindow() {
     backgroundport.postMessage({request:"request2bkg_getListOfAllActiveWindowNodes_continueToScrollUpToNextOpenWindow_onRequestedPort"});
 }
 
+/**
+ * Description for continue_scrollUpToNextOpenWindow.
+ * @param {*}    allOpenWindowsIdMVCs    Description.
+ */
 function continue_scrollUpToNextOpenWindow(allOpenWindowsIdMVCs) {
     var isAutoscrollView_originalValue = window.isAutoscrollView;
     window.isAutoscrollView = true; // Enable treeView scroling - чтоб requestScrollNodeToViewInAutoscrolledViews() срабатывал для нас
@@ -493,20 +634,36 @@ function continue_scrollUpToNextOpenWindow(allOpenWindowsIdMVCs) {
 
 const application_x_tabsoutliner_actionlink = 'application/x-tabsoutliner-actionlink';
 
+/**
+ * Description for actionLinkEventGetFabric.
+ * @param {*}    event    Description.
+ */
 function actionLinkEventGetFabric(event) {
     return event.srcElement.dataset['fabric'];
 }
 
+/**
+ * Description for actionLink_ondragstart.
+ * @param {*}    event    Description.
+ */
 function actionLink_ondragstart(event) {
     event.dataTransfer.setData(application_x_tabsoutliner_actionlink, actionLinkEventGetFabric(event));
     return true; // Запускаем дефолтную реализация - она нам рисуночек сбахает кстате красивый для драга,
                  // в любом случае драг не начнётся если тут вернуть false ->> Это кстате не правда если мы подвешены через addEventListener, это так только для подвеса через el.ondragstart
 }
 
+/**
+ * Description for actionLink_onclick.
+ * @param {*}    event    Description.
+ */
 function actionLink_onclick(event) {
     let dummyDataTransfer = {
         types                                   : [application_x_tabsoutliner_actionlink],
         [application_x_tabsoutliner_actionlink] : actionLinkEventGetFabric(event),
+        /**
+         * Description for getData.
+         * @param {*}    type    Description.
+         */
         getData                                 : function(type) { return this[type]; },
     };
 
@@ -519,6 +676,9 @@ function actionLink_onclick(event) {
 
 
 // About block functionality --------------------------------------------------------------------------------------------
+/**
+ * Description for onInfoClick.
+ */
 function onInfoClick() {
     focusTabIfAliveCreateAsPopUpIfAbsent( chrome.runtime.getURL('about.html'),
                                           function(){ window.open('about.html','_blank','height=1000,width=920, left=350, top=50') } );
@@ -526,11 +686,19 @@ function onInfoClick() {
 }
 
 // Settings block functionality --------------------------------------------------------------------------------------------
+/**
+ * Description for onOptionsClick.
+ */
 function onOptionsClick() {
     focusTabIfAliveCreateAsPopUpIfAbsent( chrome.runtime.getURL('options.html'),
                                           function(){ window.open('options.html','_blank','height=850,width=900, left=200, top=200') } );
 }
 
+/**
+ * Description for focusTabIfAliveCreateAsPopUpIfAbsent.
+ * @param {*}    url    Description.
+ * @param {*}    createMethod    Description.
+ */
 function focusTabIfAliveCreateAsPopUpIfAbsent(url, createMethod){
     window.chrome.windows.getAll({'populate':true}, function(windowsList) {
         var alifeTabWithRequestedUrl;
@@ -557,6 +725,11 @@ document.getElementById("mainToolbar").addEventListener("mouseout", maintoolbarF
 
 var elementFocusedWhenMainToolbarHovered = null;
 
+/**
+ * Description for isAChildOf.
+ * @param {*}    _parent    Description.
+ * @param {*}    _child    Description.
+ */
 function isAChildOf(_parent, _child)
 {
     var testElement = _child;
@@ -568,6 +741,9 @@ function isAChildOf(_parent, _child)
     return false;
 }
 
+/**
+ * Description for getUrlVars.
+ */
 function getUrlVars() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -576,19 +752,33 @@ function getUrlVars() {
     return vars;
 }
 
+/**
+ * Description for maintoolbarFocusHack_onMouseOver.
+ * @param {*}    event    Description.
+ */
 function maintoolbarFocusHack_onMouseOver(event) {
     if(!isAChildOf(this, event.relatedTarget)) maintoolbarFocusHack_onMouseEnter();
 }
 
+/**
+ * Description for maintoolbarFocusHack_onMouseOut.
+ * @param {*}    event    Description.
+ */
 function maintoolbarFocusHack_onMouseOut(event) {
     if(!isAChildOf(this, event.relatedTarget)) maintoolbarFocusHack_onMouseLeave();
 }
 
+/**
+ * Description for maintoolbarFocusHack_onMouseEnter.
+ */
 function maintoolbarFocusHack_onMouseEnter() {
     elementFocusedWhenMainToolbarHovered = document.activeElement;
     document.activeElement.blur();
 }
 
+/**
+ * Description for maintoolbarFocusHack_onMouseLeave.
+ */
 function maintoolbarFocusHack_onMouseLeave() {
     // РАньше вместо всего этого дикого костыля было просто elementFocusedWhenMainToolbarHovered.focus(); - но это приводило к скролингу к зафокусенному элементу при Leave - и почти всегда это было не в тему
     undoScroll_memorizerEnabled = false;
@@ -629,6 +819,9 @@ if(window.chrome && window.chrome.extension) {
     document.addEventListener('DOMContentLoaded', prepareDomForSavedAsHtmlMode);
 }
 
+/**
+ * Description for actionPrint.
+ */
 function actionPrint() {
     setTimeout( function(){ window.print() }, 1); // setTimeout, because it's called from context menu and i whant to close it (so need return from event) before render print page
 }
@@ -636,16 +829,33 @@ function actionPrint() {
 //    setTimeout( function(){ window.find() }, 1); // setTimeout, because it's called from context menu and i whant to close it (so need return from event) before render print page
 //}
 
+/**
+ * Description for requestClipboardPermissions.
+ * @param {*}    callback    Description.
+ */
 function requestClipboardPermissions(callback) {
     chrome.permissions.request({
             permissions: [ "clipboardRead", "clipboardWrite"], //identity не требует consent скрина, identity.email - требует! и 100% блокирует extension на апдейте если указано не в optional_permissions
             origins: []
         }, callback);
 }
+/**
+ * Description for execCommand_cut.
+ */
 function execCommand_cut() { document.execCommand('cut') }
+/**
+ * Description for execCommand_copy.
+ */
 function execCommand_copy() { document.execCommand('copy') }
+/**
+ * Description for execCommand_paste.
+ */
 function execCommand_paste() { document.execCommand('paste') }
 
+/**
+ * Description for ifLite_goPro.
+ * @param {*}    skipNagScreen    Description.
+ */
 function ifLite_goPro(skipNagScreen) {
     if( !!window['isKeysAndcontextMenuActionsEnabled'] ) {
         return false; //to continue execution in such expression: ifLite_goPro() || executeProAction()
@@ -655,6 +865,10 @@ function ifLite_goPro(skipNagScreen) {
     }
 }
 
+/**
+ * Description for window_onActionCommand.
+ * @param {*}    event    Description.
+ */
 function window_onActionCommand(event){
     if( ifLite_goPro() ) return; // Do not show nag screen in case of Ctrl-C in lite mode, as many translators autovaticaly send this shortcuts in every focused  window
 
@@ -704,6 +918,10 @@ function window_onActionCommand(event){
         //case 'actionOneClickSwitchMode': actionTogleOneClickMode(); break;
     }
 }
+/**
+ * Description for window_onkeydown.
+ * @param {*}    event    Description.
+ */
 function window_onkeydown(event) {
     //console.log(event, event.keyIdentifier);
 
@@ -959,6 +1177,9 @@ function window_onkeydown(event) {
     }
 }
 
+/**
+ * Description for getEmptyCustomStyleshit.
+ */
 function getEmptyCustomStyleshit() {
     var customStyleshitId = 'usersCustomColorsStyleshit';
 
@@ -982,6 +1203,9 @@ function getEmptyCustomStyleshit() {
 	return styleshit.sheet;
 }
 
+/**
+ * Description for applyCustomUserStyles.
+ */
 function applyCustomUserStyles() {
     // TODO this is slightly ineficient as we alway regenerate and reaply complete styleshit, even if there was no changes at all
 
@@ -1008,6 +1232,9 @@ function applyCustomUserStyles() {
     }
 }
 
+/**
+ * Description for prepareDomForSavedAsHtmlMode.
+ */
 function prepareDomForSavedAsHtmlMode() {
     document.title = "Tabs Outliner Window Saved As Html File"; //i18n;
     document.getElementById("mainToolbar").style.display="none";
@@ -1048,6 +1275,10 @@ function prepareDomForSavedAsHtmlMode() {
 //    window.localStorage['winunload_onpagehide_start'] = JSON.stringify( new Date() );
 //};
 
+/**
+ * Description for window.onbeforeunload.
+ * @param {*}    e    Description.
+ */
 window.onbeforeunload = function(e) {
     // Если это последнее окно у нас тут есть целая секунда !!!!!!!! "1113" Правда диалог это уже не покажет, закроет всёравно. но нам и не надо.
     // А если это не последнее окон то оно может ебошить кико угодно! Правда бекграунд страница при этом тоже блоконётся.
@@ -1058,6 +1289,9 @@ window.onbeforeunload = function(e) {
     backgroundport.postMessage({request:"request2bkg_onViewWindowBeforeUnload_saveNow"});
 };
 
+/**
+ * Description for window.onunload.
+ */
 window.onunload = function() {
     elementFocusedWhenMainToolbarHovered = null;
     performOperationOnLoadComplete = null;
@@ -1083,6 +1317,9 @@ window.onunload = function() {
 };
 
 
+/**
+ * Description for doScrollAndSetIsAutoscrollViewOnReadyAndShowHelpBlock.
+ */
 function doScrollAndSetIsAutoscrollViewOnReadyAndShowHelpBlock() {
     var urlVars = getUrlVars();
     if(urlVars['type'] == 'clone') {
@@ -1166,6 +1403,9 @@ console.timeEnd("SessionView TreeGenerationTime");
 
 // Help block functionality --------------------------------------------------------------------------------------------
 var HELP_BLOCK_ELEMENT_ID = 'helpBlock';
+/**
+ * Description for createHelpBlock.
+ */
 function createHelpBlock() {
     var r = document.createElement("div");
     r.id = HELP_BLOCK_ELEMENT_ID;
@@ -1173,17 +1413,27 @@ function createHelpBlock() {
     return r;
 }
 
+/**
+ * Description for onChange_doNotShowHelpBlockOnStartV2.
+ */
 function onChange_doNotShowHelpBlockOnStartV2() {
     if(this.checked) localStorage['doNotShowHelpBlockOnStartV2'] = 'true';
     else             delete localStorage['doNotShowHelpBlockOnStartV2'];
 }
 
+/**
+ * Description for hideHelpBlock.
+ */
 function hideHelpBlock() {
     var helpBlock = document.getElementById(HELP_BLOCK_ELEMENT_ID);
     if(helpBlock) helpBlock.parentElement.removeChild(helpBlock);
 }
 window['hideHelpBlock'] = hideHelpBlock;
 
+/**
+ * Description for showHelpBlock.
+ * @param {*}    scrollIntoView    Description.
+ */
 function showHelpBlock(scrollIntoView) {
     var helpBlock = document.getElementById(HELP_BLOCK_ELEMENT_ID);
     if(!helpBlock) {
@@ -1209,6 +1459,9 @@ function showHelpBlock(scrollIntoView) {
         window.scrollTo(0, window.pageYOffset - 120);
     }
 }
+/**
+ * Description for onHelpClick.
+ */
 function onHelpClick() {
     showHelpBlock(true);
 }
@@ -1218,6 +1471,9 @@ window['onPrintClick'] = function() {
     helpWindow.onload = onHelpWindowLoaded;
 };
 
+/**
+ * Description for onHelpWindowLoaded.
+ */
 function onHelpWindowLoaded() {
     var helpBlock = createHelpBlock();
 
@@ -1227,6 +1483,10 @@ function onHelpWindowLoaded() {
     var imges = this.document.querySelectorAll('img');
     var img = imges[imges.length-1];
 
+    /**
+     * Description for loaded.
+     * @param {*}    event    Description.
+     */
     function loaded(event) {
         event.target.ownerDocument.defaultView.print();
     }
@@ -1239,6 +1499,9 @@ function onHelpWindowLoaded() {
     }
 }
 
+/**
+ * Description for onclick_toggleHlpBlock.
+ */
 function onclick_toggleHlpBlock() {
     var controlelement = this;
 
@@ -1264,6 +1527,9 @@ function onclick_toggleHlpBlock() {
 	}
 }
 
+/**
+ * Description for onExpandTransitionEnd.
+ */
 function onExpandTransitionEnd()
 {
 	this.removeEventListener("webkitTransitionEnd", onExpandTransitionEnd );
@@ -1280,6 +1546,9 @@ function onExpandTransitionEnd()
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Functions wich support drags from saved as HTML tree // Copied from HTML on move to manifest 2
+/**
+ * Description for replaceChromeFaviconUrls.
+ */
 function replaceChromeFaviconUrls() {
     var images = document.images;
     for (var i = 0; i < images.length; i++){
@@ -1296,6 +1565,10 @@ function replaceChromeFaviconUrls() {
 //    }, 50 );
 //}
 //
+/**
+ * Description for loadAllDefferedIcons.
+ * @param {*}    max    Description.
+ */
 function loadAllDefferedIcons(max) {
     var images = document.images;
     var count = 0;
@@ -1339,6 +1612,9 @@ setTimeout( function() { // Отложено просто потому что к
 
 var favIconSourceDatasetName = (window.location.href.indexOf('activesessionview.html') < 0) ? 'nodeIconForHtmlExport' : 'iconSrcDefferedLoad';
 
+/**
+ * Description for loadVisibleIcons.
+ */
 function loadVisibleIcons() {
     //console.time('loadVisibleIcons');
 
@@ -1365,6 +1641,9 @@ function loadVisibleIcons() {
 }
 
 var lastVisibleImageIndex = -1;
+/**
+ * Description for getVisibleFavicons.
+ */
 function getVisibleFavicons() {
     // console.time('getImages');
     var images = document.images;
@@ -1439,6 +1718,10 @@ function getVisibleFavicons() {
 // It is utterly important that you attach your image position determining process on document load event and not
 // the usually use DOM ready, because you have to wait for the document to load in order for your images to have
 // final positions.
+/**
+ * Description for isElementVerticalProjectionInViewport.
+ * @param {*}    el    Description.
+ */
 function isElementVerticalProjectionInViewport (el) {
     if(!el) return false;
 
@@ -1452,6 +1735,11 @@ function isElementVerticalProjectionInViewport (el) {
         // && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
     );
 }
+/**
+ * Description for getNextSearchIntervalForVisibleElement.
+ * @param {*}    el    Description.
+ * @param {*}    beg_index_end    Description.
+ */
 function getNextSearchIntervalForVisibleElement (el, beg_index_end) {
     var beg = beg_index_end[0];
     var index = beg_index_end[1];
@@ -1465,16 +1753,27 @@ function getNextSearchIntervalForVisibleElement (el, beg_index_end) {
 }
 // --------------------------------------------------------------------------------------------------------------
 
+/**
+ * Description for makeAllElementsDragable.
+ */
 function makeAllElementsDragable() {
     var nodes = document.getElementsByTagName("li");
     for (var i = 0; i < nodes.length; i++)
          nodes[i].ondragstart = linodes_ondragstart;
 }
 
+/**
+ * Description for linodes_filterOutFavIconsInHtml.
+ * @param {*}    htmlText    Description.
+ */
 function linodes_filterOutFavIconsInHtml(htmlText){
     return htmlText.replace(/<img[^>]*>/g, '');
 }
 
+/**
+ * Description for linodes_classListToInterchangeType.
+ * @param {*}    nodeTitleEl    Description.
+ */
 function linodes_classListToInterchangeType(nodeTitleEl) {
     if( nodeTitleEl.classList.contains("winNTC") )           return 'savedwin_';
     if( nodeTitleEl.classList.contains("savedwinNTC") )      return 'savedwin_';
@@ -1489,6 +1788,10 @@ function linodes_classListToInterchangeType(nodeTitleEl) {
 
 // { type:'textline_', title:innerHTML,                       subnodes:[] }
 // { type:'link_',     title:innerHTML, url:nodeTitleEl.href, subnodes:[] }
+/**
+ * Description for linodes_convertDomElementToInterchangeJsonObj.
+ * @param {*}    nodeDomObj    Description.
+ */
 function linodes_convertDomElementToInterchangeJsonObj(nodeDomObj) {
     var r = {};
     var nodeTitleEl    = nodeDomObj.querySelector('.nodeTitleContainer');
@@ -1510,6 +1813,10 @@ function linodes_convertDomElementToInterchangeJsonObj(nodeDomObj) {
     return r;
 }
 
+/**
+ * Description for linodes_convertToInterchangeJson.
+ * @param {*}    nodeDomObj    Description.
+ */
 function linodes_convertToInterchangeJson(nodeDomObj) {
     var r = linodes_convertDomElementToInterchangeJsonObj(nodeDomObj);
 
@@ -1517,6 +1824,10 @@ function linodes_convertToInterchangeJson(nodeDomObj) {
 }
 
 // TODO это частичный C&P с treeview.js
+/**
+ * Description for linodes_ondragstart.
+ * @param {*}    event    Description.
+ */
 function linodes_ondragstart(event) {
     //console.log("modelid:" + this._ref_nodeModel.id + " ondragstart");
     event.stopPropagation(); // without this event will buble up through all our parent and their ondragstart
@@ -1532,17 +1843,27 @@ function linodes_ondragstart(event) {
     return true; // Run default implementation, they will do nice drag feedback picture. Anyway we must return true as drag will not start if we will return false.
 }
 
+/**
+ * Description for setTrialMode.
+ */
 function setTrialMode() {
     window['isContextMenuGoProBanerVisible'] = true;
     window['isKeysAndcontextMenuActionsEnabled'] = false;
 }
 
 
+/**
+ * Description for setProMode.
+ */
 function setProMode() {
     window['isContextMenuGoProBanerVisible'] = false;
     window['isKeysAndcontextMenuActionsEnabled'] = true;
 }
 
+/**
+ * Description for msg2view_optionsChanged_message.
+ * @param {*}    response    Description.
+ */
 function msg2view_optionsChanged_message(response) {
     let changedOption = response.changedOption;
 
@@ -1559,6 +1880,9 @@ function msg2view_optionsChanged_message(response) {
     }
 };
 
+/**
+ * Description for setBackupNowBtnVisibility.
+ */
 function setBackupNowBtnVisibility() {
     document.getElementById('backupNowButton').style.display = localStorage['showBackupNowBtn'] ? '' : 'none';
 }
@@ -1566,6 +1890,9 @@ function setBackupNowBtnVisibility() {
 setBackupNowBtnVisibility();
 
 var backupOperationId_;
+/**
+ * Description for backupNow.
+ */
 function backupNow() {
     ifLite_goPro() || backgroundport.postMessage({request:"request2bkg_performGdriveBackup", backupOperationId_:Math.random()}); // performGdriveBackup() will call backupStarted_backgroundPageCall before connecting and then one more time before starting upload (if no error during connect)
     

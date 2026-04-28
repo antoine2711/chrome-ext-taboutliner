@@ -51,6 +51,9 @@ chrome.windows.onRemoved.addListener( updateBrowserActionTitle );
         console.log("=== TabsOutliner Background script code started ===");
 
         activeSession = new ActiveSession( 
+            /**
+             * Description for continueExecution.
+             */
             function continueExecution() {
                 console.log("ActiveSession initialized");
                 updateBrowserActionTitle();
@@ -121,6 +124,10 @@ var instanceId = Date.now();
 var viewsCommunicationInterface = {
     viewPorts:[],
 
+    /**
+     * Description for viewRequestScrollNodeToViewInAutoscrolledViews.
+     * @param {*}    idMVC    Description.
+     */
     viewRequestScrollNodeToViewInAutoscrolledViews:function(idMVC) {
         this.viewPorts.forEach( function (port) {
             try {
@@ -132,10 +139,18 @@ var viewsCommunicationInterface = {
         })
     },
 
+    /**
+     * Description for portConnected.
+     * @param {*}    port    Description.
+     */
     portConnected:function(port) {
         this.viewPorts.push(port)
     },
 
+    /**
+     * Description for portDisconected.
+     * @param {*}    port    Description.
+     */
     portDisconected:function(port) {
         const index = this.viewPorts.indexOf(port);
         if (index > -1) { // only splice array when item is found
@@ -145,6 +160,10 @@ var viewsCommunicationInterface = {
         }
     },
 
+    /**
+     * Description for postMessageToAllViews.
+     * @param {*}    message    Description.
+     */
     postMessageToAllViews:function(message) {
         this.viewPorts.forEach( function (port) {
             try {
@@ -156,16 +175,32 @@ var viewsCommunicationInterface = {
     },
 
     //Cut&Paste notifyObserversInViews_onNodeUpdated
+    /**
+     * Description for notifyObserversInViews.
+     * @param {*}    targedNodeIdMVC    Description.
+     * @param {*}    parameters    Description.
+     */
     notifyObserversInViews:function(targedNodeIdMVC, parameters) {
         this.postMessageToAllViews({command:"msg2view_notifyObserver", idMVC:targedNodeIdMVC, parameters:parameters});
     },
 
     //Cut&Paste notifyObserversInViews
+    /**
+     * Description for notifyObserversInViews_alsoUpdateCollapsedParents.
+     * @param {*}    targedNodeIdMVC    Description.
+     * @param {*}    parameters    Description.
+     * @param {*}    parentsUpdateData    Description.
+     */
     notifyObserversInViews_alsoUpdateCollapsedParents:function(targedNodeIdMVC, parameters, parentsUpdateData) {
         this.postMessageToAllViews({command:"msg2view_notifyObserver", idMVC:targedNodeIdMVC, parameters:parameters, parentsUpdateData:parentsUpdateData});
     },
 
     //Cut&Paste notifyObserversInViews
+    /**
+     * Description for notifyObserversInViews_onNodeUpdated.
+     * @param {*}    targedNodeIdMVC    Description.
+     * @param {*}    modelDataCopy    Description.
+     */
     notifyObserversInViews_onNodeUpdated:function(targedNodeIdMVC, modelDataCopy) {
         this.postMessageToAllViews({command:"msg2view_notifyObserver_onNodeUpdated", idMVC:targedNodeIdMVC, modelDataCopy:modelDataCopy});
     }
@@ -330,58 +365,122 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
+/**
+ * Description for request2bkg_storeUserSelectedFile.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_storeUserSelectedFile(msg, port) {
     storeUserSelectedFile(msg.file);
 }
 
+/**
+ * Description for request2bkg_optionsChanged_notifyAllViews.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_optionsChanged_notifyAllViews(msg, port) {
     optionsChanged_notifyAllViews(msg.changedOption);
 }
 
+/**
+ * Description for request2bkg_closeAllWindowsExceptThis.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_closeAllWindowsExceptThis(msg, port) {
     closeAllWindowsExceptThis(msg.preserveWinId);
 }
 
+/**
+ * Description for request2bkg_focusTab.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_focusTab(msg, port) {
     focusTab(msg.tabWindowId, msg.tabId); 
 }
 
+/**
+ * Description for request2bkg_performGdriveBackup.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_performGdriveBackup(msg, port) {
     performGdriveBackup(msg.backupOperationId_);
 }
 
+/**
+ * Description for request2bkg_authTokenGranted_notifyAllOpenedViews.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_authTokenGranted_notifyAllOpenedViews(msg, port) {
     callOnAuthorizationTokenGranted_ForAllViews();
 }
 
+/**
+ * Description for request2bkg_authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews(msg, port) {
     authTokenInvalidOrAbsent_dropAndNotifyAllOpenedViews();
 }
 
+/**
+ * Description for request2bkg_checkAndUpdateLicenseStatusInAllViews.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_checkAndUpdateLicenseStatusInAllViews(msg, port) {
     checkAndUpdateLicenseStatusInAllViews();
 }
 
 
+/**
+ * Description for request2bkg_onViewWindowBeforeUnload_saveNow.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_onViewWindowBeforeUnload_saveNow(msg, port) {
     activeSession.treeModel.saveNowOnViewClose();
 }
 
+/**
+ * Description for request2bkg_cloneTabsOutlinerView.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_cloneTabsOutlinerView(msg, port) {
     cloneTabsOutlinerView(msg.tabsOutlinerInitiatorWindow_outerWidth, msg.tabsOutlinerInitiatorWindow_screenX, msg.sourceViewPageYOffset);
 }
 
+/**
+ * Description for request2bkg_performDrop.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_performDrop(msg, port) {
     //console.log("request2bkg_performDrop --------------------------------------------------------------------");
     //console.log(msg.dataTransferContainer);
 
     msg.dataTransferContainer.items = Object.keys(msg.dataTransferContainer).map((key) => { return { type: key }; }); // This is for operation of if( getItemFromDragDataStoreByMimeType() )
+    /**
+     * Description for msg.dataTransferContainer.getData.
+     * @param {*}    type    Description.
+     */
     msg.dataTransferContainer.getData = function(type) { return this[type]; };
 
     var nodesHierarchy = prepareDragedModel(msg.dataTransferContainer, msg.instanceUnicalClipboardDataMimeType, activeSession.treeModel); // было раньше-> песец, accesing global event - и при этом это ещё и работает << это так раньше было, хз зачем, теперь передаю event из вызывающей функции
     if(nodesHierarchy) activeSession.treeModel.moveCopyHierarchy( msg.dropTarget, nodesHierarchy, msg.dropAsCopy, port/*передаётся для активации prompt диалога при вставки note + для установки курсора на вставленный узел*/ );
 }
 
+/**
+ * Description for request2bkg_actionMoveWindowToTheEndOfTree.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_actionMoveWindowToTheEndOfTree(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -390,6 +489,11 @@ function request2bkg_actionMoveWindowToTheEndOfTree(msg, port) {
     if(tabsOrganizer) tabsOrganizer.moveToTheEndOfTree();
 }
 
+/**
+ * Description for request2bkg_actionFlattenTabsHierarchy.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_actionFlattenTabsHierarchy(msg, port) {
     // For Window or Group or saved Window - this will flatten all its tabs
     // If called on tab - it's flaten the tabs above the current tab
@@ -408,6 +512,11 @@ function request2bkg_actionFlattenTabsHierarchy(msg, port) {
     a.forEach((node) => node.flattenTabsHierarchy_skipTabsOrganizers() )
 }
 
+/**
+ * Description for request2bkg_moveCursor_toFirstSiblingInSameLevel.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveCursor_toFirstSiblingInSameLevel(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -418,6 +527,11 @@ function request2bkg_moveCursor_toFirstSiblingInSameLevel(msg, port) {
     requestCaller_setCursorToNodeOrToFirstCollapsedParent(port, nodeModel.parent.subnodes[0], false);
 }
 
+/**
+ * Description for request2bkg_moveCursor_toLastSiblingInSameLevel.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveCursor_toLastSiblingInSameLevel(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -428,15 +542,31 @@ function request2bkg_moveCursor_toLastSiblingInSameLevel(msg, port) {
     requestCaller_setCursorToNodeOrToFirstCollapsedParent(port, nodeModel.parent.subnodes[nodeModel.parent.subnodes.length-1], false);
 }
 
+/**
+ * Description for request2bkg_moveCursor_up.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveCursor_up(msg, port) {
     request2bkg_moveCursor_fn(msg, port, node => node.findNodeOnPrevRow() )
 
 }
 
+/**
+ * Description for request2bkg_moveCursor_down.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveCursor_down(msg, port) {
     request2bkg_moveCursor_fn(msg, port, node => node.findNodeOnNextRow(false/*stayInParentBounds != false*/) )
 }
 
+/**
+ * Description for request2bkg_moveCursor_fn.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ * @param {*}    fn    Description.
+ */
 function request2bkg_moveCursor_fn(msg, port, fn) {
     let cursoredNode = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!cursoredNode) return;
@@ -452,6 +582,11 @@ function request2bkg_moveCursor_fn(msg, port, fn) {
     }
 }
 
+/**
+ * Description for request2bkg_moveCursor_toFirstSubnode_expandIfCollapsed.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveCursor_toFirstSubnode_expandIfCollapsed(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -463,6 +598,11 @@ function request2bkg_moveCursor_toFirstSubnode_expandIfCollapsed(msg, port) {
 
 }
 
+/**
+ * Description for request2bkg_moveCursor_toParent_butNotToRoot.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveCursor_toParent_butNotToRoot(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -476,6 +616,11 @@ function request2bkg_moveCursor_toParent_butNotToRoot(msg, port) {
 
 
 
+/**
+ * Description for request2bkg_invertCollapsedState.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_invertCollapsedState(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -483,14 +628,29 @@ function request2bkg_invertCollapsedState(msg, port) {
     nodeModel.setCollapsing(!nodeModel.colapsed);
 }
 
+/**
+ * Description for request2bkg_moveHierarchy.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_moveHierarchy(msg, port) {
     activeSession.treeModel.moveHierarchy_byIdMVC(msg.dropTarget, msg.hierarchyToMoveIdMVC);
 }
 
+/**
+ * Description for request2bkg_communicateDragStartDataToOtherViews.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_communicateDragStartDataToOtherViews(msg, port) {
     viewsCommunicationInterface.postMessageToAllViews({command:"msg2view_onDragStartedInSomeView", currentlyDragedIdMVC: msg.currentlyDragedIdMVC});
 }
 
+/**
+ * Description for request2bkg_deleteHierarchy.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_deleteHierarchy(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -499,6 +659,11 @@ function request2bkg_deleteHierarchy(msg, port) {
     DeleteAction_performAction(nodeModel, port);
 }
 
+/**
+ * Description for request2bkg_addNoteAsLastSubnodeOfCurrentNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_addNoteAsLastSubnodeOfCurrentNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -510,6 +675,11 @@ function request2bkg_addNoteAsLastSubnodeOfCurrentNode(msg, port) {
     msg2view_setCursor_activateNodeNoteEditTextPrompt(port, newnote);
 }
 
+/**
+ * Description for request2bkg_addNoteAsNextSiblingOfCurrentNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_addNoteAsNextSiblingOfCurrentNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -520,6 +690,11 @@ function request2bkg_addNoteAsNextSiblingOfCurrentNode(msg, port) {
     msg2view_setCursor_activateNodeNoteEditTextPrompt(port, newnote);
 }
 
+/**
+ * Description for request2bkg_addNoteAsParentOfCurrentNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_addNoteAsParentOfCurrentNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -531,6 +706,11 @@ function request2bkg_addNoteAsParentOfCurrentNode(msg, port) {
 
 }
 
+/**
+ * Description for request2bkg_addNoteAsFirstSubnodeOfCurrentNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_addNoteAsFirstSubnodeOfCurrentNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -543,6 +723,11 @@ function request2bkg_addNoteAsFirstSubnodeOfCurrentNode(msg, port) {
     msg2view_setCursor_activateNodeNoteEditTextPrompt(port, newnote);
 }
 
+/**
+ * Description for request2bkg_addNoteAsPrevSiblingOfCurrentNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_addNoteAsPrevSiblingOfCurrentNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -554,6 +739,11 @@ function request2bkg_addNoteAsPrevSiblingOfCurrentNode(msg, port) {
     msg2view_setCursor_activateNodeNoteEditTextPrompt(port, newnote);
 }
 
+/**
+ * Description for request2bkg_addNoteAtTheEndOfTree.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_addNoteAtTheEndOfTree(msg, port) {
 
     //---
@@ -565,6 +755,11 @@ function request2bkg_addNoteAtTheEndOfTree(msg, port) {
     msg2view_setCursor_activateNodeNoteEditTextPrompt(port, newnote);
 }
 
+/**
+ * Description for request2bkg_actionAddSeparatorBelove.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_actionAddSeparatorBelove(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -574,6 +769,11 @@ function request2bkg_actionAddSeparatorBelove(msg, port) {
     //---
 }
 
+/**
+ * Description for request2bkg_actionAddGroupAbove.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_actionAddGroupAbove(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -583,12 +783,22 @@ function request2bkg_actionAddGroupAbove(msg, port) {
     //---
 }
 
+/**
+ * Description for msg2view_setCursor_activateNodeNoteEditTextPrompt.
+ * @param {*}    port    Description.
+ * @param {*}    newnote    Description.
+ */
 function msg2view_setCursor_activateNodeNoteEditTextPrompt(port, newnote) {
     port.postMessage({ command: "msg2view_setCursorHere", targetNodeIdMVC: newnote.idMVC, doNotScrollView:false});
 
     newnote.editTitle(port);
 }
 
+/**
+ * Description for request2bkg_onOkAfterSetNodeWindowTextPrompt.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_onOkAfterSetNodeWindowTextPrompt(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -596,6 +806,11 @@ function request2bkg_onOkAfterSetNodeWindowTextPrompt(msg, port) {
     nodeModel.setCustomTitle(msg.newText);
 }
 
+/**
+ * Description for request2bkg_onOkAfterSetNodeTabTextPrompt.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_onOkAfterSetNodeTabTextPrompt(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -603,6 +818,11 @@ function request2bkg_onOkAfterSetNodeTabTextPrompt(msg, port) {
     nodeModel.setCustomTitle(msg.newText);
 }
 
+/**
+ * Description for request2bkg_onOkAfterSetNodeNoteTextPrompt.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_onOkAfterSetNodeNoteTextPrompt(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if (!nodeModel) return;
@@ -616,6 +836,10 @@ function request2bkg_onOkAfterSetNodeNoteTextPrompt(msg, port) {
     else nodeModel.setNodeTitle(newText) // TODO Serious Refactoring, сдесь должна была быть создана новая нода NodeNote - копия. Хотя не факт.
 
 
+    /**
+     * Description for makeGroup.
+     * @param {*}    titleStrWith2g    Description.
+     */
     function makeGroup(titleStrWith2g) {
         var r = new NodeGroup();
         r.setCustomTitle(titleStrWith2g.substr('2g '.length));
@@ -623,12 +847,23 @@ function request2bkg_onOkAfterSetNodeNoteTextPrompt(msg, port) {
     }
 }
 
+/**
+ * Description for performAction.
+ * @param {*}    nodeModel    Description.
+ * @param {*}    actionId    Description.
+ * @param {*}    port    Description.
+ */
 function performAction(nodeModel, actionId, port){
     var action = nodeModel.getHoveringMenuActions()[actionId];
 
     if(action) action.performAction(nodeModel, port);
 }
 
+/**
+ * Description for request2bkg_activateHoveringMenuActionOnNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_activateHoveringMenuActionOnNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -636,6 +871,11 @@ function request2bkg_activateHoveringMenuActionOnNode(msg, port) {
     performAction(nodeModel, msg.actionId, port)
 }
 
+/**
+ * Description for request2bkg_activateNode.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_activateNode(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -643,6 +883,11 @@ function request2bkg_activateNode(msg, port) {
     nodeModel.onNodeDblClicked(activeSession.treeModel, port, msg.isAlternativeRestore);
 }
 
+/**
+ * Description for request2bkg_setCursorToNodeOrToFirstCollapsedParent.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_setCursorToNodeOrToFirstCollapsedParent(msg, port) {
     var nodeModel = activeSession.treeModel.findNodeByIdMVC(msg.targetNodeIdMVC);
     if(!nodeModel) return;
@@ -650,14 +895,31 @@ function request2bkg_setCursorToNodeOrToFirstCollapsedParent(msg, port) {
     requestCaller_setCursorToNodeOrToFirstCollapsedParent(port, nodeModel, false );
 }
 
+/**
+ * Description for requestCaller_setCursorToNodeOrToFirstCollapsedParent.
+ * @param {*}    port    Description.
+ * @param {*}    targetNode    Description.
+ * @param {*}    doNotScrollView    Description.
+ */
 function requestCaller_setCursorToNodeOrToFirstCollapsedParent(port, targetNode, doNotScrollView) {
     requestCaller_setCursorToNode(port, targetNode.getFirstCollapsedNodeInPathFromRootOrThisIfNotHiden().idMVC, doNotScrollView);
 }
 
+/**
+ * Description for requestCaller_setCursorToNode.
+ * @param {*}    port    Description.
+ * @param {*}    targetNodeIdMVC    Description.
+ * @param {*}    doNotScrollView    Description.
+ */
 function requestCaller_setCursorToNode(port, targetNodeIdMVC, doNotScrollView) {
     port.postMessage({ command: "msg2view_setCursorHere", targetNodeIdMVC: targetNodeIdMVC, doNotScrollView:doNotScrollView});
 }
 
+/**
+ * Description for request2bkg_getListOfAllActiveWindowNodes_continueToScrollUpToNextOpenWindow_onRequestedPort.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_getListOfAllActiveWindowNodes_continueToScrollUpToNextOpenWindow_onRequestedPort(msg, port) {
     var allOpenWindows = activeSession.treeModel.getListOfAllActiveWindowNodes();
     var allOpenWindowsIdMVCs = [];
@@ -669,6 +931,11 @@ function request2bkg_getListOfAllActiveWindowNodes_continueToScrollUpToNextOpenW
 }
 
 
+/**
+ * Description for request2bkg_selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick(msg, port) {
     var scrollToVieWinId          = msg.scrollToVieWinId;
     var focusTabId                = msg.focusTabId;
@@ -683,6 +950,11 @@ function request2bkg_selectTreeNodePlusScrollToNodeOnBrowserActionBtnClick(msg, 
 }
 
 
+/**
+ * Description for request2bkg_get_tree_structure.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_get_tree_structure(msg, port) {
     console.time("request2bkg_get_tree_structure data wraping");
     let data = new NodeModelMVCDataTransferObject(activeSession.treeModel[0]);
@@ -697,6 +969,11 @@ function request2bkg_get_tree_structure(msg, port) {
     console.timeEnd("port.postMessage({command:\"msg2view_initTreeView\""); //~429ms 30'749 узлов (370ms null strings - not a solution)
 }
 
+/**
+ * Description for request2bkg_setCursorToLastChildOfRoot.
+ * @param {*}    msg    Description.
+ * @param {*}    port    Description.
+ */
 function request2bkg_setCursorToLastChildOfRoot(msg, port) {
     var rootNode = activeSession.treeModel.currentSession_rootNode;
     var lastRootChild = rootNode.subnodes[rootNode.subnodes.length-1];
@@ -715,11 +992,19 @@ function request2bkg_setCursorToLastChildOfRoot(msg, port) {
     var wakeup = setInterval(BackupUnstuck, timer);
     // -------------------------------------------------------
         
+    /**
+     * Description for BackupUnstuck.
+     * @async
+     */
     async function BackupUnstuck() {
 
         const now = Date.now();
         const age = now - lastCall;
 
+        /**
+         * Description for convertNoDate.
+         * @param {*}    long    Description.
+         */
         function convertNoDate(long) {
             var dt = new Date(long).toISOString()
             return dt.slice(-13, -5) // HH:MM:SS only
@@ -761,6 +1046,10 @@ function request2bkg_setCursorToLastChildOfRoot(msg, port) {
 
 
 // ------------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for getTabs.
+ * @param {*}    windowId    Description.
+ */
 function getTabs(windowId) {
     return new Promise((resolve, reject) => {
         chrome.tabs.query({ windowId: windowId }, (tabsList) => {
@@ -772,6 +1061,10 @@ function getTabs(windowId) {
     });
 }
 
+/**
+ * Description for tabsListContainOurViews.
+ * @param {*}    tabsList    Description.
+ */
 function tabsListContainOurViews(tabsList) {
     const extensionTabs = tabsList.filter(tab => tab.url && tab.url.includes(chrome.runtime.getURL('')));
 
@@ -786,6 +1079,10 @@ function tabsListContainOurViews(tabsList) {
 
 // Также может понадобиться стандартная функция decodeURIcomponent()для последующей раскодировки процентных символов
 //'?a=123&b=abc#anchor' -> {a: "123", b: "abc"}
+/**
+ * Description for getJsonFromQueryString.
+ * @param {*}    url    Description.
+ */
 function getJsonFromQueryString(url) {
   var questionMarkStart = url.indexOf('?');
   var anchorStart = url.lastIndexOf('#');
@@ -799,6 +1096,10 @@ function getJsonFromQueryString(url) {
   return result;
 }
 
+/**
+ * Description for console_log_differenceTransaction.
+ * @param {*}    diff    Description.
+ */
 function console_log_differenceTransaction(diff) {
     console.group("Diff Data");
     if(diff['k']) for(var key in diff['k']) console.log('%s:%c %s', key, 'color:#522900', diff['k'][key]);
@@ -811,6 +1112,9 @@ function console_log_differenceTransaction(diff) {
     console.groupEnd();
 }
 
+/**
+ * Description for getLocalStorageConfigInfoAsJsonString.
+ */
 function getLocalStorageConfigInfoAsJsonString() {
     var r = {};
 
@@ -824,6 +1128,9 @@ function getLocalStorageConfigInfoAsJsonString() {
 
 //?t=ag9kZXZ-dGFtbnViYXRlc3RyPgsSC1VzZXJQcm9maWxlIhUxODU4MDQ3NjQyMjAxMzkxMjQxMTgMCxILQWN0aW9uVG9rZW4YgICAgIDwrwoM&action=impart_state
 
+/**
+ * Description for BackEndInterface.
+ */
 function BackEndInterface(){
     this.authorizedServerSides =[ "http://localhost:8080",
                                   "https://tamnubatest.appspot.com",
@@ -836,6 +1143,10 @@ function BackEndInterface(){
 }
 
 // If url represent our server side return get parameters as JSON + serverSideUri which point to correct server
+/**
+ * Description for BackEndInterface.prototype.ifThisIsOurServerSideProfilePathReturnParams.
+ * @param {*}    url    Description.
+ */
 BackEndInterface.prototype.ifThisIsOurServerSideProfilePathReturnParams = function(url) {
     for(var i = 0; i < this.authorizedServerSides.length; i++) {
         var testStr = this.authorizedServerSides[i] + this.profilePath;
@@ -849,12 +1160,21 @@ BackEndInterface.prototype.ifThisIsOurServerSideProfilePathReturnParams = functi
     return null;
 };
 
+/**
+ * Description for BackEndInterface.prototype.titleContainConfirmIndicator.
+ * @param {*}    title    Description.
+ */
 BackEndInterface.prototype.titleContainConfirmIndicator = function(title) {
     var confirmMark = '[#]';
     return (title.length - title.lastIndexOf(confirmMark)) === confirmMark.length;
 };
 
 // Asynchromously load backend_gateway.js and add it to document, then execute action wich is use it
+/**
+ * Description for BackEndInterface.prototype.callOnBackEndInterface.
+ * @param {*}    params_serverSideUri    Description.
+ * @param {*}    actionToCall    Description.
+ */
 BackEndInterface.prototype.callOnBackEndInterface = function(params_serverSideUri, actionToCall) {
     var backEndInterfaceGlobalObjectCreatedByGatewayScript = '__backEndInterface';
     if(!window[backEndInterfaceGlobalObjectCreatedByGatewayScript]) { // Не очень здорово так вобщето проверять, как раз в этотм момент мы можем грузится, но вроде большой бедыф не будет даже если 2 скрипта будут загружены
@@ -867,9 +1187,15 @@ BackEndInterface.prototype.callOnBackEndInterface = function(params_serverSideUr
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(backEndInterfaceScript, s);
 
+        /**
+         * Description for backEndInterfaceScript.onload.
+         */
         backEndInterfaceScript.onload = function() {
             actionToCall(window[backEndInterfaceGlobalObjectCreatedByGatewayScript]); // onload гарантировано приходит после полного выполнения скрипта? Это надо проверить!
         };
+        /**
+         * Description for backEndInterfaceScript.onerror.
+         */
         backEndInterfaceScript.onerror = function() {
             console.error("BEINT LOAD ERROR");
         };
@@ -880,6 +1206,9 @@ BackEndInterface.prototype.callOnBackEndInterface = function(params_serverSideUr
 };
 // ---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Description for getNewChromeSessionAndUpdateChangedTabs.
+ */
 function getNewChromeSessionAndUpdateChangedTabs() {
     // var startTime = Date.now();
     chrome.tabs.query({}, function(chromeActiveTabObjectsList) { // Вроде быстрее Window get.all
@@ -927,9 +1256,15 @@ function getNewChromeSessionAndUpdateChangedTabs() {
     });
 }
 
+/**
+ * Description for checkTabsChanges.
+ */
 function checkTabsChanges() {
     var CHECK_INTERVAL = 2000;
     if(debugLogChromeOperations) console.log("@@@@@ TABS CHECK STARTED, interval:", CHECK_INTERVAL);
+    /**
+     * Description for tabsCheck.
+     */
     function tabsCheck() {
         getNewChromeSessionAndUpdateChangedTabs();
         setTimeout(tabsCheck, CHECK_INTERVAL);
@@ -938,6 +1273,9 @@ function checkTabsChanges() {
 }
 
 
+/**
+ * Description for threadCheck.
+ */
 function threadCheck() {
     var CHECK_INTERVAL = 30;
     console.log("@@@@@ THREAD CHECK STARTED, interval:", CHECK_INTERVAL);
@@ -945,6 +1283,9 @@ function threadCheck() {
     var startTime = Date.now();
     var lastCheckTime = startTime;
     var checks = [];
+    /**
+     * Description for threadCheckCheck.
+     */
     function threadCheckCheck() {
         var time = Date.now();
         checks.push( ( (time - lastCheckTime) <= (CHECK_INTERVAL + 7) ) ? '.' : (time - lastCheckTime) );
@@ -961,14 +1302,23 @@ function threadCheck() {
     threadCheckCheck();
 }
 
+/**
+ * Description for serializeActiveSessionToJSO.
+ */
 function serializeActiveSessionToJSO() {
     return activeSession.treeModel.serializeHierarchyAsJSO();
 }
 
+/**
+ * Description for serializeActiveSessionToOperations.
+ */
 function serializeActiveSessionToOperations() {
     return activeSession.treeModel.serializeAsOperationsLog();
 }
 
+/**
+ * Description for saveCurrentSessionAsJSONtoLocalStorage.
+ */
 function saveCurrentSessionAsJSONtoLocalStorage() {
     // threadCheck();
     console.log('saveCurrentSessionAsJSON to LocalStorage ====================================');
@@ -998,6 +1348,9 @@ function saveCurrentSessionAsJSONtoLocalStorage() {
 
 }
 
+/**
+ * Description for saveCurrentSessionAsOperationsToIndexedDbNow.
+ */
 function saveCurrentSessionAsOperationsToIndexedDbNow() {
     // threadCheck();
     // console.log('saveCurrentSessionAsOperations to IndexedDB ====================================');
@@ -1079,6 +1432,11 @@ var dataBaseSchemeV34_Default = { dbName:"TabsOutlinerDB34"
 
 var currentSessionSnapshotDbKey    = 'currentSessionSnapshot';
 
+/**
+ * Description for openIndexedDbToUse_neverCreateAnything.
+ * @param {*}    dataBaseScheme    Description.
+ * @param {*}    useDbCallback    Description.
+ */
 function openIndexedDbToUse_neverCreateAnything(dataBaseScheme, useDbCallback) {
     // WARNING Не юзать ни в коем случае этот МЕТОД!!!!!
     // Он открывает базу данных без onupgrade needed эвента и это отсавляет её в состоянии когда ничто уже не может ей помочь
@@ -1089,11 +1447,19 @@ function openIndexedDbToUse_neverCreateAnything(dataBaseScheme, useDbCallback) {
     var openRequest = indexedDB.open(dataBaseScheme.dbName, dataBaseScheme.dbVersion);
 
     // Always anticipate blocked events
+    /**
+     * Description for openRequest.onblocked.
+     * @param {*}    event    Description.
+     */
     openRequest.onblocked = function (event) {
         if(console) console.error("ERROR IndexedDB openRequest.onblocked", event); //TODO TBD Error case
         useDbCallback(null);
     };
 
+    /**
+     * Description for openRequest.onerror.
+     * @param {*}    event    Description.
+     */
     openRequest.onerror = function (event) {
         if(console) console.error("ERROR IndexedDB openRequest.onerror",  event.target.webkitErrorMessage, event.target.errorCode, event); //TODO TBD Error case. Do something with this.errorCode!
         useDbCallback(null);
@@ -1104,6 +1470,10 @@ function openIndexedDbToUse_neverCreateAnything(dataBaseScheme, useDbCallback) {
 //        if(console) console.log("IndexedDB openRequest.onupgradeneeded",  event);
 //    };
 
+    /**
+     * Description for openRequest.onsuccess.
+     * @param {*}    event    Description.
+     */
     openRequest.onsuccess = function(event) {
         // console.log("IndexedDB openRequest.onsuccess",  event, "; time from indexedDB.open():", Date.now() - startTime_openIndexedDbToUse);
 
@@ -1135,6 +1505,11 @@ function openIndexedDbToUse_neverCreateAnything(dataBaseScheme, useDbCallback) {
     };
 }
 
+/**
+ * Description for openIndexedDbToUse_createStoreIfAbsent.
+ * @param {*}    dataBaseScheme    Description.
+ * @param {*}    useDbCallback    Description.
+ */
 function openIndexedDbToUse_createStoreIfAbsent(dataBaseScheme, useDbCallback) {
     // console.log('IndexedDB = Open DB ====================================');
 
@@ -1143,11 +1518,19 @@ function openIndexedDbToUse_createStoreIfAbsent(dataBaseScheme, useDbCallback) {
     var openRequest = indexedDB.open(dataBaseScheme.dbName, dataBaseScheme.dbVersion);
 
     // Always anticipate blocked events
+    /**
+     * Description for openRequest.onblocked.
+     * @param {*}    event    Description.
+     */
     openRequest.onblocked = function (event) {
         if(console) console.error("ERROR IndexedDB openRequest.onblocked:", event); //TODO TBD Error case
         useDbCallback(null);
     };
 
+    /**
+     * Description for openRequest.onerror.
+     * @param {*}    event    Description.
+     */
     openRequest.onerror = function (event) {
         // Сюда мы прилетаем в случае поломанной базы данныйх
         if(console) {
@@ -1164,12 +1547,20 @@ function openIndexedDbToUse_createStoreIfAbsent(dataBaseScheme, useDbCallback) {
 //    Само наличие этой хуеты приводит к проблеме
 //    doUpgrade вызвается в Chrome Canary хотя база данных и индексы которые он собирается создать таки уже созданы!
 //    в результате мы влетаем в onerror
+    /**
+     * Description for openRequest.onupgradeneeded.
+     * @param {*}    event    Description.
+     */
     openRequest.onupgradeneeded = function (event) {
         if(console) console.log("IndexedDB openRequest.onupgradeneeded",  event);
         var db = event.target.result;
         createObjectStoreAndIndexIfNoObjectStores(db, dataBaseScheme, event.oldVersion);
     };
 
+    /**
+     * Description for openRequest.onsuccess.
+     * @param {*}    event    Description.
+     */
     openRequest.onsuccess = function(event) {
         // console.log("IndexedDB openRequest.onsuccess",  event, "; time from indexedDB.open():", Date.now() - startTime_openIndexedDbToUse);
 
@@ -1185,11 +1576,18 @@ function openIndexedDbToUse_createStoreIfAbsent(dataBaseScheme, useDbCallback) {
             if (!db.setVersion) { throw new Error(); }
 
             var versionRequest = db.setVersion(dataBaseScheme.dbVersion);
+            /**
+             * Description for versionRequest.onsuccess.
+             * @param {*}    event    Description.
+             */
             versionRequest.onsuccess = function (event) {
                 if(console) console.log("IndexedDB versionRequest.onsuccess",  event);
                 createObjectStoreAndIndexIfNoObjectStores(db, dataBaseScheme, oldVersion);
 
                 var transaction = event.target.result;
+                /**
+                 * Description for transaction.oncomplete.
+                 */
                 transaction.oncomplete = function() {
                     useDbCallback(db);
                 };
@@ -1200,6 +1598,12 @@ function openIndexedDbToUse_createStoreIfAbsent(dataBaseScheme, useDbCallback) {
     };
 }
 
+/**
+ * Description for createObjectStoreAndIndexIfNoObjectStores.
+ * @param {*}    db    Description.
+ * @param {*}    dataBaseScheme    Description.
+ * @param {*}    oldVersion    Description.
+ */
 function createObjectStoreAndIndexIfNoObjectStores(db, dataBaseScheme, oldVersion) {
     if(console) console.log("IndexedDB = Create ObjectStore in DB ===================");
 
@@ -1232,6 +1636,14 @@ function createObjectStoreAndIndexIfNoObjectStores(db, dataBaseScheme, oldVersio
 //    };
 //}
 
+/**
+ * Description for saveDataToDB.
+ * @param {*}    db    Description.
+ * @param {*}    objectStoreName    Description.
+ * @param {*}    key    Description.
+ * @param {*}    JSO    Description.
+ * @param {*}    onDone    Description.
+ */
 function saveDataToDB(db, objectStoreName, key, JSO, onDone) {
     // console.log('IndexedDB = Write ======================================');
 
@@ -1248,6 +1660,10 @@ function saveDataToDB(db, objectStoreName, key, JSO, onDone) {
     var stopRIB_add = Date.now();
     // 800ms дл 5500 нод console.log('IndexedDB time to serialize data to IndexedDB Worker during objectStore.put(data) ###:', stopRIB_add - startRIB_add);
 
+    /**
+     * Description for putRequest.onsuccess.
+     * @param {*}    event    Description.
+     */
     putRequest.onsuccess = function(event) {
         // console.log("IndexedDB putRequest.onsuccess", event);
         // console.log('IndexedDB time from serialize end to putRequest.onsuccess:', Date.now() - stopRIB_add); // от 300ms до 12sec!
@@ -1257,11 +1673,19 @@ function saveDataToDB(db, objectStoreName, key, JSO, onDone) {
 
     };
 
+    /**
+     * Description for putRequest.onerror.
+     * @param {*}    event    Description.
+     */
     putRequest.onerror = function(event) {
         if(console) console.log("IndexedDB ERROR putRequest.onerror", event);
     };
 
     // Do something when all the data is added to the database.
+    /**
+     * Description for transaction.oncomplete.
+     * @param {*}    event    Description.
+     */
     transaction.oncomplete = function(event) {
         // console.log('IndexedDB Write transaction.oncomplete', event);
         // console.log('IndexedDB time from serialize end to transaction.oncomplete:', Date.now() - stopRIB_add); // 1s для 5500 нод, но может быть и 13sec если шо
@@ -1275,11 +1699,22 @@ function saveDataToDB(db, objectStoreName, key, JSO, onDone) {
         if(onDone) onDone(db);
     };
 
+    /**
+     * Description for transaction.onerror.
+     * @param {*}    event    Description.
+     */
     transaction.onerror = function(event) {
         if(console) console.log("IndexedDB ERROR write transaction.onerror", event);
     };
 }
 
+/**
+ * Description for readDataFromDB.
+ * @param {*}    db    Description.
+ * @param {*}    objectStoreName    Description.
+ * @param {*}    key    Description.
+ * @param {*}    callback    Description.
+ */
 function readDataFromDB(db, objectStoreName, key, callback) {
     // console.log('IndexedDB = Read ==================================');
 
@@ -1287,6 +1722,10 @@ function readDataFromDB(db, objectStoreName, key, callback) {
 
     var getRequest = transaction.objectStore(objectStoreName).get(key);
 
+    /**
+     * Description for getRequest.onsuccess.
+     * @param {*}    event    Description.
+     */
     getRequest.onsuccess = function(event) {
         // console.log("IndexedDB getRequest.onsuccess", event, event.target.result);
 
@@ -1297,21 +1736,38 @@ function readDataFromDB(db, objectStoreName, key, callback) {
 
     };
 
+    /**
+     * Description for getRequest.onerror.
+     * @param {*}    event    Description.
+     */
     getRequest.onerror = function(event) {
         if(console) console.log("IndexedDB ERROR getRequest.onerror", event);
         callback(undefined);
     };
 
+    /**
+     * Description for transaction.oncomplete.
+     * @param {*}    event    Description.
+     */
     transaction.oncomplete = function(event) {
         // console.log('IndexedDB Read transaction.oncomplete', event);
     };
 
+    /**
+     * Description for transaction.onerror.
+     * @param {*}    event    Description.
+     */
     transaction.onerror = function(event) {
         if(console) console.log("IndexedDB ERROR read transaction.onerror", event);
         callback(undefined);
     };
 }
 
+/**
+ * Description for saveToDefaultIndexedDB.
+ * @param {*}    key    Description.
+ * @param {*}    data    Description.
+ */
 function saveToDefaultIndexedDB(key, data) {
     if(debugLogChromeOperations) if(console) console.log('saveToDefaultIndexedDB START', new Date().toTimeString());
 
@@ -1326,6 +1782,11 @@ function saveToDefaultIndexedDB(key, data) {
     })
 }
 
+/**
+ * Description for readOperationsFromIndexedDB.
+ * @param {*}    dataBaseScheme    Description.
+ * @param {*}    callback    Description.
+ */
 function readOperationsFromIndexedDB( dataBaseScheme, callback ) {
     var multipleCallbackinvocationOnErrorsChecker_db = 0; //TODO пиздец проверка на повторные входы из-за error, и такаяже ещё ниже есть - это надо убрать
     if(++multipleCallbackinvocationOnErrorsChecker_db !== 1) return;
@@ -1357,22 +1818,34 @@ function readOperationsFromIndexedDB( dataBaseScheme, callback ) {
 // Используется для аплаинга в новой сессии onRemoved эвентов которые возможно были потеряны при резком закрытии прошлой сессии
 // до того как чтото успело записаться на диск.
 var OnRemovedTracker = Class.extend({
+    /**
+     * Description for init.
+     */
     init:function() {
         this.PERIOD_OF_INACTIVITY_BEFORE_CLEARING_DATA = 25*1000; // ms //must be surely bigger than possible period between saves
         this.lastSessionOnRemoved = this._getDataFromLocalStorage();
         this.clearStorage();
     },
 
+    /**
+     * Description for clearStorage.
+     */
     clearStorage:function() {
         this.recentlyRemoved = this.getEmptyOnRemovedCollection(); // Тут поменяеш также в getItemsArrayFromLocalStorage надо проверку на Array изменить и инициализатор
         this._dumpDataToLocalStorage();
         this.clearTimerID  = null;
     },
 
+    /**
+     * Description for getEmptyOnRemovedCollection.
+     */
     getEmptyOnRemovedCollection:function() {
         return {'removedTabs':{}, 'removedWindows':{}}; // If changed the getItemsArrayFromLocalStorage() also must be changed
     },
 
+    /**
+     * Description for _dumpDataToLocalStorage.
+     */
     _dumpDataToLocalStorage:function() {
         try{
         var s = JSON.stringify(this.recentlyRemoved);
@@ -1381,6 +1854,9 @@ var OnRemovedTracker = Class.extend({
         } catch(e) {console.error("ERROR DDTLS",e);} // Catch possible Quata errors, to not brake the onRemoved logic which update tree
     },
 
+    /**
+     * Description for _getDataFromLocalStorage.
+     */
     _getDataFromLocalStorage:function(){
         try{
         var removedItems = JSON.parse(localStorage['recentlyRemoved']);
@@ -1391,6 +1867,9 @@ var OnRemovedTracker = Class.extend({
         return removedItems;
     },
 
+    /**
+     * Description for recentlyRemovedItemsListUpdated_dubpData_scheduleClear.
+     */
     recentlyRemovedItemsListUpdated_dubpData_scheduleClear:function() {
         this._dumpDataToLocalStorage();
 
@@ -1398,6 +1877,11 @@ var OnRemovedTracker = Class.extend({
         this.clearTimerID = setTimeout(this.clearStorage.bind(this), this.PERIOD_OF_INACTIVITY_BEFORE_CLEARING_DATA);
     },
 
+    /**
+     * Description for register_onTabRemoved.
+     * @param {*}    tabId    Description.
+     * @param {*}    isWindowClosingInfo    Description.
+     */
     register_onTabRemoved:function(tabId, isWindowClosingInfo/*{isWindowClosing: true/false, windowId: 964} */) {
         this.recentlyRemoved['removedTabs'][tabId] = isWindowClosingInfo;
         // isWindowClosingInfo - CAN BE UNDEFINED!!!!
@@ -1407,16 +1891,26 @@ var OnRemovedTracker = Class.extend({
         this.recentlyRemovedItemsListUpdated_dubpData_scheduleClear();
     },
 
+    /**
+     * Description for register_onWindowRemoved.
+     * @param {*}    windowId    Description.
+     */
     register_onWindowRemoved:function(windowId) {
         this.recentlyRemoved['removedWindows'][windowId] = Date.now(); // этот же код в register_onTabRemoved() С&P чтоб не дампить в localStorage лишний раз
 
         this.recentlyRemovedItemsListUpdated_dubpData_scheduleClear();
     },
 
+    /**
+     * Description for getTabsOnRemovedEventsFromLastSession.
+     */
     getTabsOnRemovedEventsFromLastSession:function() {
         return this.lastSessionOnRemoved['removedTabs']; // Object.keys(w); ignore the keys assigned like this: Object.prototype.zzz = 'ssss' в отличии от for (var k in w) {console.log(k)}
     },
 
+    /**
+     * Description for getWindowsOnRemovedEventsFromLastSession.
+     */
     getWindowsOnRemovedEventsFromLastSession:function() {
         return this.lastSessionOnRemoved['removedWindows']; // Object.keys(w); ignore the keys assigned like this: Object.prototype.zzz = 'ssss' в отличии от for (var k in w) {console.log(k)}
     },
@@ -1471,6 +1965,12 @@ var OnRemovedTracker = Class.extend({
 //    EOC:null
 //});
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for SaveScheduler.
+ * @param {*}    saveFunction    Description.
+ * @param {*}    UPDATES_ACCUMULATING_PERIOD    Description.
+ * @param {*}    MAXIMUM_POSTPONE_BECAUSE_OF_UPDATES_PERIOD_BEFORE_FORCED_SAVE    Description.
+ */
 function SaveScheduler(saveFunction, UPDATES_ACCUMULATING_PERIOD, MAXIMUM_POSTPONE_BECAUSE_OF_UPDATES_PERIOD_BEFORE_FORCED_SAVE){
     this.performSaveFunction = saveFunction;
     this.timeOfFirstUnsavedUpdate = null;
@@ -1480,10 +1980,16 @@ function SaveScheduler(saveFunction, UPDATES_ACCUMULATING_PERIOD, MAXIMUM_POSTPO
 }
 
 SaveScheduler.prototype = {
+    /**
+     * Description for _cancellAnyAlreadyScheduledSaveCall.
+     */
     _cancellAnyAlreadyScheduledSaveCall : function()    {
         clearTimeout(this.timeoutCallId)
     },
 
+    /**
+     * Description for _callSave.
+     */
     _callSave : function() {
         if(debugLogChromeOperations) { console.log("SaveScheduler(%d)::_callSave():", this.UPDATES_ACCUMULATING_PERIOD); }
 
@@ -1491,14 +1997,24 @@ SaveScheduler.prototype = {
         (this.performSaveFunction)();
     },
 
+    /**
+     * Description for _scheduleSaveCall.
+     * @param {*}    period    Description.
+     */
     _scheduleSaveCall: function(period) {
         this.timeoutCallId = setTimeout(this._callSave.bind(this), period)
     },
 
+    /**
+     * Description for _isWeAllreadyPostponeSaveExecutionForTooMuch.
+     */
     _isWeAllreadyPostponeSaveExecutionForTooMuch: function() {
         return (Date.now() - this.timeOfFirstUnsavedUpdate) > this.MAXIMUM_POSTPONE_BECAUSE_OF_UPDATES_PERIOD_BEFORE_FORCED_SAVE;
     },
 
+    /**
+     * Description for processUpdateRequest.
+     */
     processUpdateRequest: function() {
         if(!this.timeOfFirstUnsavedUpdate) this.timeOfFirstUnsavedUpdate = Date.now();
 
@@ -1512,6 +2028,9 @@ SaveScheduler.prototype = {
 };
 
 var TreeModelPersistenceManagerAbstractBase = Class.extend({
+    /**
+     * Description for init.
+     */
     init:function() {
         this.tree = null;
 
@@ -1521,22 +2040,39 @@ var TreeModelPersistenceManagerAbstractBase = Class.extend({
         //REALTIMEBACKUP this.diffSaveScheduler = new SaveScheduler(this._diff_performScheduledSave.bind(this),            70,    200);
     },
 
+    /**
+     * Description for registerTree.
+     * @param {*}    tree    Description.
+     */
     registerTree:function(tree) {
         this.tree = tree
     },
 
+    /**
+     * Description for restoreTree.
+     */
     restoreTree:function( callback /*(restoredTree)*/) {
         // Abstract;
     },
 
+    /**
+     * Description for saveTree.
+     * @param {*}    isPerformSureSynchronousSave_onViewClose    Description.
+     */
     saveTree:function(isPerformSureSynchronousSave_onViewClose) {
         // Abstract;
     },
 
+    /**
+     * Description for diff_saveTree.
+     */
     diff_saveTree:function() {
         // Abstract
     },
 
+    /**
+     * Description for saveNow.
+     */
     saveNow:function() { // Вызывается прямо из View, на onbeforeclose
         if(this.fullSaveScheduler.timeOfFirstUnsavedUpdate == null) return; // Нечего писать, ничего не менялось
 
@@ -1549,6 +2085,10 @@ var TreeModelPersistenceManagerAbstractBase = Class.extend({
         //REALTIMEBACKUP this.diffSaveScheduler.timeOfFirstUnsavedUpdate = null;
     },
 
+    /**
+     * Description for _diff_and_full_performScheduledSave.
+     * @param {*}    doLocalStorageSave    Description.
+     */
     _diff_and_full_performScheduledSave:function(doLocalStorageSave/*can be undefined*/) {
         // TODO счас нахрен этого не нужно тут diff_saveTree делать перед saveTree!!! Потому что между ними нет зависимости которая раньше предполагалось что будет
         // в любом случае diff_saveTree скорее всего не сработает. Так как для него изменений по сравнению с прошлым его вызовом врядли будет.
@@ -1556,10 +2096,16 @@ var TreeModelPersistenceManagerAbstractBase = Class.extend({
         try { this.saveTree(!!doLocalStorageSave/*true - to make sure & synchronous save in localstorage first*/)  } catch(e) { console.error("!!! saveTree exception:", e); }
     },
 
+    /**
+     * Description for _diff_performScheduledSave.
+     */
     _diff_performScheduledSave:function() {
         try { this.diff_saveTree() } catch(e) { console.error("!!! diff_saveTree3 exception:", e); }
     },
 
+    /**
+     * Description for treeUpdated.
+     */
     treeUpdated:function() {
         // TODO _full_performScheduledSave также вызывает diff_saveTree в обязательном порядке,
         // Но произойдёт это после срабатывания diffSaveScheduler таймера, но зачем он обязательно вызывает diffSave перед собой... чтото такое было насчёт того чтоб diff всегда
@@ -1583,12 +2129,18 @@ var TreeModelPersistenceManagerAbstractBase = Class.extend({
 });
 
 var TreeModelPersistenceManagerIndexedDB = TreeModelPersistenceManagerAbstractBase.extend({
+    /**
+     * Description for restoreTree.
+     */
     restoreTree:function( callback /*(restoredTree)*/) {
         readOperationsFromIndexedDB(dataBaseSchemeV34_Default, function(savedOperations) {
             callback( savedOperations ? restoreTreeFromOperations(savedOperations) : null )
         } )
     },
 
+    /**
+     * Description for saveTree.
+     */
     saveTree:function() {
         saveCurrentSessionAsOperationsToIndexedDbNow();
     },
@@ -1597,11 +2149,17 @@ var TreeModelPersistenceManagerIndexedDB = TreeModelPersistenceManagerAbstractBa
 });
 
 var TreeModelPersistenceManagerLocalStorage = TreeModelPersistenceManagerAbstractBase.extend({
+    /**
+     * Description for restoreTree.
+     */
     restoreTree:function( callback /*(restoredTree)*/) {
         var savedData = JSON.parse( localStorage.getItem(currentSessionSnapshotDbKey) );
         callback( (savedData && savedData['node']) ? restoreHierarchyFromJSO(savedData) : null );
     },
 
+    /**
+     * Description for saveTree.
+     */
     saveTree:function() {
         saveCurrentSessionAsJSONtoLocalStorage();
     },
@@ -1611,6 +2169,9 @@ var TreeModelPersistenceManagerLocalStorage = TreeModelPersistenceManagerAbstrac
 
 // TODO, это очень тупо, но мы берём treeModel из глобальной activeSession.treeModel
 var TreeModelPersistenceManagerIndexedDBAndFilesystem = TreeModelPersistenceManagerAbstractBase.extend({
+    /**
+     * Description for restoreTree.
+     */
     restoreTree:function( callback___________ /*callback___________(restoredTree)*/) {
         //FFv3 setTimeout(consoleLoglistOfAllFiles, 1); // Чтоб на нас не повлияли exceptions
 
@@ -1667,6 +2228,10 @@ var TreeModelPersistenceManagerIndexedDBAndFilesystem = TreeModelPersistenceMana
                 continueTreeInitialization(result.lastSessionSnapshotSaveTime);
             });
 
+            /**
+             * Description for continueTreeInitialization.
+             * @param {*}    lastSessionSnapshotSaveTime    Description.
+             */
             function continueTreeInitialization(lastSessionSnapshotSaveTime) {
                 try {
                 if(console) console.log("localStorage.lastSessionSnapshotSaveTime :", (new Date(lastSessionSnapshotSaveTime)).toISOString());                
@@ -1763,6 +2328,10 @@ var TreeModelPersistenceManagerIndexedDBAndFilesystem = TreeModelPersistenceMana
         });
     },
 
+    /**
+     * Description for registerTree.
+     * @param {*}    tree    Description.
+     */
     registerTree:function(tree) {
         this._super(tree);
 
@@ -1771,11 +2340,18 @@ var TreeModelPersistenceManagerIndexedDBAndFilesystem = TreeModelPersistenceMana
 
     },
 
+    /**
+     * Description for diff_saveTree.
+     */
     diff_saveTree:function() { // Вызывается также всегда перед saveTree() в обязательном порядке + сильно чаще обычного saveTree из-за настроект таймера накоплений изменений
         //REALTIMEBACKUP
         //this.prepareAndSendDiffsManager.treeUpdated();
     },
 
+    /**
+     * Description for saveTree.
+     * @param {*}    isSynchronousUnscheduledSaveRequested    Description.
+     */
     saveTree:function(isSynchronousUnscheduledSaveRequested) {
         var sessionDataAsOperations = this.tree.serializeAsOperationsLog(); //TODO нафиг надо AsOperationsLog, просто .serialize() быстрее и выдаёт JSON, ну да хер с ним
         chrome.storage.local.set({ 'lastSessionSnapshotSaveTime':    sessionDataAsOperations[sessionDataAsOperations.length-1]['time'] });
@@ -1947,6 +2523,11 @@ var TreeModelPersistenceManagerIndexedDBAndFilesystem = TreeModelPersistenceMana
 //    EOC:null
 //});
 
+/**
+ * Description for backupSessionDataInWebSQL.
+ * @param {*}    dataString    Description.
+ * @param {*}    op_array_len    Description.
+ */
 function backupSessionDataInWebSQL(dataString, op_array_len) {
     var db = openDatabase('backupdb', '1.0', 'Tree Backup', 20 * 1024 * 1024);
     db.transaction(function (tx) {
@@ -1955,6 +2536,10 @@ function backupSessionDataInWebSQL(dataString, op_array_len) {
     });
 }
 
+/**
+ * Description for readSessionDataBackupFromWebSQL.
+ * @param {*}    callback    Description.
+ */
 function readSessionDataBackupFromWebSQL( callback ) {
     var db = openDatabase('backupdb', '1.0', 'Tree Backup', 20 * 1024 * 1024);
     db.readTransaction(function (tx) {
@@ -1975,6 +2560,10 @@ function readSessionDataBackupFromWebSQL( callback ) {
 
 }
 
+/**
+ * Description for getV34DataSaveTime.
+ * @param {*}    operations    Description.
+ */
 function getV34DataSaveTime(operations) {
     if(isValidV34Data_endNodeIsEof(operations))
         return operations[operations.length-1]['time'];
@@ -1982,6 +2571,10 @@ function getV34DataSaveTime(operations) {
     return NaN;
 }
 
+/**
+ * Description for isValidV34Data_endNodeIsEof.
+ * @param {*}    operations    Description.
+ */
 function isValidV34Data_endNodeIsEof(operations) {
     return operations &&
            operations.length &&
@@ -1990,6 +2583,14 @@ function isValidV34Data_endNodeIsEof(operations) {
           (operations[operations.length-1]['type'] == DbOperations.OperationsEnum.EOF);
 }
 
+/**
+ * Description for performBackups.
+ * @param {*}    sessionDataAsOperations    Description.
+ * @param {*}    localStorageFieldForLastBackupTimestamp    Description.
+ * @param {*}    timeBetweenBackups    Description.
+ * @param {*}    backupFilePrefix    Description.
+ * @param {*}    howManyBackupsHandle    Description.
+ */
 function performBackups(sessionDataAsOperations, localStorageFieldForLastBackupTimestamp, timeBetweenBackups, backupFilePrefix, howManyBackupsHandle) {
     var lastBackupTime = Number(localStorage[localStorageFieldForLastBackupTimestamp] || 0); // 0 or 'time'
     if( Math.abs(Date.now() - lastBackupTime) > timeBetweenBackups ) {
@@ -2000,6 +2601,11 @@ function performBackups(sessionDataAsOperations, localStorageFieldForLastBackupT
     }
 }
 
+/**
+ * Description for deleteOlderBackups.
+ * @param {*}    backupFilePrefix    Description.
+ * @param {*}    howManyBackupsHandle    Description.
+ */
 function deleteOlderBackups(backupFilePrefix, howManyBackupsHandle) {
     listAllFiles(function(entries){
         var pattern = new RegExp(backupFilePrefix+"([\\d]*)-[\\d]*\\.json");
@@ -2016,6 +2622,11 @@ function deleteOlderBackups(backupFilePrefix, howManyBackupsHandle) {
     });
 }
 
+/**
+ * Description for deleteFileByFullPath.
+ * @param {*}    fullPath    Description.
+ * @param {*}    continuneCallback    Description.
+ */
 function deleteFileByFullPath(fullPath, continuneCallback) {
     continuneCallback = continuneCallback || function(){};
     webkitRequestFileSystem(PERSISTENT, 1024*1024 /*1MB*/, function(fs) {
@@ -2025,6 +2636,9 @@ function deleteFileByFullPath(fullPath, continuneCallback) {
     });
 }
 
+/**
+ * Description for consoleLoglistOfAllFiles.
+ */
 function consoleLoglistOfAllFiles() {
     listAllFiles(function(entries){
         console.log('- Files -------------------------------');
@@ -2033,15 +2647,26 @@ function consoleLoglistOfAllFiles() {
     });
 }
 
+/**
+ * Description for listAllFiles.
+ * @param {*}    callback_listResults    Description.
+ */
 function listAllFiles(callback_listResults/*[entries]*/) {
     webkitRequestFileSystem(PERSISTENT, 1024*1024, onInitFs_listAllFiles, fsErrorHandler);
 
+    /**
+     * Description for onInitFs_listAllFiles.
+     * @param {*}    fs    Description.
+     */
     function onInitFs_listAllFiles(fs) {
 
       var dirReader = fs.root.createReader();
       var entries = [];
 
       // Call the reader.readEntries() until no more results are returned.
+      /**
+       * Description for readEntries.
+       */
       var readEntries = function() {
          dirReader.readEntries (function(results) {
           if (!results.length) {
@@ -2059,6 +2684,10 @@ function listAllFiles(callback_listResults/*[entries]*/) {
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for ActiveSession.
+ * @param {*}    continueCallback    Description.
+ */
 function ActiveSession(continueCallback) {
     this.treeModel = null;
 
@@ -2095,6 +2724,9 @@ function ActiveSession(continueCallback) {
 }
 
 ActiveSession.prototype = {
+    /**
+     * Description for applyOnRemovedRecordedBeforeLastSessionExit.
+     */
     applyOnRemovedRecordedBeforeLastSessionExit : function() {
         try {
             var tabOnRemovedEvents = this.onRemovedTracker.getTabsOnRemovedEventsFromLastSession();
@@ -2126,6 +2758,10 @@ ActiveSession.prototype = {
         }
     },
 
+    /**
+     * Description for asyncSynchronizeTreeWithOpenWindowsList.
+     * @param {*}    doneCallback    Description.
+     */
     asyncSynchronizeTreeWithOpenWindowsList : function( doneCallback ) {
         var _this = this;
         chrome.windows.getAll({ 'populate': true }, function(chromeActiveWindowObjectsList) {
@@ -2192,6 +2828,9 @@ ActiveSession.prototype = {
         });
     },
 
+    /**
+     * Description for registerChromeEventsListeners.
+     */
     registerChromeEventsListeners : function () {
         //if(!chrome.tabs.onReplaced) chrome.tabs.onReplaced = {addListener:function(f){}}; // To preven errors on very old chromes where is onReplaced is not defined
 
@@ -2257,6 +2896,11 @@ ActiveSession.prototype = {
     //     //sendResponse({"isRegistered":true, "licenseKey":"KEYKEYKEY"});
     // },
     
+    /**
+     * Description for fromChrome_onTabReplaced.
+     * @param {*}    addedTabId    Description.
+     * @param {*}    removedTabId    Description.
+     */
     fromChrome_onTabReplaced : function(addedTabId, removedTabId) {
         var newTabNode = this.treeModel.onTabIdReplaced(removedTabId, addedTabId);
         if(!newTabNode) return;
@@ -2400,14 +3044,27 @@ ActiveSession.prototype = {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Description for fromChrome_onTabCreated.
+     * @param {*}    chromeTabObj    Description.
+     */
     fromChrome_onTabCreated : function(chromeTabObj) {
         return this.treeModel.fromChrome_onTabCreated(chromeTabObj);
     },
 
+    /**
+     * Description for fromChrome_onWindowCreated.
+     * @param {*}    chromeWindowObj    Description.
+     */
     fromChrome_onWindowCreated : function(chromeWindowObj) {
         return this.treeModel.fromChrome_onWindowCreated(chromeWindowObj);
     },
 
+    /**
+     * Description for fromChrome_onTabAttached.
+     * @param {*}    tabId    Description.
+     * @param {*}    attachInfo    Description.
+     */
     fromChrome_onTabAttached : function(tabId, attachInfo) {
         // attachInfo - {newWindowId:x, newPosition:n}
 
@@ -2462,6 +3119,10 @@ ActiveSession.prototype = {
         //}); // getOption('relateNewTabToOpener').then( (relateNewTabToOpener) => {  
     },
 
+    /**
+     * Description for fromChrome_onTabRemoved.
+     * @param {*}    tabId    Description.
+     */
     fromChrome_onTabRemoved : function(tabId, isWindowClosingInfo/*{isWindowClosing: true/false, windowId: 964} - CAN BE UNDEFINED! also the windowId is absent on Ubunta, always*/) {
         // Fix for ubunta, Chrome 22
         if(isWindowClosingInfo && !isWindowClosingInfo['windowId'])
@@ -2472,12 +3133,21 @@ ActiveSession.prototype = {
         this.treeModel.onActiveTabRemoved(tabId, isWindowClosingInfo);
     },
 
+    /**
+     * Description for fromChrome_onWindowRemoved.
+     * @param {*}    windowId    Description.
+     */
     fromChrome_onWindowRemoved : function(windowId) {
         //RRv3 this.onRemovedTracker.register_onWindowRemoved(windowId);
 
         this.treeModel.onActiveWindowRemoved(windowId);
     },
 
+    /**
+     * Description for fromChrome_onTabDetached.
+     * @param {*}    tabId    Description.
+     * @param {*}    detachInfo    Description.
+     */
     fromChrome_onTabDetached : function(tabId, detachInfo) {
 // Выкидываем, мы никак не используем DETACH_WAITING_LIST - но вообще так мона вычислять move между окнами инициируемые TO
 //        var detachedTabIndexInDetachList = DETACH_WAITING_LIST.indexOf(tabId);
@@ -2487,6 +3157,11 @@ ActiveSession.prototype = {
 //            do nothing. это chrome initiated move, во время onAttach его мовнем, или уже мовнули */
     },
 
+    /**
+     * Description for fromChrome_onTabMoved.
+     * @param {*}    tabId    Description.
+     * @param {*}    moveInfo    Description.
+     */
     fromChrome_onTabMoved : function(tabId, moveInfo/*{fromIndex:, toIndex:, windowId:}*/) {
         let relateNewTabToOpener = true;
         //getOption('relateNewTabToOpener').then( (relateNewTabToOpener) => {
@@ -2494,10 +3169,20 @@ ActiveSession.prototype = {
         //});
     },
 
+    /**
+     * Description for fromChrome_onTabActivated.
+     * @param {*}    activeInfo    Description.
+     */
     fromChrome_onTabActivated : function(activeInfo) {
         this.treeModel.setActiveTabInWindow(activeInfo['tabId'], activeInfo['windowId']);
     },
 
+    /**
+     * Description for fromChrome_onTabUpdated.
+     * @param {*}    tabId    Description.
+     * @param {*}    changeInfornamtion    Description.
+     * @param {*}    chromeTabObj    Description.
+     */
     fromChrome_onTabUpdated : function(tabId, changeInfornamtion, chromeTabObj) {
         // Example of log during new chromeTabObj creation by midl click
         // Tab 230 http://mamonino.livejournal.com/51107.html is created
@@ -2524,6 +3209,10 @@ ActiveSession.prototype = {
         }
     },
 
+    /**
+     * Description for fromChrome_onWindowFocusChanged.
+     * @param {*}    windowId    Description.
+     */
     fromChrome_onWindowFocusChanged : function(windowId) {
         // console.log("#### fromChrome_onWindowFocusChanged", windowId )
         // Этот комент, или то шо мы тут переформатировали код, мистически убрал багу с автоскролом на свои собственные окна
@@ -2538,6 +3227,11 @@ ActiveSession.prototype = {
         }
     },
 
+    /**
+     * Description for postponed_updateFocusedWindowState.
+     * @param {*}    _this    Description.
+     * @param {*}    windowId    Description.
+     */
     postponed_updateFocusedWindowState : function(_this, windowId) {
         /// Dont use this. here!!! use _this.!!!
 
@@ -2557,6 +3251,11 @@ ActiveSession.prototype = {
             .finally(() => winIdForWhichNeedSkipScrollToView = -1);
     },
 
+    /**
+     * Description for requestTabNodeUpdate_getFaviconHack.
+     * @param {*}    tabModel    Description.
+     * @param {*}    changeInfornamtion_status    Description.
+     */
     requestTabNodeUpdate_getFaviconHack : function(tabModel, changeInfornamtion_status) {
         // Note that before we come to declared in this method callback many things can happen,
         // for example tab can become detached during move operation (or even deleted) and will not be accesible by chrome.tabs.get(),
@@ -2620,6 +3319,12 @@ ActiveSession.prototype = {
         });
     },
 
+    /**
+     * Description for chromeInitiated_moveTabNode.
+     * @param {*}    tabId    Description.
+     * @param {*}    moveInfo    Description.
+     * @param {*}    relateNewTabToOpener    Description.
+     */
     chromeInitiated_moveTabNode : function(tabId, moveInfo/*{fromIndex:, toIndex:, windowId:}*/, relateNewTabToOpener) {
         var nodeModelForMovedTab = this.treeModel.findActiveTab(tabId);
         var nodeModelForAffectedWindow = this.treeModel.findActiveWindow(moveInfo.windowId);
@@ -2665,6 +3370,12 @@ ActiveSession.prototype = {
 
 const TABS_OUTLINER_DEFAULT_WIDTH = 400;
 
+/**
+ * Description for cloneTabsOutlinerView.
+ * @param {*}    tabsOutlinerInitiatorWindow_outerWidth    Description.
+ * @param {*}    tabsOutlinerInitiatorWindow_screenX    Description.
+ * @param {*}    sourceViewPageYOffset    Description.
+ */
 function cloneTabsOutlinerView( tabsOutlinerInitiatorWindow_outerWidth, tabsOutlinerInitiatorWindow_screenX, sourceViewPageYOffset ) {
     getDisplayWorkAreaBounds( ( primaryDisplayWorkArea) => {
         var createData =  {
@@ -2691,6 +3402,14 @@ function cloneTabsOutlinerView( tabsOutlinerInitiatorWindow_outerWidth, tabsOutl
     });
 }
 
+/**
+ * Description for createNewActiveSessionViewWin.
+ * @param {*}    focusNodeId    Description.
+ * @param {*}    altFocusNodeId    Description.
+ * @param {*}    scrollToViewWinId    Description.
+ * @param {*}    newWindowCreatedCallback    Description.
+ * @param {*}    donecallback    Description.
+ */
 function createNewActiveSessionViewWin( focusNodeId, altFocusNodeId, scrollToViewWinId, newWindowCreatedCallback, donecallback ) {
     getDisplayWorkAreaBounds( ( primaryDisplayWorkArea) => {
         var createData =  {
@@ -2752,10 +3471,19 @@ function createNewActiveSessionViewWin( focusNodeId, altFocusNodeId, scrollToVie
     });
 }
 
+/**
+ * Description for preventScrollToViewInNextOnFocusChangeForWinId.
+ * @param {*}    winId    Description.
+ */
 function preventScrollToViewInNextOnFocusChangeForWinId(winId) {
     winIdForWhichNeedSkipScrollToView = winId;
 }
 
+/**
+ * Description for focusWindow.
+ * @param {*}    winId    Description.
+ * @param {*}    dontScrollToView    Description.
+ */
 function focusWindow(winId, dontScrollToView) {
     if(!winId) return;
     if(dontScrollToView) preventScrollToViewInNextOnFocusChangeForWinId(winId);
@@ -2763,6 +3491,13 @@ function focusWindow(winId, dontScrollToView) {
     chrome.windows.update(winId, {'focused':true});
 }
 
+/**
+ * Description for focusTab.
+ * @param {*}    winId    Description.
+ * @param {*}    tabId    Description.
+ * @param {*}    donecallback    Description.
+ * @param {*}    dontScrollToView    Description.
+ */
 function focusTab(winId, tabId, donecallback, dontScrollToView) {
     if(dontScrollToView) preventScrollToViewInNextOnFocusChangeForWinId(winId);
 
@@ -2777,6 +3512,18 @@ function focusTab(winId, tabId, donecallback, dontScrollToView) {
     });
 }
 
+/**
+ * Description for focusTabIfAliveCreateIfAbsent.
+ * @param {*}    winId    Description.
+ * @param {*}    tabId    Description.
+ * @param {*}    focusNodeId    Description.
+ * @param {*}    altFocusNodeId    Description.
+ * @param {*}    scrollToViewWinId    Description.
+ * @param {*}    createMethod    Description.
+ * @param {*}    focusMethod    Description.
+ * @param {*}    newWindowCreatedCallback    Description.
+ * @param {*}    donecallback    Description.
+ */
 function focusTabIfAliveCreateIfAbsent(winId, tabId, focusNodeId, altFocusNodeId, scrollToViewWinId, createMethod, focusMethod, newWindowCreatedCallback, donecallback){
     chrome.windows.getAll({'populate':true}, function(windowsList) {
         var ourWindow = windowsList.filter( function(chromeWindowObj){ return chromeWindowObj.id === winId } );
@@ -2795,15 +3542,27 @@ function focusTabIfAliveCreateIfAbsent(winId, tabId, focusNodeId, altFocusNodeId
     });
 }
 
+/**
+ * Description for updateBrowserActionTitle.
+ */
 function updateBrowserActionTitle() {
     calculateNumberOfTabsAndWindow(setStatsInBrowserActionTitle);
 }
 
+/**
+ * Description for setStatsInBrowserActionTitle.
+ * @param {*}    tabsCount    Description.
+ * @param {*}    windowsCount    Description.
+ */
 function setStatsInBrowserActionTitle(tabsCount, windowsCount) {
     chrome.action.setBadgeText({'text': ""+tabsCount});
     chrome.action.setTitle({'title': ""+windowsCount+" windows / "+tabsCount+" tabs"});
 }
 
+/**
+ * Description for calculateNumberOfTabsAndWindow.
+ * @param {*}    callback    Description.
+ */
 function calculateNumberOfTabsAndWindow(callback) {
     chrome.windows.getAll({'populate':true}, function(windowsList) {
         var windowsCount = windowsList.length;
@@ -2814,18 +3573,35 @@ function calculateNumberOfTabsAndWindow(callback) {
     });
 }
 
+/**
+ * Description for isThisWindowContainOurExtentionViews.
+ * @param {*}    windowId    Description.
+ */
 function isThisWindowContainOurExtentionViews(windowId) {
     return false; //FASTFORWARDv3
     var views = chrome.extension.getViews({'windowId':windowId});
     return (views && views.length > 0);
 }
 
+/**
+ * Description for supressUnexpectedRemovedTabIdErrorFor.
+ * @param {*}    id    Description.
+ */
 function supressUnexpectedRemovedTabIdErrorFor(id) {
     notUnexpectedRemovedTabsIds.push(id);
 }
+/**
+ * Description for supressUnexpectedRemovedWindowIdErrorFor.
+ * @param {*}    id    Description.
+ */
 function supressUnexpectedRemovedWindowIdErrorFor(id) {
     notUnexpectedRemovedWindowsIds.push(id);
 }
+/**
+ * Description for isIdUnexpected.
+ * @param {*}    notUnexpectedIds    Description.
+ * @param {*}    id    Description.
+ */
 function isIdUnexpected(notUnexpectedIds, id) {
     var i = notUnexpectedIds.indexOf(id);
     if(i >= 0)
@@ -2833,17 +3609,32 @@ function isIdUnexpected(notUnexpectedIds, id) {
     else
         return true;
 }
+/**
+ * Description for isRemovedTabIdUnexpected.
+ * @param {*}    id    Description.
+ */
 function isRemovedTabIdUnexpected(id) {
     return isIdUnexpected(notUnexpectedRemovedTabsIds, id);
 }
+/**
+ * Description for isRemovedWindowIdUnexpected.
+ * @param {*}    id    Description.
+ */
 function isRemovedWindowIdUnexpected(id) {
     return isIdUnexpected(notUnexpectedRemovedWindowsIds, id);
 }
 
+/**
+ * Description for openTabsOutlinerMainView.
+ */
 function openTabsOutlinerMainView() {
     getLastFocusedTabIdAndWindowId(createOrFocusTabsOutlinerTab);
 }
 
+/**
+ * Description for getLastFocusedTabIdAndWindowId.
+ * @param {*}    callback    Description.
+ */
 function getLastFocusedTabIdAndWindowId(callback) {
     chrome.windows.getLastFocused({'populate':true}, function(chromeWindowObj) {
         var selectedTabId    = getSelectedTabIdInWindowObj(chromeWindowObj);
@@ -2852,6 +3643,10 @@ function getLastFocusedTabIdAndWindowId(callback) {
     });
 }
 
+/**
+ * Description for getSelectedTabIdInWindowObj.
+ * @param {*}    chromeWindowObj    Description.
+ */
 function getSelectedTabIdInWindowObj(chromeWindowObj) {
     if(!chromeWindowObj)         return undefined;
     if(!chromeWindowObj['tabs']) return undefined;
@@ -2863,10 +3658,20 @@ function getSelectedTabIdInWindowObj(chromeWindowObj) {
     return selectedTabId;
 }
 
+/**
+ * Description for browserAction_onClicked.
+ * @param {*}    clickedChromeTabObj    Description.
+ */
 function browserAction_onClicked(clickedChromeTabObj) {
     createOrFocusTabsOutlinerTab(clickedChromeTabObj.id,  clickedChromeTabObj.windowId);
 }
 
+/**
+ * Description for createOrFocusTabsOutlinerTab.
+ * @param {*}    clickedChromeTabObj_id    Description.
+ * @param {*}    clickedChromeTabObj_windowId    Description.
+ * @param {*}    continueCallback    Description.
+ */
 function createOrFocusTabsOutlinerTab(clickedChromeTabObj_id,  clickedChromeTabObj_windowId, continueCallback) {
     // TODO checkForOutOfScreen Conditions For Tabs Outliner window - if so - resize & move window to default (or at least better) position/size
 
@@ -2880,6 +3685,10 @@ function createOrFocusTabsOutlinerTab(clickedChromeTabObj_id,  clickedChromeTabO
         focusOpenTabNodeId, altFocusNodeId, scrollToViewWinId,
         createNewActiveSessionViewWin,
         focusTab,
+        /**
+         * Description for newWindowCreatedCallback.
+         * @param {*}    chromeWindowObj    Description.
+         */
         function newWindowCreatedCallback(chromeWindowObj) {
             mainActiveSessionViewWinId = chromeWindowObj.id;
             // manifest v2
@@ -2896,6 +3705,10 @@ function createOrFocusTabsOutlinerTab(clickedChromeTabObj_id,  clickedChromeTabO
             // Одна вот только проблема - в момент этого вызова окно ещё не успело создаться полностью - до завершения onload - и этот setFocused скоерее всего не привёл к скролу
             // По этой причине мы ещё раз попросим этот скрол в doneCallback(), всёравно мы там просим селектинг таба с которого кликнули
         },
+        /**
+         * Description for doneCallback.
+         * @param {*}    tabsOutlinerViewWindowId    Description.
+         */
         function doneCallback(tabsOutlinerViewWindowId) {
             // Устанавливаем курсор на таб с которого открыли tree view
 
@@ -2995,25 +3808,47 @@ function createOrFocusTabsOutlinerTab(clickedChromeTabObj_id,  clickedChromeTabO
 //    "onclick" : clickHandler
 //});
 
+/**
+ * Description for clickHandler.
+ * @param {*}    e    Description.
+ * @param {*}    tab    Description.
+ */
 function clickHandler(e, tab) {
     console.log( e.pageUrl, e.selectionText, e.mediaType, e.linkUrl, e.srcUrl, e, tab );
 }
 
+/**
+ * Description for BackgroundInterpagesComunicationStorageForDragedItems.
+ */
 function BackgroundInterpagesComunicationStorageForDragedItems() {
     this.tabsOutlinerDraggedModel = null;
 }
 
+/**
+ * Description for BackgroundInterpagesComunicationStorageForDragedItems.prototype.setDragedModel.
+ * @param {*}    model    Description.
+ */
 BackgroundInterpagesComunicationStorageForDragedItems.prototype.setDragedModel = function (model) {
         this.tabsOutlinerDraggedModel = model;
 };
+/**
+ * Description for BackgroundInterpagesComunicationStorageForDragedItems.prototype.clearDragedModel.
+ */
 BackgroundInterpagesComunicationStorageForDragedItems.prototype.clearDragedModel = function () {
         this.tabsOutlinerDraggedModel = null;
 };
+/**
+ * Description for BackgroundInterpagesComunicationStorageForDragedItems.prototype.getDragedModel.
+ */
 BackgroundInterpagesComunicationStorageForDragedItems.prototype.getDragedModel = function () {
         return this.tabsOutlinerDraggedModel;
 };
 
 // ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for closeAllWindowsExceptThis.
+ * @param {*}    excludedChromeWindowObjId    Description.
+ */
 function closeAllWindowsExceptThis(excludedChromeWindowObjId) {
     activeSession.treeModel.getListOfAllActiveWindowNodes().forEach( function(openWindowNode){
         if( openWindowNode.chromeWindowObj.id != excludedChromeWindowObjId )
@@ -3022,21 +3857,38 @@ function closeAllWindowsExceptThis(excludedChromeWindowObjId) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for getActiveSessionTreeModel.
+ */
 function getActiveSessionTreeModel() {
     return activeSession.treeModel;
 }
 
 
+/**
+ * Description for fsErrorHandler.
+ * @param {*}    err    Description.
+ */
 function fsErrorHandler(err){
     console.error('ERROR on file system access. FileError.code:', err['code']);
 }
 
 
+/**
+ * Description for saveSessionDataAsFile_fsErrorHandler.
+ * @param {*}    err    Description.
+ */
 function saveSessionDataAsFile_fsErrorHandler(err){
     console.error('ERROR on file system access. FileError.code:', err['code']);
     window['treeWriteFail'] = true;
 }
 
+/**
+ * Description for saveSessionDataAsFile.
+ * @param {*}    filename    Description.
+ * @param {*}    sessionData    Description.
+ * @param {*}    onwriteend    Description.
+ */
 function saveSessionDataAsFile(filename, sessionData, onwriteend) {
     if(debugLogChromeOperations) if(console) console.log('saveSessionDataAsFile START', filename, new Date().toTimeString());
 
@@ -3044,10 +3896,17 @@ function saveSessionDataAsFile(filename, sessionData, onwriteend) {
     var exportDataBlob = new Blob([exportDataString]); // Теоретически строки будут как UTF-8 закодированы
     webkitRequestFileSystem(PERSISTENT/*TEMPORARY*/, exportDataBlob.size+100, fsReady, saveSessionDataAsFile_fsErrorHandler);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs){
         fs.root.getFile(filename, {create: true, exclusive: false}, function(fileEntry) {
             fileEntry.createWriter(function(fileWriter) {
                 fileWriter.truncate(0);
+                /**
+                 * Description for fileWriter.onwriteend.
+                 */
                 fileWriter.onwriteend = function() {
                     fileWriter.onwriteend = onwriteend || null;  // кстате будет рекурсия если onwriteend не переписать
                     fileWriter.write(exportDataBlob);
@@ -3058,18 +3917,34 @@ function saveSessionDataAsFile(filename, sessionData, onwriteend) {
 }
 
 
+/**
+ * Description for storeUserSelectedFile.
+ * @param {*}    file    Description.
+ */
 function storeUserSelectedFile(file) {
     userSelectedFileToOpen = file;
 }
 
+/**
+ * Description for readSessionDataFromUserSelectedFile.
+ * @param {*}    callback    Description.
+ */
 function readSessionDataFromUserSelectedFile(callback) {
     readJsonOperationsFromFile(userSelectedFileToOpen, callback);
 }
 
 // Даже если файла нет или любая проблема мы вызовем callback.
+/**
+ * Description for readSessionDataFromFile.
+ * @param {*}    filename    Description.
+ */
 function readSessionDataFromFile(filename, callback/*(fileData or error)*/) {
     webkitRequestFileSystem(PERSISTENT, 1024*1024, fsReady, callback /*fsErrorHandler*/);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs) {
       fs.root.getFile(filename, {create: false}, function(fileEntry) {
         fileEntry.file( function(file) { readJsonOperationsFromFile(file, callback) }, callback /*errorCallback*/);
@@ -3077,8 +3952,17 @@ function readSessionDataFromFile(filename, callback/*(fileData or error)*/) {
     }
 }
 
+/**
+ * Description for readJsonOperationsFromFile.
+ * @param {*}    file    Description.
+ * @param {*}    callback    Description.
+ */
 function readJsonOperationsFromFile(file, callback) {
     var reader = new FileReader();
+    /**
+     * Description for reader.onloadend.
+     * @param {*}    e    Description.
+     */
     reader.onloadend = function(e) {
         try { var operations = JSON.parse(e.target.result); } catch(parseError) { callback(parseError); }
         callback(operations);
@@ -3088,6 +3972,10 @@ function readJsonOperationsFromFile(file, callback) {
 }
 
 // callback(fileEntry)
+/**
+ * Description for saveCurrentSessionAsFileNow.
+ * @param {*}    callback    Description.
+ */
 function saveCurrentSessionAsFileNow(callback) {
     console.time("= Save Tree Total ====");
 
@@ -3110,6 +3998,10 @@ function saveCurrentSessionAsFileNow(callback) {
 
     webkitRequestFileSystem(TEMPORARY/*PERSISTENT*/, exportDataBlob.size+100, fsReady, fsErrorHandler);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs){
         fs.root.getFile('tree-exported-'+(new Date()).toDateString().replace(/ /g,'-')+'.tree', {create: true, exclusive: false}, function(fileEntry) {
             console.log('A file ' + fileEntry.name + ' was created successfully.');
@@ -3126,6 +4018,10 @@ function saveCurrentSessionAsFileNow(callback) {
     }
 }
 
+/**
+ * Description for processCommand.
+ * @param {*}    command    Description.
+ */
 function processCommand(command) {
     calculateNumberOfTabsAndWindow(function(tabsCount, windowsCount) {
         getLastFocusedTabIdAndWindowId( function(tabId, windowId) {
@@ -3147,6 +4043,10 @@ function processCommand(command) {
 
 }
 
+/**
+ * Description for saveTab.
+ * @param {*}    tabId    Description.
+ */
 function saveTab(tabId) {
     var tabModel = activeSession.treeModel.findActiveTab(tabId);
     if(tabModel)
@@ -3156,6 +4056,11 @@ function saveTab(tabId) {
 
 }
 
+/**
+ * Description for saveWindow.
+ * @param {*}    tabId    Description.
+ * @param {*}    windowId    Description.
+ */
 function saveWindow(tabId, windowId) {
     var windowModel = activeSession.treeModel.findActiveWindow(windowId);
     if(windowModel)
@@ -3164,6 +4069,12 @@ function saveWindow(tabId, windowId) {
         console.error("ERROR NOT ! STM #qdfhwve#  ", tabId);
 }
 
+/**
+ * Description for saveAllWindows.
+ * @param {*}    tabId    Description.
+ * @param {*}    windowId    Description.
+ * @param {*}    tabsOutlinerViewWinId    Description.
+ */
 function saveAllWindows(tabId, windowId, tabsOutlinerViewWinId) {
     closeAllWindowsExceptThis(tabsOutlinerViewWinId);
 }
@@ -3171,12 +4082,20 @@ function saveAllWindows(tabId, windowId, tabsOutlinerViewWinId) {
 // License Key Checks ---------------------------------------------------------------------------------------------------------------------
 
 // continue_callback(null) - no permission granted, continue_callback(userInfo{email:'email@zzz.xxx', id:'2342342'}) if(!userInfo.email) then permission exist but no email (Chrome not logged in)
+/**
+ * Description for getIdentityEmailWithoutInteractiveRequestingEmailPermissions.
+ * @param {*}    continue_callback    Description.
+ */
 function getIdentityEmailWithoutInteractiveRequestingEmailPermissions( continue_callback ) {
     chrome.identity.getProfileUserInfo( function(userInfo) {
             continue_callback(userInfo);
     });
 }
 
+/**
+ * Description for isEmailPemissionPresent.
+ * @param {*}    callback    Description.
+ */
 function isEmailPemissionPresent(callback) {
     chrome.permissions.contains({
         permissions: ['identity.email'],
@@ -3185,6 +4104,10 @@ function isEmailPemissionPresent(callback) {
 }
 
 // Returns false if it's not a corectly formated key object
+/**
+ * Description for setLicenseKey.
+ * @param {*}    newLicenseKey_base64    Description.
+ */
 function setLicenseKey(newLicenseKey_base64) {
     var keyObj = unpackLicenseKey(newLicenseKey_base64);
 
@@ -3195,6 +4118,10 @@ function setLicenseKey(newLicenseKey_base64) {
 
     return true;
 }
+/**
+ * Description for unpackLicenseKey.
+ * @param {*}    licenseKeyUrlString    Description.
+ */
 function unpackLicenseKey(licenseKeyUrlString) {
     var keyString =  atob(decodeURIComponent(licenseKeyUrlString));
     try {
@@ -3206,10 +4133,20 @@ function unpackLicenseKey(licenseKeyUrlString) {
     return keyObj;
 }
 
+/**
+ * Description for packLicenseKey.
+ * @param {*}    keyObj    Description.
+ */
 function packLicenseKey(keyObj) {
     return encodeURIComponent(btoa( JSON.stringify(keyObj) ));
 }
 
+/**
+ * Description for _addLicenseKeyToLocalStorage.
+ * @async
+ * @param {*}    keyObj    Description.
+ * @param {*}    isFromSyncStorage    Description.
+ */
 async function _addLicenseKeyToLocalStorage(keyObj, isFromSyncStorage) {
     // We support multiple license keys just to not implement any additional dialogs that propose to drop previous key
     // in case user folow the options.html?setLey link with the other key
@@ -3231,6 +4168,10 @@ async function _addLicenseKeyToLocalStorage(keyObj, isFromSyncStorage) {
 }
 
 
+/**
+ * Description for getLicenseKeys.
+ * @async
+ */
 async function getLicenseKeys() {
     let localKeys = (await chrome.storage.local.get('licenseKeys')).licenseKeys;
     let syncKeys = (await chrome.storage.sync.get('licenseKeys')).licenseKeys;
@@ -3238,6 +4179,11 @@ async function getLicenseKeys() {
 }
 
 
+/**
+ * Description for console_log_licenseKeysLinks.
+ * @async
+ * @param {*}    console    Description.
+ */
 async function console_log_licenseKeysLinks(console) {
     var keys = (await chrome.storage.local.get('licenseKeys')).licenseKeys || [];
     keys.forEach(function(key){
@@ -3250,6 +4196,10 @@ async function console_log_licenseKeysLinks(console) {
 
 // Тут и дальше я использую catch для сообщения о невалидном лицензионном ключе, это не очень здорово так как туда и просто exceptions могут упасть.
 // надо использовать тока then() и передавать флаг валидности через параметр
+/**
+ * Description for checkLicenseKeySignature_promise.
+ * @param {*}    licenseKeyObj    Description.
+ */
 function checkLicenseKeySignature_promise(licenseKeyObj) {
     var message   = licenseKeyObj.timestamp+licenseKeyObj.serial+licenseKeyObj.product;
     var signature = licenseKeyObj.signature;
@@ -3265,6 +4215,11 @@ function checkLicenseKeySignature_promise(licenseKeyObj) {
                       });
 }
 
+/**
+ * Description for isLicenseKeySignatureValid.
+ * @async
+ * @param {*}    licenseKeyObj    Description.
+ */
 async function isLicenseKeySignatureValid(licenseKeyObj) {
     var message   = licenseKeyObj.timestamp+licenseKeyObj.serial+licenseKeyObj.product;
     var signature = licenseKeyObj.signature;
@@ -3272,6 +4227,12 @@ async function isLicenseKeySignatureValid(licenseKeyObj) {
     return  SignatureValidator.isMessageSignatureValid_promise(message, signature);
 }
 
+/**
+ * Description for getAnyValidLicenseKey.
+ * @async
+ * @param {*}    licenseKeysArray    Description.
+ * @param {*}    userEmail    Description.
+ */
 async function getAnyValidLicenseKey(licenseKeysArray, userEmail) {
     let serialNumber = await calculateSerialNumber_promise(userEmail);
 
@@ -3285,6 +4246,12 @@ async function getAnyValidLicenseKey(licenseKeysArray, userEmail) {
     return null;
 }
 
+/**
+ * Description for checkAndUpdateLicenseStatusInAllViews.
+ * @async
+ * @param {*}    onSignInChanged_accountInfo    Description.
+ * @param {*}    onSignInChanged_isSignedIn    Description.
+ */
 async function checkAndUpdateLicenseStatusInAllViews( onSignInChanged_accountInfo, onSignInChanged_isSignedIn ) {
     var licenseKeys = await getLicenseKeys();
 
@@ -3349,33 +4316,63 @@ async function checkAndUpdateLicenseStatusInAllViews( onSignInChanged_accountInf
 //     });
 // }
 
+/**
+ * Description for notifyAllViews_validLicenseState.
+ * @param {*}    isUserEmailAccessible    Description.
+ * @param {*}    isLicenseKeyPresent    Description.
+ * @param {*}    userInfoEmail    Description.
+ */
 function notifyAllViews_validLicenseState(licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/ ) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_setLicenseState_valid', licenseStateValues:licenseStateValues});
     //callOnAllViews('setLicenseState_valid', licenseStateValues);
 }
+/**
+ * Description for notifyAllViews_invalidLicenseState_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey.
+ * @param {*}    licenseStateValues    Description.
+ */
 function notifyAllViews_invalidLicenseState_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey(licenseStateValues) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey', licenseStateValues:licenseStateValues});
     //callOnAllViews('setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey', licenseStateValues);
 }
+/**
+ * Description for notifyAllViews_invalidLicenseState_KeyPresentButChromeIsNotSignedIn.
+ * @param {*}    licenseStateValues    Description.
+ */
 function notifyAllViews_invalidLicenseState_KeyPresentButChromeIsNotSignedIn(licenseStateValues) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn', licenseStateValues:licenseStateValues});
     //callOnAllViews('setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn', licenseStateValues);
 }
+/**
+ * Description for notifyAllViews_invalidLicenseState_KeyPresentChromeIsSignedInButNoEmailPermission.
+ * @param {*}    licenseStateValues    Description.
+ */
 function notifyAllViews_invalidLicenseState_KeyPresentChromeIsSignedInButNoEmailPermission(licenseStateValues) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPermission', licenseStateValues:licenseStateValues});
     //callOnAllViews('setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPermission', licenseStateValues);
 }
+/**
+ * Description for notifyAllViews_invalidLicenseState_NoLicenseKey.
+ * @param {*}    licenseStateValues    Description.
+ */
 function notifyAllViews_invalidLicenseState_NoLicenseKey(licenseStateValues) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_setLicenseState_invalid_NoLicenseKey', licenseStateValues:licenseStateValues});
     //callOnAllViews('setLicenseState_invalid_NoLicenseKey', licenseStateValues);
 }
 
+/**
+ * Description for optionsChanged_notifyAllViews.
+ * @param {*}    changedOption    Description.
+ */
 function optionsChanged_notifyAllViews(changedOption) {
     viewsCommunicationInterface.postMessageToAllViews({command:'msg2view_optionsChanged_message', changedOption:changedOption});
     //callOnAllViews('optionsChanged_message', changedOption);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for getArrayFromLocalStorage.
+ * @param {*}    arrayName    Description.
+ */
 function getArrayFromLocalStorage(arrayName) {
     try {
         var r = JSON.parse(localStorage[arrayName]);
@@ -3386,10 +4383,19 @@ function getArrayFromLocalStorage(arrayName) {
     return r;
 }
 
+/**
+ * Description for setArrayToLocalStorage.
+ * @param {*}    arrayName    Description.
+ * @param {*}    arrayObj    Description.
+ */
 function setArrayToLocalStorage(arrayName, arrayObj) {
     localStorage[arrayName] = JSON.stringify(arrayObj);
 }
 
+/**
+ * Description for firstUseOfEventMark.
+ * @param {*}    eventTitle    Description.
+ */
 function firstUseOfEventMark(eventTitle) {
     var alreadyFiredEventsArray = getArrayFromLocalStorage('alreadyFiredEventsArray');
 
@@ -3402,34 +4408,61 @@ function firstUseOfEventMark(eventTitle) {
     }
 }
 
+/**
+ * Description for pad4.
+ * @param {*}    n    Description.
+ */
 function pad4(n) {
     var padding = "0000";
     return (padding + n).slice(-padding.length);
 }
+/**
+ * Description for beforeAfter.
+ * @param {*}    n    Description.
+ */
 function beforeAfter(n) {
     if(n > 0)  // Install after the Paid version first release
         return 'B'+pad4( n | 0);
     else   // Install before the Paid version first release
         return 'A'+pad4(-n | 0);  // -0.1 => 0
 }
+/**
+ * Description for getInstallTimestamp.
+ */
 function getInstallTimestamp() {
     return Number(localStorage['install']);
 }
 
+/**
+ * Description for msecondsInstalledBeforePaidRelease.
+ */
 function msecondsInstalledBeforePaidRelease() {
     return (new Date(2015, 9, 28)).getTime() - (getInstallTimestamp() || 0); // 9 - October (from 0)
 }
 
+/**
+ * Description for getInstanceInstallDayDimension.
+ */
 function getInstanceInstallDayDimension() {
     return getInstallDimension(   24*60*60*1000);
 }
+/**
+ * Description for getInstanceInstallWeekDimension.
+ */
 function getInstanceInstallWeekDimension() {
     return getInstallDimension( 7*24*60*60*1000);
 }
+/**
+ * Description for getInstanceInstallMonthDimension.
+ */
 function getInstanceInstallMonthDimension() {
     return getInstallDimension(30*24*60*60*1000);
 }
 
+/**
+ * Description for getInstallDimension.
+ * @param {*}    k    Description.
+ */
 function getInstallDimension(k) {
     if(!getInstallTimestamp()) return 'NONE';
     var days_weeks_months = msecondsInstalledBeforePaidRelease() / k;
@@ -3469,6 +4502,10 @@ function getInstallDimension(k) {
 // //ga('set', 'dataSource', 'app'); // Maybe need change to 'ext' actually (or 'web'), or just skip this
 
 
+/**
+ * Description for ga_screenview.
+ * @param {*}    screenName    Description.
+ */
 function ga_screenview(screenName) {
     var page = '/'+screenName.replace(/ /g,'');
 
@@ -3484,16 +4521,31 @@ function ga_screenview(screenName) {
 }
 
 
+/**
+ * Description for incrementLocalStorageValue.
+ * @param {*}    valueName    Description.
+ */
 function incrementLocalStorageValue(valueName) {
     var v = Number(localStorage['valueName']) || 0;
     localStorage[valueName] = ++v;
 }
 
+/**
+ * Description for setFirstUseDimension.
+ * @param {*}    titleForFirstUseCheck    Description.
+ */
 function setFirstUseDimension(titleForFirstUseCheck) {
     return { 'dimension2': firstUseOfEventMark(titleForFirstUseCheck) }; // dimension2 - isFirstUse 'Y'/'N'
 }
 
 
+/**
+ * Description for ga_event_access_states.
+ * @param {*}    eventTitle    Description.
+ * @param {*}    chromeSignedInState    Description.
+ * @param {*}    emailGrantedState    Description.
+ * @param {*}    gdriveAccessGrantedState    Description.
+ */
 function ga_event_access_states(eventTitle, chromeSignedInState, emailGrantedState, gdriveAccessGrantedState) {
     if(chromeSignedInState)        ga_set_access_state_dimension('dimension9',  'profile_sign_in', chromeSignedInState);
 
@@ -3504,6 +4556,12 @@ function ga_event_access_states(eventTitle, chromeSignedInState, emailGrantedSta
     ga_event(eventTitle);
 }
 
+/**
+ * Description for ga_set_access_state_dimension.
+ * @param {*}    dimensionId    Description.
+ * @param {*}    dimensionStateName    Description.
+ * @param {*}    newDimensionState    Description.
+ */
 function ga_set_access_state_dimension(dimensionId, dimensionStateName, newDimensionState) {
     ga_signin_state_dimension(dimensionStateName, newDimensionState);
     ga('set', dimensionId, get_signin_state_dimension(dimensionStateName));
@@ -3526,6 +4584,11 @@ function ga_set_access_state_dimension(dimensionId, dimensionStateName, newDimen
 //            YN
 //                ...
 
+/**
+ * Description for ga_signin_state_dimension.
+ * @param {*}    dimensionName    Description.
+ * @param {*}    newState    Description.
+ */
 function ga_signin_state_dimension(dimensionName, newState) {
     var currentState = get_signin_state_dimension(dimensionName);
 
@@ -3556,10 +4619,19 @@ function ga_signin_state_dimension(dimensionName, newState) {
 // 'profile_sign_in'
 // 'email_access'
 // 'gdrive_access'
+/**
+ * Description for get_signin_state_dimension.
+ * @param {*}    dimensionName    Description.
+ */
 function get_signin_state_dimension(dimensionName) {
     return localStorage[dimensionName] || '-';
 }
 
+/**
+ * Description for ga_event_backup_view.
+ * @param {*}    eventTitle    Description.
+ * @param {*}    errorText    Description.
+ */
 function ga_event_backup_view(eventTitle, errorText) {
     var category = 'Backup View';
     var action   = eventTitle;
@@ -3567,6 +4639,10 @@ function ga_event_backup_view(eventTitle, errorText) {
     ga('send', 'event', category, action, label, setFirstUseDimension(category + '#' + action));
 }
 
+/**
+ * Description for ga_event.
+ * @param {*}    eventTitle    Description.
+ */
 function ga_event(eventTitle) {
     var category = 'Flow';
     var action   = eventTitle;
@@ -3574,6 +4650,11 @@ function ga_event(eventTitle) {
     ga('send', 'event', category, action, label, setFirstUseDimension(category + '#' + action) );
 }
 
+/**
+ * Description for ga_event_error.
+ * @param {*}    eventTitle    Description.
+ * @param {*}    errorText    Description.
+ */
 function ga_event_error(eventTitle, errorText) {
     var category = 'Error';
     var action   = eventTitle;
@@ -3581,6 +4662,10 @@ function ga_event_error(eventTitle, errorText) {
     ga('send', 'event', category, action, label, setFirstUseDimension(category + '#' + action + '#' + label) );
 }
 
+/**
+ * Description for ga_event_backup_started.
+ * @param {*}    isInteractive    Description.
+ */
 function ga_event_backup_started(isInteractive) {
     var category = 'Backup';
     var action   = 'Backup Started';
@@ -3590,6 +4675,10 @@ function ga_event_backup_started(isInteractive) {
     incrementLocalStorageValue('backup_atemptCount');
 }
 
+/**
+ * Description for ga_event_backup_succeded.
+ * @param {*}    backupRequestBodySize    Description.
+ */
 function ga_event_backup_succeded(backupRequestBodySize) {
     var category = 'Backup';
     var action   = 'Backup Succeded';
@@ -3600,6 +4689,10 @@ function ga_event_backup_succeded(backupRequestBodySize) {
     incrementLocalStorageValue('backup_successCount');
 }
 
+/**
+ * Description for ga_event_backup_error.
+ * @param {*}    errorReason    Description.
+ */
 function ga_event_backup_error(errorReason) {
     var category = 'Backup';
     var action   = 'Backup Failed';
@@ -3613,6 +4706,12 @@ function ga_event_backup_error(errorReason) {
 // License Key Link Monitor --------------------------------------------------------------------------------------------------
 
 
+/**
+ * Description for licenseKeyLinkHandler.
+ * @param {*}    tabId    Description.
+ * @param {*}    changeInfornamtion    Description.
+ * @param {*}    tab    Description.
+ */
 function licenseKeyLinkHandler(tabId, changeInfornamtion, tab) {  
     var match = licenseKeyLinkRegExp.exec(tab.url);
     if (match && match[1]) {
@@ -3625,6 +4724,10 @@ function licenseKeyLinkHandler(tabId, changeInfornamtion, tab) {
     }
 }
 
+/**
+ * Description for _addLicenseKeyToSyncStorage.
+ * @param {*}    keyObj    Description.
+ */
 function _addLicenseKeyToSyncStorage(keyObj) { // called from options.js by processUrlSetKeyCommand(), so only in case user MANULY opens the license key link
     chrome.storage.sync.get({'licenseKeys': []}, function getKeys(syncDataObj) {
         var keysArray = syncDataObj['licenseKeys'];
@@ -3635,10 +4738,19 @@ function _addLicenseKeyToSyncStorage(keyObj) { // called from options.js by proc
     });
 }
 
+/**
+ * Description for adapter_proceedLicenseKeysFromSyncStorage.
+ * @param {*}    syncDataObj    Description.
+ */
 function adapter_proceedLicenseKeysFromSyncStorage(syncDataObj) {
     proceedLicenseKeysFromSyncStorage(syncDataObj['licenseKeys']);
 }
 
+/**
+ * Description for proceedLicenseKeysFromSyncStorage.
+ * @async
+ * @param {*}    licensekeys    Description.
+ */
 async function proceedLicenseKeysFromSyncStorage(licensekeys) {
     if(!licensekeys) return; // это реально происходит если dropkey() было вызвано и sync storage было очищено, тогда срабатывает onChanged но changes['licenseKeys']['newValue'] == undefined
 
@@ -3661,6 +4773,9 @@ async function proceedLicenseKeysFromSyncStorage(licensekeys) {
 let previousSyncState = null;
 
 // Function to get sync state
+/**
+ * Description for getSyncState.
+ */
 function getSyncState() {
   return new Promise((resolve) => {
     chrome.storage.sync.get(null, (items) => {

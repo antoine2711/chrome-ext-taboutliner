@@ -40,10 +40,19 @@ to_messages.mainViewMessageTemplates = { 'info':'<div class="mainViewMessage" ty
                                                 '</div>'
                                        };
 
+/**
+ * Description for to_messages.MessageManager.
+ */
 to_messages.MessageManager = function() {
     this.activeSessionMessages = []; // Messages that is holded only during one ssesion, they must be requested again after restart to stay alive
 };
 
+/**
+ * Description for to_messages.appendHtml.
+ * @param {*}    parent    Description.
+ * @param {*}    reference    Description.
+ * @param {*}    str    Description.
+ */
 to_messages.appendHtml = function(parent, reference, str) {
     var div = document.createElement('div');
     div.innerHTML = str;
@@ -54,6 +63,9 @@ to_messages.appendHtml = function(parent, reference, str) {
     return lastInsertedElement;
 };
 
+/**
+ * Description for to_messages.addMessageDomToMainViewStack.
+ */
 to_messages.addMessageDomToMainViewStack = function(messageParams/*{messageType, messageTextHtml, closeCallback(messageParams, event)}*/) {
 
 
@@ -91,6 +103,10 @@ to_messages.addMessageDomToMainViewStack = function(messageParams/*{messageType,
 
 to_messages.messages_stack = [];
 to_messages.messages = {};
+/**
+ * Description for to_messages.regMessage.
+ * @param {*}    messageParameters    Description.
+ */
 to_messages.regMessage = function(messageParameters) {
     this.messages_stack.push(messageParameters);
     this.messages[messageParameters.localStorageFlagsPrefix] = messageParameters;
@@ -162,6 +178,9 @@ to_messages.regMessage({localStorageFlagsPrefix:'test_error',
                         closeCallback:null});
 
 // Updates messages acording to model from local storage
+/**
+ * Description for to_messages.rerenderMessages.
+ */
 to_messages.rerenderMessages = function(){
     var mainViewMessagesStack = document.getElementById('mainViewMessagesStack');
     mainViewMessagesStack.innerHTML = ""; // delete everything
@@ -179,15 +198,28 @@ to_messages.rerenderMessages = function(){
     mainViewMessagesStack.style.padding = isNoMessagesVisible ? "0px" : ""/*will use paddings from styleshit*/;
 };
 
+/**
+ * Description for to_messages.showMessage.
+ * @param {*}    key    Description.
+ */
 to_messages.showMessage = function(key){
     localStorage['message_'+key] = 'on';
     this.rerenderMessages();
 };
+/**
+ * Description for to_messages.hideMessage.
+ * @param {*}    key    Description.
+ */
 to_messages.hideMessage = function(key){
     delete localStorage['message_'+key];
     this.rerenderMessages();
 };
 
+/**
+ * Description for onMessageClose_hide_and_timestamp.
+ * @param {*}    messageParams    Description.
+ * @param {*}    event    Description.
+ */
 function onMessageClose_hide_and_timestamp(messageParams, event) {
     localStorage['message_'+messageParams.localStorageFlagsPrefix+'_closeTimeStamp'] = Date.now();
     to_messages.hideMessage(messageParams.localStorageFlagsPrefix);
@@ -196,11 +228,19 @@ function onMessageClose_hide_and_timestamp(messageParams, event) {
     event.stopPropagation(); // Do not buble up to messageClickCallback callback
 }
 
+/**
+ * Description for onMessageClose_hide.
+ * @param {*}    messageParams    Description.
+ * @param {*}    event    Description.
+ */
 function onMessageClose_hide(messageParams, event) {
     to_messages.hideMessage(messageParams.localStorageFlagsPrefix);
    // event.srcElement.parentElement.parentElement.removeChild(event.srcElement.parentElement);
 }
 
+/**
+ * Description for isNotRecentlyInstalled.
+ */
 function isNotRecentlyInstalled() {
     var installDate = new Date(Number(localStorage['install']) || 0);
     var daysAfterInstall = Math.abs(installDate.getTime() - Date.now()) / (24*60*60*1000);
@@ -208,6 +248,10 @@ function isNotRecentlyInstalled() {
     return daysAfterInstall > 2;
 }
 
+/**
+ * Description for showMessage_IfEnoughTimePassedFromLastClose.
+ * @param {*}    messageParams    Description.
+ */
 function showMessage_IfEnoughTimePassedFromLastClose(messageParams) {
     var timePeriodToNotDisturbAfterClose = messageParams.timePeriodToNotDisturbAfterClose;
 
@@ -223,32 +267,55 @@ function showMessage_IfEnoughTimePassedFromLastClose(messageParams) {
     return false;
 }
 
+/**
+ * Description for goProBannerCliked.
+ * @param {*}    event    Description.
+ */
 function goProBannerCliked(event) {
     onOptionsClick();
 }
 
+/**
+ * Description for showMainViewGoProBaner_IfEnoughTimePassedFromLastClose.
+ */
 function showMainViewGoProBaner_IfEnoughTimePassedFromLastClose() {
     return showMessage_IfEnoughTimePassedFromLastClose(to_messages.messages['gopro']);
 }
 
+/**
+ * Description for showIdentityIsNotLicensedWarning_IfEnoughTimePassedFromLastClose.
+ */
 function showIdentityIsNotLicensedWarning_IfEnoughTimePassedFromLastClose() {
     return showMessage_IfEnoughTimePassedFromLastClose(to_messages.messages['warning_identity_is_not_match_the_license_key']);
 }
 
+/**
+ * Description for showChromeIsNotSignedInWarning_IfEnoughTimePassedFromLastClose.
+ */
 function showChromeIsNotSignedInWarning_IfEnoughTimePassedFromLastClose() {
     return showMessage_IfEnoughTimePassedFromLastClose(to_messages.messages['warning_chrome_is_not_signed_in']);
 }
 
+/**
+ * Description for showNoEmailPermissionWarning_IfEnoughTimePassedFromLastClose.
+ */
 function showNoEmailPermissionWarning_IfEnoughTimePassedFromLastClose() {
     return showMessage_IfEnoughTimePassedFromLastClose(to_messages.messages['warning_chrome_signed_in_no_email_permission']);
 }
 
+/**
+ * Description for hideAllLicenseRelatedWarnings.
+ */
 function hideAllLicenseRelatedWarnings() {
     to_messages.hideMessage('warning_identity_is_not_match_the_license_key');
     to_messages.hideMessage('warning_chrome_is_not_signed_in');
     to_messages.hideMessage('warning_chrome_signed_in_no_email_permission');
 }
 
+/**
+ * Description for msg2view_setLicenseState_valid.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_valid(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
 
@@ -259,6 +326,10 @@ function msg2view_setLicenseState_valid(response) {
 
     ga_reportScreeViewIfChanged('Main View - Paid');
 }
+/**
+ * Description for msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
 
@@ -271,6 +342,10 @@ function msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMat
 
     ga_reportScreeViewIfChanged('Main View - Key Present - Invalid');
 }
+/**
+ * Description for msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
 
@@ -283,6 +358,10 @@ function msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn(respo
 
     ga_reportScreeViewIfChanged('Main View - Key Present - Chrome Is Not Signed In');
 }
+/**
+ * Description for msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPermission.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPermission(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
 
@@ -295,6 +374,10 @@ function msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPe
 
     ga_reportScreeViewIfChanged('Main View - Key Present - Chrome Signed In - No Email Permission');
 }
+/**
+ * Description for msg2view_setLicenseState_invalid_NoLicenseKey.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_NoLicenseKey(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
 
@@ -308,6 +391,10 @@ function msg2view_setLicenseState_invalid_NoLicenseKey(response) {
 }
 
 var lastSeenScreen;
+/**
+ * Description for ga_reportScreeViewIfChanged.
+ * @param {*}    screenName    Description.
+ */
 function ga_reportScreeViewIfChanged(screenName) {
     if(screenName != lastSeenScreen) {
         //FF_REMOVED_GA ga_screenview(screenName);
@@ -315,6 +402,9 @@ function ga_reportScreeViewIfChanged(screenName) {
     }
 }
 
+/**
+ * Description for backupNowBtn_showBackupInProgressState.
+ */
 function backupNowBtn_showBackupInProgressState(){
     var backupNowBtn = document.getElementById('backupNowButton');
 
@@ -333,15 +423,26 @@ function backupNowBtn_showBackupInProgressState(){
 }
 
 // existed styles: backupRecentlySucceededIndicator, backupSomeTimeAgoSucceededIndicator, backupNotPerformedForMoreThanADayIndicator, backupFailedIndicator
+/**
+ * Description for backupNowBtn_showBackupState.
+ * @param {*}    stateStyle    Description.
+ */
 function backupNowBtn_showBackupState(stateStyle){
     var backupNowBtn = document.getElementById('backupNowButton');
     backupNowBtn.innerHTML = '<div id='+stateStyle+'></div>';
 }
 
+/**
+ * Description for isbackupNowBtnInRecentlySuccededState.
+ */
 function isbackupNowBtnInRecentlySuccededState(){
     return !!document.getElementById('backupRecentlySucceededIndicator');
 }
 
+/**
+ * Description for msg2view_updateBackupIndicator_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_updateBackupIndicator_backgroundPageCall(response) {
     let gdriveLastSuccessfulBackupTime = response.gdriveLastSuccessfulBackupTime;
     // Light Green
@@ -352,25 +453,49 @@ function msg2view_updateBackupIndicator_backgroundPageCall(response) {
 
     // backupNowBtn_showBackupState('backupNotPerformedForMoreThanADayIndicator');
 }
+/**
+ * Description for msg2view_backupStarted_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_backupStarted_backgroundPageCall(response) {
     let isUploadStartedPhase = response.isUploadStartedPhase;
     backupNowBtn_showBackupInProgressState();
 }
+/**
+ * Description for msg2view_onAuthorizationTokenGranted_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_onAuthorizationTokenGranted_backgroundPageCall(response) {
     to_messages.hideMessage('warning_gdrive_access_is_not_authorized');
 }
+/**
+ * Description for msg2view_onBackupSucceeded_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_onBackupSucceeded_backgroundPageCall(response) {
     backupNowBtn_showBackupState('backupRecentlySucceededIndicator');
 }
+/**
+ * Description for msg2view_onGdriveAccessRewoked_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_onGdriveAccessRewoked_backgroundPageCall(response) {
     to_messages.showMessage('warning_gdrive_access_is_not_authorized');
     backupNowBtn_showBackupState('backupFailedIndicator');
 }
+/**
+ * Description for msg2view_noConnectionError_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_noConnectionError_backgroundPageCall(response) {
     let operationInitiatorId = response.operationInitiatorId;
     alertErrorMessageIfOurWindowIsOperationInitiator(operationInitiatorId, "A network error occurred, and the request could not be completed. Check your Internet connection."); // i18n +
     backupNowBtn_showBackupState('backupFailedIndicator');
 }
+/**
+ * Description for msg2view_backupError_backgroundPageCall.
+ * @param {*}    response    Description.
+ */
 function msg2view_backupError_backgroundPageCall(response) {
     let operationInitiatorId = response.operationInitiatorId;
     let errorCode = response.errorCode;
@@ -380,6 +505,11 @@ function msg2view_backupError_backgroundPageCall(response) {
 }
 
 
+/**
+ * Description for alertErrorMessageIfOurWindowIsOperationInitiator.
+ * @param {*}    operationInitiatorId    Description.
+ * @param {*}    errorMessage    Description.
+ */
 function alertErrorMessageIfOurWindowIsOperationInitiator(operationInitiatorId, errorMessage) {
     if(operationInitiatorId == backupOperationId_) setTimeout(function(){alert(errorMessage)},1); //setTimeout to not block background script (but it's looks like it block all visible windows anyway)
 }
@@ -400,6 +530,10 @@ function alertErrorMessageIfOurWindowIsOperationInitiator(operationInitiatorId, 
 //}
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for createProFeatureUsageInLiteModeDialogDom.
+ * @param {*}    document    Description.
+ */
 function createProFeatureUsageInLiteModeDialogDom(document) {
     var r = document.createElement('div');
     r.id = "proFeatureUsedInLiteModeAlert";
@@ -415,6 +549,10 @@ function createProFeatureUsageInLiteModeDialogDom(document) {
 
 }
 
+/**
+ * Description for initProFeatureUsageInLiteModeDialog.
+ * @param {*}    window_    Description.
+ */
 function initProFeatureUsageInLiteModeDialog(window_) {
     // Special ids recognized by dialog factory:
     //

@@ -23,14 +23,25 @@ DbOperations.OperationsEnum  =  { TREE_CREATE:1000
                                 };
 
 DbOperations.OperationBase = Class.extend({
+    /**
+     * Description for init.
+     * @param {*}    opType    Description.
+     */
     init:function(opType) {
         this.data = {'opType':opType, 'opSchemeVersion':DbOperations.DbSchemaVersion, 'opData':{}};
     },
 
+    /**
+     * Description for saveToDb.
+     */
     saveToDb:function() {
 
     },
 
+    /**
+     * Description for restore.
+     * @param {*}    tree    Description.
+     */
     restore:function(tree) {
         // Abstract
     },
@@ -40,6 +51,9 @@ DbOperations.OperationBase = Class.extend({
 
 
 DbOperations.OperationTreeCreate = DbOperations.OperationBase.extend({
+    /**
+     * Description for init.
+     */
     init:function() {
         this._super(DbOperations.OperationsEnum.TREE_CREATE);
     },
@@ -48,6 +62,11 @@ DbOperations.OperationTreeCreate = DbOperations.OperationBase.extend({
 });
 
 DbOperations.NodeOperationBase = DbOperations.OperationBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    opType    Description.
+     * @param {*}    targetPath    Description.
+     */
     init:function(opType, targetPath) {
         this._super(opType);
         this.data.opData.targetPath  = targetPath;
@@ -57,6 +76,11 @@ DbOperations.NodeOperationBase = DbOperations.OperationBase.extend({
 });
 
 DbOperations.NodeOperationInsert = DbOperations.NodeOperationBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    targetPath    Description.
+     * @param {*}    nodeData    Description.
+     */
     init:function(targetPath, nodeData) {
         this._super(DbOperations.OperationsEnum.NODE_INSERT, targetPath);
         this.data.opData.nodeData    = nodeData;
@@ -66,6 +90,11 @@ DbOperations.NodeOperationInsert = DbOperations.NodeOperationBase.extend({
 });
 
 DbOperations.NodeOperationReplace = DbOperations.NodeOperationBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    targetPath    Description.
+     * @param {*}    nodeData    Description.
+     */
     init:function(targetPath, nodeData) {
         this._super(DbOperations.OperationsEnum.NODE_REPLACE, targetPath);
         this.data.opData.nodeData    = nodeData;
@@ -75,6 +104,10 @@ DbOperations.NodeOperationReplace = DbOperations.NodeOperationBase.extend({
 });
 
 DbOperations.NodeOperationEOF = DbOperations.NodeOperationBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    time    Description.
+     */
     init:function(time) {
         this._super(DbOperations.OperationsEnum.EOF);
         this.data.opData.time = time;

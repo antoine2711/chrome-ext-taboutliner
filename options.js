@@ -30,6 +30,10 @@ backgroundport.onMessage.addListener(function getResp(response) {
 });
 
 // New storage.local options - accessed from service worker --------------------------
+/**
+ * Description for setOptionsFieldAndOnchangeListener.
+ * @param {*}    fieldName    Description.
+ */
 function setOptionsFieldAndOnchangeListener(fieldName) {
     getOption(fieldName).then( (value) => {
         document.getElementById(fieldName).checked = !!value;
@@ -37,6 +41,9 @@ function setOptionsFieldAndOnchangeListener(fieldName) {
     });
 }
 
+/**
+ * Description for onchange_optionInStorageLocal.
+ */
 function onchange_optionInStorageLocal() {
     setOption(this.id,!!this.checked);
 }
@@ -58,6 +65,9 @@ document.getElementById('experimentalLightBackground').checked = !!localStorage[
 document.getElementById('experimentalLightBackground').onchange = onchange_experimentalLightBackground;
 
 
+/**
+ * Description for onchange_experimentalLightBackground.
+ */
 function onchange_experimentalLightBackground() {
     if(this.checked) localStorage['experimentalLightBackground'] = 'true';
     else      delete localStorage['experimentalLightBackground'];
@@ -65,6 +75,9 @@ function onchange_experimentalLightBackground() {
     optionsChanged_notifyAllViews('colors');
 }
 
+/**
+ * Description for onchange_oneClickToOpen.
+ */
 function onchange_oneClickToOpen() {
     if(this.checked) localStorage['oneClickToOpen'] = 'true';
     else      delete localStorage['oneClickToOpen'];
@@ -72,6 +85,9 @@ function onchange_oneClickToOpen() {
     optionsChanged_notifyAllViews('oneClickToOpen');
 }
 
+/**
+ * Description for onchange_showBackupNowBtn.
+ */
 function onchange_showBackupNowBtn() {
     if(this.checked) localStorage['showBackupNowBtn'] = 'true';
     else      delete localStorage['showBackupNowBtn'];
@@ -79,6 +95,10 @@ function onchange_showBackupNowBtn() {
     optionsChanged_notifyAllViews('showBackupNowBtn');
 }
 
+/**
+ * Description for optionsChanged_notifyAllViews.
+ * @param {*}    changedOption    Description.
+ */
 function optionsChanged_notifyAllViews(changedOption) {
     backgroundport.postMessage({request:"request2bkg_optionsChanged_notifyAllViews", changedOption:changedOption});
 }
@@ -88,6 +108,10 @@ function optionsChanged_notifyAllViews(changedOption) {
     function (item) { item.onclick = onShowMoreClick}
 );
 
+/**
+ * Description for onShowMoreClick.
+ * @param {*}    event    Description.
+ */
 function onShowMoreClick(event) {
     var moreContentEl = document.getElementById(event.target.getAttribute('name'));
     if(!moreContentEl) return;
@@ -97,14 +121,26 @@ function onShowMoreClick(event) {
 }
 // ---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Description for readSessionDataFromUserSelectedFile.
+ * @param {*}    callback    Description.
+ */
 function readSessionDataFromUserSelectedFile(callback) {
     readJsonOperationsFromFile(userSelectedFileToOpen, callback);
 }
 
 // Даже если файла нет или любая проблема мы вызовем callback.
+/**
+ * Description for readSessionDataFromFile.
+ * @param {*}    filename    Description.
+ */
 function readSessionDataFromFile(filename, callback/*(fileData or error)*/) {
     webkitRequestFileSystem(PERSISTENT, 1024*1024, fsReady, callback /*fsErrorHandler*/);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs) {
       fs.root.getFile(filename, {create: false}, function(fileEntry) {
         fileEntry.file( function(file) { readJsonOperationsFromFile(file, callback) }, callback /*errorCallback*/);
@@ -112,8 +148,17 @@ function readSessionDataFromFile(filename, callback/*(fileData or error)*/) {
     }
 }
 
+/**
+ * Description for readJsonOperationsFromFile.
+ * @param {*}    file    Description.
+ * @param {*}    callback    Description.
+ */
 function readJsonOperationsFromFile(file, callback) {
     var reader = new FileReader();
+    /**
+     * Description for reader.onloadend.
+     * @param {*}    e    Description.
+     */
     reader.onloadend = function(e) {
         try { var operations = JSON.parse(e.target.result); } catch(parseError) { callback(parseError); }
         callback(operations);
@@ -122,6 +167,11 @@ function readJsonOperationsFromFile(file, callback) {
     reader.readAsText(file); // Тип UTF энкодинга будет определён по первым байтам файлам или UTF-8 если они его не задают (вродебы)
 }
 
+/**
+ * Description for saveCurrentSessionAsFileNow.
+ * @async
+ * @param {*}    callback    Description.
+ */
 async function saveCurrentSessionAsFileNow(callback) {
     console.time("= Save Tree Total ====");
 
@@ -137,12 +187,20 @@ async function saveCurrentSessionAsFileNow(callback) {
 
     console.timeEnd("Serialize Tree Full");
 
+    /**
+     * Description for fsErrorHandler.
+     * @param {*}    err    Description.
+     */
     function fsErrorHandler(err){
         console.error('ERROR on file system access. FileError.code:', err['code']);
     }
 
     window.webkitRequestFileSystem(window.TEMPORARY/*window.PERSISTENT*/, exportDataBlob.size+100, fsReady, fsErrorHandler);
 
+    /**
+     * Description for fsReady.
+     * @param {*}    fs    Description.
+     */
     function fsReady(fs){
         fs.root.getFile('tree-exported-'+(new Date()).toDateString().replace(/ /g,'-')+'.tree', {create: true, exclusive: false}, function(fileEntry) {
             console.log('A file ' + fileEntry.name + ' was created successfully.');
@@ -163,6 +221,9 @@ async function saveCurrentSessionAsFileNow(callback) {
 var URL =  window.URL || window.webkitURL || window;
 
 document.getElementById('exportToFile').addEventListener('click', exportToFile );
+/**
+ * Description for exportToFile.
+ */
 function exportToFile() {
     document.getElementById('exporteBlobUrl').innerHTML = '';
     // startThreadCheck();
@@ -172,6 +233,10 @@ function exportToFile() {
         var filename = 'tree-exported-'+(new Date()).toDateString().replace(/ /g,'-')+'.tree';
         var save_link= document.createElementNS("http://www.w3.org/1999/xhtml", "a");
 
+        /**
+         * Description for click.
+         * @param {*}    node    Description.
+         */
         function click (node) {
             var eventMouseClick = document.createEvent("MouseEvents");
             eventMouseClick.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -188,6 +253,10 @@ function exportToFile() {
 }
 
 document.getElementById('viewExportedFile').addEventListener('change', handleFileSelect_viewExportedFile, false);
+/**
+ * Description for handleFileSelect_viewExportedFile.
+ * @param {*}    evt    Description.
+ */
 function handleFileSelect_viewExportedFile(evt) {
     var files = evt.target.files; // FileList object
 
@@ -203,6 +272,10 @@ function handleFileSelect_viewExportedFile(evt) {
 //     viewTree('selectedFile', file.lastModifiedDate, file.size, true, true);
 // }
 
+/**
+ * Description for viewExportedFile.
+ * @param {*}    file    Description.
+ */
 function viewExportedFile(file) {
     // Check for FileReader support
     if (!window.FileReader) {
@@ -214,6 +287,10 @@ function viewExportedFile(file) {
     var reader = new FileReader();
 
     // This event listener will be triggered when the reading operation is completed
+    /**
+     * Description for reader.onload.
+     * @param {*}    event    Description.
+     */
     reader.onload = function(event) {
         var fileContent = event.target.result;
         var exportDataBlob = new Blob([fileContent], { type: file.type });
@@ -227,11 +304,17 @@ function viewExportedFile(file) {
                 fileEntry.createWriter(function(fileWriter) {
                     fileWriter.truncate(0);
 
+                    /**
+                     * Description for fileWriter.onwriteend.
+                     */
                     fileWriter.onwriteend = function() {
                         // After truncating, write the new content
                         fileWriter.write(exportDataBlob);
 
 
+                        /**
+                         * Description for fileWriter.onwriteend.
+                         */
                         fileWriter.onwriteend = function() {
                             console.log('File written to filesystem successfully.');
 
@@ -240,6 +323,10 @@ function viewExportedFile(file) {
                         };
                     }
 
+                    /**
+                     * Description for fileWriter.onerror.
+                     * @param {*}    err    Description.
+                     */
                     fileWriter.onerror = function(err) {
                         console.log('Error while writing to the file:', err);
                     };
@@ -249,6 +336,10 @@ function viewExportedFile(file) {
     };
 
     // Error handling function for the filesystem
+    /**
+     * Description for fsErrorHandler.
+     * @param {*}    error    Description.
+     */
     function fsErrorHandler(error) {
         console.log('Filesystem Error:', error);
     }
@@ -258,11 +349,19 @@ function viewExportedFile(file) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for registerColorOverrideControlsListener.
+ * @param {*}    overrideOptionId    Description.
+ * @param {*}    colorSelectorId    Description.
+ */
 function registerColorOverrideControlsListener(overrideOptionId, colorSelectorId) {
     document.getElementById(overrideOptionId).checked = !!localStorage[overrideOptionId];
     if(localStorage[colorSelectorId]) document.getElementById(colorSelectorId).value = localStorage[colorSelectorId];
 
 
+    /**
+     * Description for onchange_listener.
+     */
     function onchange_listener() {
         if(document.getElementById(overrideOptionId).checked)
             localStorage[overrideOptionId] = 'true';
@@ -291,6 +390,12 @@ document.getElementById('enableTrialBackupBtn').addEventListener('click', initia
 document.getElementById('testNoIdentityEmailPermissionGrantedWarning').addEventListener('click', showNoIdentityEmailPermissionGrantedWarning);
 document.getElementById('testNotSignedInToChromeWarning').addEventListener('click', showNotSignedInToChromeWarning);
 
+/**
+ * Description for addHtmlMessage.
+ * @param {*}    areaElementId    Description.
+ * @param {*}    clearAreaBeforeAdd    Description.
+ * @param {*}    htmlMessage    Description.
+ */
 function addHtmlMessage(areaElementId, clearAreaBeforeAdd, htmlMessage) {
     var messagesArea = document.getElementById(areaElementId);
     if(clearAreaBeforeAdd) messagesArea.innerHTML = ""; // delete everything
@@ -306,28 +411,45 @@ function addHtmlMessage(areaElementId, clearAreaBeforeAdd, htmlMessage) {
     return lastInsertedElement;
 }
 
+/**
+ * Description for addHeaderWarning.
+ * @param {*}    messageHtml    Description.
+ */
 function addHeaderWarning(messageHtml) {
     addHtmlMessage('headerWarningMessageArea', false, messageHtml);
     window.scrollTo(0,0);
 }
 
+/**
+ * Description for showIdentityAccessErrorWarning.
+ * @param {*}    messageHtml    Description.
+ */
 function showIdentityAccessErrorWarning(messageHtml) {
     addHtmlMessage('identityAccessWarningsMessageArea-Pro', true, messageHtml);
     addHtmlMessage('identityAccessWarningsMessageArea-Backup', false, messageHtml);
 
 }
 
+/**
+ * Description for clearIdentityAccessErrorWarnings.
+ */
 function clearIdentityAccessErrorWarnings () {
     document.getElementById('identityAccessWarningsMessageArea-Pro').innerHTML = ""; // delete everything
     document.getElementById('identityAccessWarningsMessageArea-Backup').innerHTML = ""; // delete everything
 
 }
+/**
+ * Description for showNoIdentityEmailPermissionGrantedWarning.
+ */
 function showNoIdentityEmailPermissionGrantedWarning(){ //i18n +
     showIdentityAccessErrorWarning('<div class="mainViewMessage" type="warning">'+
                                         '<span class="mainViewMessageIcon"></span>'+
                                         '<div class="mainViewMessageBody">Warning: Permission to access Chrome Profile email address is not granted. To validate your license key and further configure online backup to your Google Drive account, Tabs Outliner needs access to your Chrome Profile identity and email. Please grant access.</div>'+
                                    '</div>');
 }
+/**
+ * Description for showNotSignedInToChromeWarning.
+ */
 function showNotSignedInToChromeWarning(){ //i18n +
     showIdentityAccessErrorWarning('<div class="mainViewMessage" type="warning">'+
                                         '<span class="mainViewMessageIcon"></span>'+
@@ -340,6 +462,9 @@ function showNotSignedInToChromeWarning(){ //i18n +
         function (item) { item.onclick = signInToChrome }
     );
 }
+/**
+ * Description for show401Error.
+ */
 function show401Error(){ //i18n+
     if(document.getElementById('noGdriveAccessGrantedErrorWarning')) return; // Only one warning message on page
 
@@ -350,6 +475,9 @@ function show401Error(){ //i18n+
 
     document.getElementById('authorizeBtnInMessage').onclick = manualAuth_listGdriveFiles;
 }
+/**
+ * Description for hide401Error.
+ */
 function hide401Error(){
     var message = document.getElementById('noGdriveAccessGrantedErrorWarning');
     if(message) message.parentElement.removeChild(message);
@@ -380,11 +508,17 @@ document.getElementById('buyLicenseKeyBtn-backup').addEventListener('click', fun
     initiateBuyLicenseKeySequence();
 });
 
+/**
+ * Description for switchToProTab.
+ */
 function switchToProTab() {
     var tab_pro = document.getElementById('tab-pro');
     tab_pro && (tab_pro.checked = true);
 }
 
+/**
+ * Description for initiateBuyLicenseKeySequence.
+ */
 function initiateBuyLicenseKeySequence() {
     clearIdentityAccessErrorWarnings();
 
@@ -394,6 +528,9 @@ function initiateBuyLicenseKeySequence() {
     );
 }
 
+/**
+ * Description for initiateEnableBackupUiTrialSequence.
+ */
 function initiateEnableBackupUiTrialSequence() {
     //FF_REMOVED_GA ga_event('Request Backup Controls Trial');
 
@@ -405,17 +542,31 @@ function initiateEnableBackupUiTrialSequence() {
     );
 }
 
+/**
+ * Description for showEmailAccessExplanation_requestIdentityPermissions_continueToPaymentFlow.
+ */
 function showEmailAccessExplanation_requestIdentityPermissions_continueToPaymentFlow() {
     showBeforeEmailAccessExplanation( requestIdentityPermissions_continueToPaymentFlow, "Payment Process" ); //i18n
 }
+/**
+ * Description for showEmailAccessExplanation_requestIdentityPermissions_continueToEnableBackupTrialControls.
+ */
 function showEmailAccessExplanation_requestIdentityPermissions_continueToEnableBackupTrialControls() {
     showBeforeEmailAccessExplanation( requestIdentityPermissions_continueToEnableBackupTrialControls, "Backup Trial" ); //i18n
 }
 
+/**
+ * Description for showEmailAccessExplanation_continueToRequestIdentityPermissions_continueToRevalidateLicenseKey.
+ */
 function showEmailAccessExplanation_continueToRequestIdentityPermissions_continueToRevalidateLicenseKey() {
     showBeforeEmailAccessExplanation( requestIdentityPermissions_continueToRevalidateLicenseKey, "" ); //i18n
 }
 
+/**
+ * Description for showBeforeEmailAccessExplanation.
+ * @param {*}    onBuyLicenseKeyDialogContinue    Description.
+ * @param {*}    identityAccessExplanationNextStepTitle    Description.
+ */
 function showBeforeEmailAccessExplanation(onBuyLicenseKeyDialogContinue, identityAccessExplanationNextStepTitle) {
     //FF_REMOVED_GA ga_event('Email Access Explanation Shown - ' + identityAccessExplanationNextStepTitle);
 
@@ -424,6 +575,9 @@ function showBeforeEmailAccessExplanation(onBuyLicenseKeyDialogContinue, identit
                                                    onBuyLicenseKeyDialogContinue );
 }
 
+/**
+ * Description for requestIdentityPermissions_continueToPaymentFlow.
+ */
 function requestIdentityPermissions_continueToPaymentFlow() {
     // Modal will be closed after we return from this function!
 
@@ -432,6 +586,10 @@ function requestIdentityPermissions_continueToPaymentFlow() {
 }
 
 
+/**
+ * Description for showBuyLicenseKeyDialog_afterIdentityAccess.
+ * @param {*}    userInfo    Description.
+ */
 function showBuyLicenseKeyDialog_afterIdentityAccess( userInfo ) {
     // нужно в диалог ващето серийник передать, в том числе на линк для фастспринга
     calculateSerialNumber_promise(userInfo.email)
@@ -444,6 +602,10 @@ function showBuyLicenseKeyDialog_afterIdentityAccess( userInfo ) {
 
 }
 
+/**
+ * Description for openFastSpringBuyPage.
+ * @param {*}    serialNumberHex    Description.
+ */
 function openFastSpringBuyPage(serialNumberHex) {
 //    var referrerObj = { // id: chrome.app.getDetails().id,
 //                        version: chrome.app.getDetails().version,
@@ -459,6 +621,10 @@ function openFastSpringBuyPage(serialNumberHex) {
 }
 
 // Permissions must be requested from inside a user gesture, like a button's click handler.
+/**
+ * Description for requestIdentityPermisionsContinueIfGrantedShowErrorsIfNot.
+ * @param {*}    continueCallback    Description.
+ */
 function requestIdentityPermisionsContinueIfGrantedShowErrorsIfNot(continueCallback) {
     //FF_REMOVED_GA ga_event_access_states('Email Access - Request','R','R',null);
 
@@ -486,6 +652,10 @@ function requestIdentityPermisionsContinueIfGrantedShowErrorsIfNot(continueCallb
 // Permissions must be requested from inside a user gesture, like a button's click handler.
 // callback(true) - The callback argument will be true if the user granted the permissions, callback(false) - permission not granted
 // C&P in background page
+/**
+ * Description for requestIdentityEmailPermission.
+ * @param {*}    callback    Description.
+ */
 function requestIdentityEmailPermission(callback) {
     chrome.permissions.request({
             permissions: ['identity.email'], //identity не требует consent скрина, identity.email - требует! и 100% блокирует extension на апдейте если указано не в optional_permissions
@@ -494,6 +664,11 @@ function requestIdentityEmailPermission(callback) {
 }
 
 
+/**
+ * Description for if_NotSignedInOrSignedInAndEmailGranted_Else_ChromeSignedInbutEmailNotGranted.
+ * @param {*}    alreadyGranted_Or_NotSignedIn_Callback    Description.
+ * @param {*}    notYetgranted_And_SignedIn_Callback    Description.
+ */
 function if_NotSignedInOrSignedInAndEmailGranted_Else_ChromeSignedInbutEmailNotGranted(alreadyGranted_Or_NotSignedIn_Callback, notYetgranted_And_SignedIn_Callback) {
     chrome.permissions.contains({
        permissions: ['identity.email'],
@@ -560,6 +735,11 @@ document.getElementById('test_setLicenseState_invalidLicenseState_NoLicenseKey')
 
 //---------------------------------------------------------------------------------------
 
+/**
+ * Description for setProTabToLicenseSetState.
+ * @param {*}    blockIdToShow    Description.
+ * @param {*}    licenseStateValues    Description.
+ */
 function setProTabToLicenseSetState(blockIdToShow, licenseStateValues) {
     document.getElementById('licenseKeyValidProTabBlock').style.display = 'none';
     document.getElementById('licenseKeyAbsentProTabBlock').style.display = 'none';
@@ -575,6 +755,10 @@ function setProTabToLicenseSetState(blockIdToShow, licenseStateValues) {
     });
 }
 
+/**
+ * Description for setBackupTabToLicenseSetState.
+ * @param {*}    blockIdToShow    Description.
+ */
 function setBackupTabToLicenseSetState(blockIdToShow) {
     document.getElementById('licenseKeyAbsentBackupTabBlock').style.display = 'none';
     document.getElementById('licenseKeyPresentBackupTabBlock').style.display = 'none';
@@ -582,6 +766,10 @@ function setBackupTabToLicenseSetState(blockIdToShow) {
     document.getElementById(blockIdToShow).style.display = '';
 }
 
+/**
+ * Description for getArrayFromLocalStorage.
+ * @param {*}    arrayName    Description.
+ */
 function getArrayFromLocalStorage(arrayName) {
     try {
         var r = JSON.parse(localStorage[arrayName]);
@@ -593,10 +781,19 @@ function getArrayFromLocalStorage(arrayName) {
 }
 
 
+/**
+ * Description for packLicenseKey.
+ * @param {*}    keyObj    Description.
+ */
 function packLicenseKey(keyObj) {
     return encodeURIComponent(btoa( JSON.stringify(keyObj) ));
 }
 
+/**
+ * Description for console_log_licenseKeysLinks.
+ * @async
+ * @param {*}    console    Description.
+ */
 async function console_log_licenseKeysLinks(console) {
     var keys = (await chrome.storage.local.get('licenseKeys')).licenseKeys || [];
     keys.forEach(function(key){
@@ -606,6 +803,11 @@ async function console_log_licenseKeysLinks(console) {
     });
 }
 
+/**
+ * Description for console_log_licenseKey.
+ * @async
+ * @param {*}    header    Description.
+ */
 async function console_log_licenseKey(header) {
     console.log(header);
     console.log("License Keys:");
@@ -613,6 +815,9 @@ async function console_log_licenseKey(header) {
     console.log("To Drop License Keys type: localStorage.licenseKeys_ = localStorage.licenseKeys; delete localStorage.licenseKeys; or dropkey()");
 }
 
+/**
+ * Description for getUrlVars.
+ */
 function getUrlVars() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -621,6 +826,9 @@ function getUrlVars() {
     return vars;
 }
 
+/**
+ * Description for processUrlSetKeyCommand.
+ */
 function processUrlSetKeyCommand() {
     var urlVars = getUrlVars();
     if(urlVars['setkey']) {
@@ -634,19 +842,31 @@ function processUrlSetKeyCommand() {
     }
 }
 
+/**
+ * Description for showBackupNowBtnOnMainToolbar.
+ */
 function showBackupNowBtnOnMainToolbar() {
     document.getElementById('showBackupNowBtn').checked = true; // This is not invoke .onchange automatically
     document.getElementById('showBackupNowBtn').onchange(null); // it's use .this inside
 }
 
+/**
+ * Description for enableTestButtons.
+ */
 function enableTestButtons() {
     document.getElementById("testButtonsBlock").style.display = "";
 }
 
+/**
+ * Description for revalidateLicenseKey.
+ */
 function revalidateLicenseKey() {
     backgroundport.postMessage({request:"request2bkg_checkAndUpdateLicenseStatusInAllViews"});    
 }
 
+/**
+ * Description for requestIdentityPermissions_continueToRevalidateLicenseKey.
+ */
 function requestIdentityPermissions_continueToRevalidateLicenseKey() {
     // Modal will be closed after we return from this function!
 
@@ -654,6 +874,9 @@ function requestIdentityPermissions_continueToRevalidateLicenseKey() {
     requestIdentityPermisionsContinueIfGrantedShowErrorsIfNot( revalidateLicenseKey );
 }
 
+/**
+ * Description for requestIdentityPermissions_continueToEnableBackupTrialControls.
+ */
 function requestIdentityPermissions_continueToEnableBackupTrialControls() {
     // Modal will be closed after we return from this function!
 
@@ -661,6 +884,9 @@ function requestIdentityPermissions_continueToEnableBackupTrialControls() {
     requestIdentityPermisionsContinueIfGrantedShowErrorsIfNot( enableBackupTrialControls );
 }
 
+/**
+ * Description for enableBackupTrialControls.
+ */
 function enableBackupTrialControls() {
     setBackupTabToLicenseSetState('licenseKeyPresentBackupTabBlock');
     // а шо если юзер тыцнет кнопку быстрее чем gapi загрузится или оно вообще не загрузится бо связи нет!!!
@@ -671,6 +897,10 @@ function enableBackupTrialControls() {
 }
 
 var isChromeSignInRequestedFromWarning = false;
+/**
+ * Description for signInToChrome.
+ * @param {*}    skipReport    Description.
+ */
 function signInToChrome(skipReport) {
     isChromeSignInRequestedFromWarning = true;
 
@@ -690,6 +920,10 @@ if(signInToChromeBtn_keyPresentBlock) signInToChromeBtn_keyPresentBlock.onclick 
     signInToChrome(true); // note that also we will not get 'SignIn Success' ga event, as it's fired only in No Key block
 };
 
+/**
+ * Description for setBackupControlsStateToTrialMode.
+ * @param {*}    isTrial    Description.
+ */
 function setBackupControlsStateToTrialMode(isTrial) {
     if(isTrial) {
         setBackupTabToLicenseSetState('licenseKeyAbsentBackupTabBlock');
@@ -704,6 +938,10 @@ function setBackupControlsStateToTrialMode(isTrial) {
 
 var PRO_LICENSE_KEY_VALID = false;
 
+/**
+ * Description for msg2view_setLicenseState_valid.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_valid(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
 
@@ -718,6 +956,10 @@ function msg2view_setLicenseState_valid(response) {
     reportScreeViewIfChanged('Options - Paid');
 }
 
+/**
+ * Description for msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMatchTheLicenseKey(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
     
@@ -731,6 +973,10 @@ function msg2view_setLicenseState_invalid_KeyPresentIdentityIsAccesibleButNotMat
     reportScreeViewIfChanged('Options - Key Present - Invalid');
 }
     
+/**
+ * Description for msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
     
@@ -744,6 +990,10 @@ function msg2view_setLicenseState_invalid_KeyPresentButChromeIsNotSignedIn(respo
     reportScreeViewIfChanged('Options - Key Present - Chrome Is Not Signed In');
 }
     
+/**
+ * Description for msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPermission.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPermission(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
     
@@ -757,6 +1007,10 @@ function msg2view_setLicenseState_invalid_KeyPresentChromeIsSignedInButNoEmailPe
     reportScreeViewIfChanged('Options - Key Present - Chrome Signed In - No Email Permission');
 }
 
+/**
+ * Description for msg2view_setLicenseState_invalid_NoLicenseKey.
+ * @param {*}    response    Description.
+ */
 function msg2view_setLicenseState_invalid_NoLicenseKey(response) {
     let licenseStateValues = response.licenseStateValues/*isLicenseValid, isUserEmailAccessible, isLicenseKeyPresent, userInfoEmail, licenseKey*/;
     
@@ -789,11 +1043,17 @@ function msg2view_setLicenseState_invalid_NoLicenseKey(response) {
     reportScreeViewIfChanged('Options - Free');
 }
 
+/**
+ * Description for dropInvalidLicenseKey.
+ */
 function dropInvalidLicenseKey() {
     //FF_REMOVED_GA ga_event('Drop Invalid License Key Btn Clicked');
     dropkey();
 }
 
+/**
+ * Description for dropkey.
+ */
 function dropkey() {
     localStorage.licenseKeys_ = localStorage.licenseKeys; delete localStorage.licenseKeys;
     chrome.storage.sync.remove('licenseKeys');
@@ -801,6 +1061,10 @@ function dropkey() {
     backgroundport.postMessage({request:"request2bkg_checkAndUpdateLicenseStatusInAllViews"});    
 }
 
+/**
+ * Description for isEmailPemissionPresent.
+ * @param {*}    callback    Description.
+ */
 function isEmailPemissionPresent(callback) {
     chrome.permissions.contains({
         permissions: ['identity.email'],
@@ -816,6 +1080,9 @@ function isEmailPemissionPresent(callback) {
     });
 }
 
+/**
+ * Description for dropEmailPemission.
+ */
 function dropEmailPemission() {
     isEmailPemissionPresent(function(isPresent){
         chrome.permissions.remove({
@@ -835,11 +1102,18 @@ function dropEmailPemission() {
 }
 
 
+/**
+ * Description for returnkey.
+ */
 function returnkey() {
     localStorage.licenseKeys = localStorage.licenseKeys_
 }
 
 var lastSeenScreen;
+/**
+ * Description for reportScreeViewIfChanged.
+ * @param {*}    screenName    Description.
+ */
 function reportScreeViewIfChanged(screenName) {
     if(screenName != lastSeenScreen) {
         //FF_REMOVED_GA ga_screenview(screenName);
@@ -847,14 +1121,27 @@ function reportScreeViewIfChanged(screenName) {
     }
 }
 
+/**
+ * Description for getOption.
+ * @async
+ * @param {*}    optionName    Description.
+ */
 async function getOption(optionName) {
     return (await chrome.storage.local.get(optionName))[optionName];
 }
 
+/**
+ * Description for setOption.
+ * @param {*}    optionName    Description.
+ * @param {*}    value    Description.
+ */
 function setOption(optionName, value) {
     return chrome.storage.local.set({ [optionName]: value });
 }
 
+/**
+ * Description for testSetAllOldLocalStorageOptions.
+ */
 function testSetAllOldLocalStorageOptions() {
     localStorage['relateNewTabToOpener']            = true;
     localStorage['openTabsOutlinerInLastClosedPos'] = true;

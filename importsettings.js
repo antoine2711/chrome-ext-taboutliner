@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Description for getArrayFromLocalStorage.
+ * @param {*}    arrayName    Description.
+ */
 function getArrayFromLocalStorage(arrayName) {
     try {
         var r = JSON.parse(localStorage[arrayName]);
@@ -10,11 +14,19 @@ function getArrayFromLocalStorage(arrayName) {
     return r;
 }
 
+/**
+ * Description for packLicenseKey.
+ * @param {*}    keyObj    Description.
+ */
 function packLicenseKey(keyObj) {
     return encodeURIComponent(btoa( JSON.stringify(keyObj) ));
 }
 
 //Cut&Paste from options.js
+/**
+ * Description for getUrlVars.
+ * @param {*}    href    Description.
+ */
 function getUrlVars(href) {
     var vars = {};
     var parts = href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -23,6 +35,9 @@ function getUrlVars(href) {
     return vars;
 }
 
+/**
+ * Description for processUrlSetKeyCommand.
+ */
 function processUrlSetKeyCommand() {
     var urlVars = getUrlVars();
     if(urlVars['setkey']) {
@@ -36,11 +51,18 @@ function processUrlSetKeyCommand() {
     }
 }
 
+/**
+ * Description for importOptionFromLocalStorage.
+ * @param {*}    fieldName    Description.
+ */
 function importOptionFromLocalStorage(fieldName) {
     if(localStorage[fieldName])
         chrome.storage.local.set({ [fieldName]: true });
 }
 
+/**
+ * Description for importSettingsFromLocalStorage.
+ */
 function importSettingsFromLocalStorage() {
     try {
         var keys = getArrayFromLocalStorage('licenseKeys');

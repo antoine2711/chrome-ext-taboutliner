@@ -4,6 +4,10 @@
 
 var nextIdForBackgroudViewCommunication = 1;
 
+/**
+ * Description for getDisplayWorkAreaBounds.
+ * @param {*}    callback    Description.
+ */
 function getDisplayWorkAreaBounds(callback) {
     chrome.system.display.getInfo((displays) => {
         let primaryDisplayWorkArea;
@@ -29,29 +33,58 @@ function getDisplayWorkAreaBounds(callback) {
 //    else      return "";
 //}
 
+/**
+ * Description for isNewTab.
+ * @param {*}    chromeTabObj    Description.
+ */
 function isNewTab(chromeTabObj) {
     return chromeTabObj.url == 'chrome://newtab/' || chromeTabObj.url.indexOf("sourceid=chrome-instant") > 0; // идbотские instant newtab имеют такое в урле
 }
 
+/**
+ * Description for isPropertiesEqual.
+ * @param {*}    obj1    Description.
+ * @param {*}    obj2    Description.
+ * @param {*}    propertiesList    Description.
+ */
 function isPropertiesEqual(obj1, obj2, propertiesList) {
     for(var i = 0; i < propertiesList.length; i++)
         if(obj1[propertiesList[i]] !== obj2[propertiesList[i]]) return false;
     return true;
 }
 
+/**
+ * Description for i2s36.
+ * @param {*}    v    Description.
+ */
 function i2s36(v) {
     return v.toString(36);
 }
 
+/**
+ * Description for s2i36.
+ * @param {*}    v    Description.
+ */
 function s2i36(v) {
     return parseInt(v,36);
 }
 
+/**
+ * Description for addToCollectionUnderS36Key.
+ * @param {*}    collectionsDict    Description.
+ * @param {*}    collectionName    Description.
+ * @param {*}    intKey    Description.
+ * @param {*}    content    Description.
+ */
 function addToCollectionUnderS36Key(collectionsDict, collectionName, intKey, content) {
     if(!collectionsDict[collectionName]) collectionsDict[collectionName] = {};
     collectionsDict[collectionName][ i2s36(intKey) ] = content;
 }
 
+/**
+ * Description for oneLevelObjectClone.
+ * @param {*}    o    Description.
+ */
 function oneLevelObjectClone(o) {
   var r = {};
   for (var i in o) {
@@ -62,6 +95,11 @@ function oneLevelObjectClone(o) {
   return r;
 }
 
+/**
+ * Description for findById.
+ * @param {*}    array    Description.
+ * @param {*}    id    Description.
+ */
 function findById(array, id) {
     if(!array) return null;
 
@@ -103,6 +141,10 @@ function findById(array, id) {
 // - del_at_start n times in a row
 //
 // Warning. Акуратно тут с сиволами, нельзя юзать для операций тежи символы по которым разрезается node skelet (строками выше определены)
+/**
+ * Description for last.
+ * @param {*}    array    Description.
+ */
 function last(array) {
     return array[array.length - 1];
 }
@@ -157,6 +199,11 @@ var OPS_COMPONENTS_SEPARATOR = '=';
 //        if(array[i] === marker) callback(array, i);
 //    }
 //};
+/**
+ * Description for SybnodesChangesMonitor_isChangesToBase.
+ * @param {*}    curSubnodesDids    Description.
+ * @param {*}    baseSubnodesArray    Description.
+ */
 function SybnodesChangesMonitor_isChangesToBase(curSubnodesDids, baseSubnodesArray) {
     if(curSubnodesDids.length != baseSubnodesArray.length) return true;
 
@@ -165,6 +212,11 @@ function SybnodesChangesMonitor_isChangesToBase(curSubnodesDids, baseSubnodesArr
     return false;
 }
 
+/**
+ * Description for SybnodesChangesMonitor_serializeCurSubnodes.
+ * @param {*}    curSubnodesDids    Description.
+ * @param {*}    baseSubnodesArray    Description.
+ */
 function SybnodesChangesMonitor_serializeCurSubnodes(curSubnodesDids, baseSubnodesArray) {
     var lastFoundDidInBasePos = -1;
 
@@ -203,6 +255,11 @@ function SybnodesChangesMonitor_serializeCurSubnodes(curSubnodesDids, baseSubnod
     return diff.join(OPS_SEPARATOR);
 }
 
+/**
+ * Description for SybnodesChangesMonitor_restoreSubnodesList.
+ * @param {*}    baseSubnodesArray    Description.
+ * @param {*}    changes_str    Description.
+ */
 function SybnodesChangesMonitor_restoreSubnodesList(baseSubnodesArray, changes_str) {
     var diff =  changes_str.split(OPS_SEPARATOR);
 
@@ -229,6 +286,10 @@ function SybnodesChangesMonitor_restoreSubnodesList(baseSubnodesArray, changes_s
 
    return r_restoredSubnodes;
 };
+/**
+ * Description for getBaseSubnodesArray.
+ * @param {*}    baseKnot    Description.
+ */
 function getBaseSubnodesArray(baseKnot /*cdid@did&did&did*/) {
     return baseKnot.split(CDID_SUBNODESLIST_SEPARATOR)[1].split(SUBNODES_DIDS_SEPARATOR);
 }
@@ -286,6 +347,9 @@ function getBaseSubnodesArray(baseKnot /*cdid@did&did&did*/) {
 //   return r_restoredSubnodes;
 //};
 
+/**
+ * Description for testSubnodesChangesAlgorithm.
+ */
 function testSubnodesChangesAlgorithm() {
     var did = 10000;
     var subnodes = [];
@@ -299,6 +363,10 @@ function testSubnodesChangesAlgorithm() {
 
     console.log('##############################################################################');
     console.log('INIT subnodes:', subnodes.join(SUBNODES_DIDS_SEPARATOR));
+    /**
+     * Description for ins.
+     * @param {*}    i    Description.
+     */
     function ins(i) {
         subnodes.splice(i, 0, i2s36(did++));
 
@@ -310,6 +378,10 @@ function testSubnodesChangesAlgorithm() {
                     '\trestored:', SybnodesChangesMonitor_restoreSubnodesList(subnodes_old, serializedDifference).join(SUBNODES_DIDS_SEPARATOR));
     }
 
+    /**
+     * Description for del.
+     * @param {*}    i    Description.
+     */
     function del(i) {
         subnodes.splice(i, 1);
 
@@ -321,19 +393,34 @@ function testSubnodesChangesAlgorithm() {
                     '\trestored:', SybnodesChangesMonitor_restoreSubnodesList(subnodes_old, serializedDifference).join(SUBNODES_DIDS_SEPARATOR));
     }
 
+    /**
+     * Description for replace.
+     * @param {*}    i    Description.
+     */
     function replace(i) {
         del(i);
         ins(i);
     }
 
+    /**
+     * Description for ins_at_end.
+     */
     function ins_at_end() {
         ins(subnodes.length);
     }
 
+    /**
+     * Description for replace_at_end.
+     */
     function replace_at_end() {
         replace(subnodes.length);
     }
 
+    /**
+     * Description for getRandomInt.
+     * @param {*}    min    Description.
+     * @param {*}    max    Description.
+     */
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -385,12 +472,22 @@ function testSubnodesChangesAlgorithm() {
 //}
 
 // Return first occurency of node with given id or null
+/**
+ * Description for findNodeById.
+ * @param {*}    nodesarray    Description.
+ * @param {*}    id    Description.
+ */
 function findNodeById(nodesarray, id) {
     return findNode(nodesarray, function(node){return node.id === id} );
 }
 
 // Return first occurency of node for which callback give true
 //Exact version of findNodeByIdMVC (so propagate any changes)
+/**
+ * Description for findNode.
+ * @param {*}    nodesarray    Description.
+ * @param {*}    condition    Description.
+ */
 function findNode(nodesarray, condition) {
     for( var i = 0; i < nodesarray.length; i++)
         if( condition(nodesarray[i]) )
@@ -411,6 +508,11 @@ function findNode(nodesarray, condition) {
 
 //Exact version of findNode (so propagate any changes)
 //its just speed optimization, I remove 2 function calls
+/**
+ * Description for findNodeByIdMVC.
+ * @param {*}    nodesarray    Description.
+ * @param {*}    idMVC    Description.
+ */
 function findNodeByIdMVC(nodesarray, idMVC) {
     for( var i = 0; i < nodesarray.length; i++)
         if( nodesarray[i].idMVC == idMVC )
@@ -430,6 +532,12 @@ function findNodeByIdMVC(nodesarray, idMVC) {
 }
 
 // =====================================================================================================================================================
+/**
+ * Description for extentToTreeModel.
+ * @param {*}    tree    Description.
+ * @param {*}    treePersistenceManager    Description.
+ * @param {*}    viewsCommunicationInterface    Description.
+ */
 function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInterface)
 {
     var rootNode = tree[0];
@@ -442,42 +550,71 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
     tree.persistenceManager = treePersistenceManager;
     tree.persistenceManager.registerTree(tree);
 
+    /**
+     * Description for tree.saveNowOnViewClose.
+     */
     tree.saveNowOnViewClose = function() {
         this.persistenceManager.saveNow();
     };
 
+    /**
+     * Description for tree.hierarchyUpdated.
+     */
     tree.hierarchyUpdated = function() {
         this.persistenceManager.treeUpdated();
     };
 
     // -----------------------------------------------------------------------------------------------------------------
     // TODO find методы мне не нравятся как сделаны
+    /**
+     * Description for tree.findActiveWindow.
+     * @param {*}    windowId    Description.
+     */
     tree.findActiveWindow = function(windowId) {
         return findNodeById(this, NodeTypesEnum.WINDOW + windowId ); // TODO - то что id формируется именно так это детали реализации!!! именно тех нод что так его формируют
     };
 
+    /**
+     * Description for tree.findActiveTab.
+     * @param {*}    tabId    Description.
+     */
     tree.findActiveTab = function(tabId) {
         return findNodeById(this, NodeTypesEnum.TAB + tabId );
     };
 
+    /**
+     * Description for tree.findNodeByIdMVC.
+     * @param {*}    idMVC    Description.
+     */
     tree.findNodeByIdMVC = function(idMVC) {
         return findNodeByIdMVC(this, idMVC);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Description for tree.getAllCollapsedNodes.
+     */
     tree.getAllCollapsedNodes = function() {
         var r = [];
         forEachNodeInTree_noChangesInTree(this, function(node) { if(node.colapsed) r.push(node); });
         return r;
     };
 
+    /**
+     * Description for tree.getListOfAllActiveWindowNodes.
+     */
     tree.getListOfAllActiveWindowNodes = function () {
         var r = [];
         forEachNodeInTree_noChangesInTree(this, function(node) { if(node.type === NodeTypesEnum.WINDOW) r.push(node); });
         return r;
     };
 
+    /**
+     * Description for tree.setActiveTabInWindow.
+     * @param {*}    tabId    Description.
+     * @param {*}    windowId    Description.
+     */
     tree.setActiveTabInWindow = function(tabId, windowId) {
         // Не только селектаем нужный таб в соответствующем tabsOrginizer но и гасим selection для других табов этогоже окна
         var windowNode = this.findActiveWindow(windowId);
@@ -497,6 +634,11 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
     };
 
     // if windowId === -1 значит операционка селектнула другую прогу, хром потерял фокус
+    /**
+     * Description for tree.setFocusedWindow.
+     * @param {*}    windowId    Description.
+     * @param {*}    scrollToView    Description.
+     */
     tree.setFocusedWindow = function (windowId, scrollToView) {
         //if(this.lastFocusedWindowId === windowId) return; // сделано ибо nowFocusedWindowNodeModel.setFocusedState(вызывает в том числе скролинг дерева)
                                                             // и если мы свитчаемся на TabsOutlinerView а потом обратно на тоже окно где были это недоречно
@@ -524,6 +666,12 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         this.lastFocusedWindowId = windowId;
     };
 
+    /**
+     * Description for ensureAndPrepareTabsOrganizerForActiveTabsMove.
+     * @param {*}    dropTarget    Description.
+     * @param {*}    dropedHierarchy    Description.
+     * @param {*}    isCopyDrop    Description.
+     */
     function ensureAndPrepareTabsOrganizerForActiveTabsMove(dropTarget, dropedHierarchy, isCopyDrop) {
         var r = dropTarget;
         // Создаём новое окно если оно требуется для кого либо из дерева дропнутой модели и его нет выше точки дропа
@@ -550,16 +698,32 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return r;
     };
 
+    /**
+     * Description for tree.moveHierarchy_byIdMVC.
+     * @param {*}    dropTarget    Description.
+     * @param {*}    hierarchyToMoveIdMVC    Description.
+     */
     tree.moveHierarchy_byIdMVC = function(dropTarget, hierarchyToMoveIdMVC) {
         this.moveCopyHierarchy(dropTarget, this.findNodeByIdMVC(hierarchyToMoveIdMVC), false, null);
     };
 
     /*OVERRIDE similar method from TreeBase IN ActiveTree*/
+    /**
+     * Description for tree.moveCopyHierarchy.
+     * @param {*}    dropTarget    Description.
+     * @param {*}    dropedNodeModel    Description.
+     * @param {*}    isCopyDrop    Description.
+     */
     tree.moveCopyHierarchy = function(dropTarget, dropedNodeModel, isCopyDrop, port /*нужно для actionLinks.postInsertActions, активация диалога для Note, установка курсора*/) {
         // Warning - sometimes console === null there
 
         /*хак*/dropTarget.container = this.findNodeByIdMVC( dropTarget.containerIdMVC ); // ну это хак грязный, надо выкинуть ваще dropTarget.container
         
+        /**
+         * Description for isSameNodeOrPresentInPathToRoot.
+         * @param {*}    dropTargetContainerIdMVC    Description.
+         * @param {*}    dropedNodeModelIdMVC    Description.
+         */
         function isSameNodeOrPresentInPathToRoot(dropTargetContainerIdMVC, dropedNodeModelIdMVC) {
             // этот метод скопирован с treeview.js и слегка изменен
             for(var testnode = this.findNodeByIdMVC(dropTargetContainerIdMVC); testnode; testnode = testnode.parentNode )
@@ -709,6 +873,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
 //        return r;
 //    };
 
+    /**
+     * Description for tree.makeTransferableRepresentation_UriList.
+     * @param {*}    hierarchy    Description.
+     */
     tree.makeTransferableRepresentation_UriList = function(hierarchy) { // For 'text/uri-list'
         //http://www.mozilla.org
         //#A second link
@@ -737,6 +905,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return r[0] ? r[0] : '';
     };
 
+    /**
+     * Description for tree.makeTransferableRepresentation_Html.
+     * @param {*}    hierarchy    Description.
+     */
     tree.makeTransferableRepresentation_Html = function(hierarchy) { // For 'text/html'
         var r = "";
         (function doRecursiveHtmlise_(nodeModel) {
@@ -761,6 +933,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return r;
     };
 
+    /**
+     * Description for tree.makeTransferableRepresentation_TextMultiline.
+     * @param {*}    hierarchy    Description.
+     */
     tree.makeTransferableRepresentation_TextMultiline = function(hierarchy) { // For 'text/plain'
         var r = "";
         var indent = "";
@@ -788,17 +964,30 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return r;
     };
 
+    /**
+     * Description for tree.makeTransferableRepresentation_TabsOutlinerInterchangeFormat.
+     * @param {*}    hierarchy    Description.
+     */
     tree.makeTransferableRepresentation_TabsOutlinerInterchangeFormat = function(hierarchy) { // For 'application/x-tabsoutliner-items'
         // Note that serializeOpenNodesAsSaved := true also play important role to nulify
         // dId, cdId, sdId, sdIdKnot properties
         return JSON.stringify(this.serializeHierarchyAsJSO(hierarchy, true /*serializeOpenNodesAsSaved*/));
     };
 
+    /**
+     * Description for tree.createHierarchyFromTabsOutlinerInterchangeFormat.
+     * @param {*}    data    Description.
+     */
     tree.createHierarchyFromTabsOutlinerInterchangeFormat = function(data) {
         return restoreHierarchyFromJSO(JSON.parse(data));
     };
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Description for tree.serializeHierarchyAsJSO.
+     * @param {*}    hierarchy    Description.
+     * @param {*}    serializeOpenNodesAsSaved    Description.
+     */
     tree.serializeHierarchyAsJSO = function(hierarchy, serializeOpenNodesAsSaved) { // backward - restoreHierarchyFromJSO
         var r = {};
         (function doRecursiveSerialize_(nodeModel, container) {
@@ -818,6 +1007,9 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return r;
     };
 
+    /**
+     * Description for tree.serializeAsOperationsLog.
+     */
     tree.serializeAsOperationsLog = function() { // backward - restoreTreeFromOperations
         var rOperations = [];
         var rootNode = this.currentSession_rootNode;
@@ -847,6 +1039,9 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return rOperations;
     };
 
+    /**
+     * Description for tree.assignDIds_beforeDiffSerialize.
+     */
     tree.assignDIds_beforeDiffSerialize = function() {
         forEachNodeInTree_noChangesInTree(this, function(node) {
             if(node.dId)  return; // IMPORTANT!!! Continue only if there is no dId and it's must set a new
@@ -894,6 +1089,12 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         }); // forEachNodeInTree(this, function(node) {
     };
 
+    /**
+     * Description for tree.renumerateDidsOnCollision.
+     * @param {*}    startingDId    Description.
+     * @param {*}    newDidForStartingDId    Description.
+     * @param {*}    maxFoundDid    Description.
+     */
     tree.renumerateDidsOnCollision  = function(startingDId, newDidForStartingDId, maxFoundDid ) {
 
         var d = newDidForStartingDId - startingDId;
@@ -919,6 +1120,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         });
     };
 
+    /**
+     * Description for tree.serializeTheDifference.
+     * @param {*}    startingDId    Description.
+     */
     tree.serializeTheDifference = function(startingDId) {
         // startingDId по идеи мы всёже должны получить из persistence manager, так как дерево не очень то и в курсе кто и где там его писал
         // куда и когда, икакие дифы есть а какие нет.
@@ -957,6 +1162,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
     };
     tree.nextWinDisplacement = {'x':34, 'y':34};
 
+    /**
+     * Description for tree.calculateAndMoveNextWindowPosition.
+     * @param {*}    tabsOutliner_chromeWindowObj    Description.
+     */
     tree.calculateAndMoveNextWindowPosition = function(tabsOutliner_chromeWindowObj) {
 
         var current_initialNewWindowPosition_left = (tabsOutliner_chromeWindowObj.left + tabsOutliner_chromeWindowObj.width) + NEW_WINDOW_AND_TO_POPUP_MARGIN/*слишком в притык не красиво*/;
@@ -979,6 +1188,9 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return r;
     };
 
+    /**
+     * Description for tree.updateDisplacementForNextWindow.
+     */
     tree.updateDisplacementForNextWindow = function() {
         this.newWindowPositionDisplacement.left +=  this.nextWinDisplacement.x;
         this.newWindowPositionDisplacement.top  +=  this.nextWinDisplacement.y;
@@ -993,6 +1205,11 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         });
     };
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Description for tree.requestNewAlifeTabForNode.
+     * @param {*}    tabsOrganizer    Description.
+     * @param {*}    waitedTabNode    Description.
+     */
     tree.requestNewAlifeTabForNode = function(tabsOrganizer, waitedTabNode) {
         var _this_activetree = this;
 
@@ -1018,6 +1235,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         } );
     };
 
+    /**
+     * Description for tree.requestNewAlifeWindowForNode.
+     * @param {*}    waitedWindowNode    Description.
+     */
     tree.requestNewAlifeWindowForNode = function(waitedWindowNode) {
         var _this_activetree = this;
         // Плохая идея откладывать  creationWaitTab.isWhantRequestNewTabCreation = false; в асинхронный вызов!!! Хотя в данном конкретном случае ничего плохого не случится
@@ -1070,6 +1291,11 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
                 chrome.windows.create(createProperties, restoreSavedWinCreationDone);
             });
 
+            /**
+             * Description for checkAndFixBounds.
+             * @param {*}    createProperties    Description.
+             * @param {*}    visibleArea    Description.
+             */
             function checkAndFixBounds(createProperties, visibleArea) {
                 // Кароче есть требование чтоб площадь окна была как минимум на 50% видна
                 // если взять пополам высоту и ширину то половина того и того это будет всего 25%, а не 50%, в худшем случае
@@ -1101,6 +1327,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
                     createProperties.top = visibleArea.top;
                 }       
                 
+                /**
+                 * Description for numberToInteger.
+                 * @param {*}    num    Description.
+                 */
                 function numberToInteger (num) {
                     if(!num /*NAN, undefined, 0*/) return 0;
     
@@ -1115,6 +1345,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
                 createProperties.left = numberToInteger(createProperties.left);
             }
 
+            /**
+             * Description for restoreSavedWinCreationDone.
+             * @param {*}    newWindow_chromeWindowObj    Description.
+             */
             function restoreSavedWinCreationDone(newWindow_chromeWindowObj) {
                 if(chrome.runtime.lastError) {
                     // If lastError present then Most likely this is:
@@ -1198,33 +1432,71 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         });
     };
 
+    /**
+     * Description for tree.findActiveWindowIdForTabId.
+     * @param {*}    tabId    Description.
+     */
     tree.findActiveWindowIdForTabId = function(tabId) {
         var activeTab = this.findActiveTab(tabId);
         var tabsOrganizer = activeTab && activeTab.findFirstSavedOrOpenTabsOrganizerInPathToRoot(tabId-1 /*тут нужно windowId чтоб popup окно посчитало себя органайзером, мы его не знаем, типа угадываем его так*/);
         return tabsOrganizer && tabsOrganizer.chromeWindowObj && tabsOrganizer.chromeWindowObj.id;
     };
 
+    /**
+     * Description for tree.createNodeNote.
+     * @param {*}    text    Description.
+     */
     tree.createNodeNote = function(text) {
         return new NodeNote({'note': text == undefined ? "#" : text})
     };
 
+    /**
+     * Description for tree.createNodeSeparator.
+     */
     tree.createNodeSeparator = function() {
         return new NodeSeparatorLine();
     };
 
+    /**
+     * Description for tree.createNodeGroup.
+     */
     tree.createNodeGroup = function() {
         return new NodeGroup();
     };
 
     // TODO replace as tree.actionLinkModelBaseFabric( type ) { switch(type) { ...} }
+    /**
+     * Description for tree.gdoc_.
+     */
     tree.gdoc_       = function(){ return new ActionLinkModelBase(function() { return new NodeTabSaved({'url':"https://docs.google.com/document/create", 'title':'Untitled document'}) }, function(node, port) { node.setCustomColor('#4986E7', '#3460AA'); node.onNodeDblClicked(tree, port) }) };
+    /**
+     * Description for tree.note_.
+     */
     tree.note_       = function(){ return new ActionLinkModelBase(function() { return new NodeNote()                                                                             }, function(node, port) { node.onNodeDblClicked(tree, port) }) };
+    /**
+     * Description for tree.openwin_.
+     */
     tree.openwin_    = function(){ return new ActionLinkModelBase(function() { return new NodeWindowSaved()                                                                      }, function(node, port) { node.onNodeDblClicked(tree, port) }) };
+    /**
+     * Description for tree.savedwin_.
+     */
     tree.savedwin_   = function(){ return new ActionLinkModelBase(function() { return new NodeWindowSaved()                                                                      }, function(node, port, data) { if(data) node.setCustomTitle(data.title) }) };
+    /**
+     * Description for tree.group_.
+     */
     tree.group_      = function(){ return new ActionLinkModelBase(function() { return new NodeGroup()                                                                            }, function(node, port, data) { if(data) node.setCustomTitle(data.title) }) };
+    /**
+     * Description for tree.separator_.
+     */
     tree.separator_  = function(){ return new ActionLinkModelBase(function() { return new NodeSeparatorLine()                                                                    }, function(node, port, data) { if(data) node.setSeparatorStyleFromText(data.title) }) };
 
+    /**
+     * Description for tree.link_.
+     */
     tree.link_       = function(){ return new ActionLinkModelBase(function(data) { return new NodeTabSaved( {'url' :data.url, 'title':data.title} ) }) };
+    /**
+     * Description for tree.textline_.
+     */
     tree.textline_   = function(){ return new ActionLinkModelBase(function(data) { return new NodeNote(     {'note':data.title                  } ) }) };
     // All additions to this ..., link_, textline_, .... must be added to externs-common.js
 
@@ -1249,6 +1521,11 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
     //        tabNodeToReplace.replaceSelfInTreeBy_mergeSubnodesAndMarks( new NodeTabActive(newChromeTabObj) );
     //    };
 
+    /**
+     * Description for tree.onTabIdReplaced.
+     * @param {*}    lastKnownActiveTabId    Description.
+     * @param {*}    newTabId    Description.
+     */
     tree.onTabIdReplaced = function(lastKnownActiveTabId, newTabId) {
         var tabNodeToReplace = this.findActiveTab( lastKnownActiveTabId );
         if(!tabNodeToReplace) {
@@ -1261,6 +1538,12 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return tabNodeToReplace.replaceSelfInTreeBy_mergeSubnodesAndMarks( new NodeTabActive(newChromeTabObj) );
     };
 
+    /**
+     * Description for tree.replaceTabInWindowByNewlyCreatedRequestedTab_orAttachWaitTab.
+     * @param {*}    windowNode    Description.
+     * @param {*}    nodeToReplace    Description.
+     * @param {*}    newlyCreated_chromeTabObj    Description.
+     */
     tree.replaceTabInWindowByNewlyCreatedRequestedTab_orAttachWaitTab = function(windowNode, nodeToReplace, newlyCreated_chromeTabObj) {
         var newlyCreatedTabNode = windowNode.findAlifeTabInOwnTabsById(newlyCreated_chromeTabObj.id);
 
@@ -1273,6 +1556,12 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         }
     };
 
+    /**
+     * Description for tree.onActiveTabRemoved.
+     * @param {*}    tabId    Description.
+     * @param {*}    isWindowClosingInfo    Description.
+     * @param {*}    doNotReportNoIdError    Description.
+     */
     tree.onActiveTabRemoved = function(tabId, isWindowClosingInfo, doNotReportNoIdError) {
         var tabNode = this.findActiveTab(tabId);
         if(!tabNode){
@@ -1298,6 +1587,11 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         tabNode.onAlifeTabClosedByChrome_removeSelfAndPromoteSubnodesInPlace_orConvertToSavedIfMarksOrTextNodesPresent(closedWindowNode);
     };
 
+    /**
+     * Description for tree.onActiveWindowRemoved.
+     * @param {*}    windowId    Description.
+     * @param {*}    doNotReportNoIdError    Description.
+     */
     tree.onActiveWindowRemoved = function(windowId, doNotReportNoIdError) {
         var winNode = this.findActiveWindow(windowId);
         if(!winNode) {
@@ -1309,6 +1603,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         winNode.onAlifeWindowClosedByChrome_removeSelfAndPromoteSubnodesInPlace_orConvertToSavedIfMarksOrTextNodesPresent();
     };
 
+    /**
+     * Description for tree.fromChrome_onTabCreated.
+     * @param {*}    chromeTabObj    Description.
+     */
     tree.fromChrome_onTabCreated = function(chromeTabObj) {
         var nodeModelForAffectedWindow = this.findActiveWindow(chromeTabObj.windowId);
         // Ситуации когда таб создан, а окна для него в дереве ещё нет быть не должно!!!
@@ -1320,6 +1618,10 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
         return nodeModelForAffectedWindow.fromChrome_onTabCreated(chromeTabObj, true/*FASTFORWARDv3 !!localStorage['relateNewTabToOpener']*/);
     };
 
+    /**
+     * Description for tree.fromChrome_onWindowCreated.
+     * @param {*}    chromeWindowObj    Description.
+     */
     tree.fromChrome_onWindowCreated = function(chromeWindowObj) {
         if(this.findActiveWindow(chromeWindowObj.id)) return; // Already created, most likely in restoreSavedWinCreationDone, see places where fromChrome_onWindowCreated called
 
@@ -1350,6 +1652,11 @@ function extentToTreeModel(tree, treePersistenceManager, viewsCommunicationInter
 }
 
 var NodeModelBase = Class.extend({
+    /**
+     * Description for init.
+     * @param {*}    type    Description.
+     * @param {*}    titleBackgroundCssClass    Description.
+     */
     init:function(type, titleBackgroundCssClass){
         var nowTime = Date.now();
 
@@ -1394,15 +1701,25 @@ var NodeModelBase = Class.extend({
 
     },
 
+    /**
+     * Description for isSubnodesPresent.
+     */
     isSubnodesPresent:function() {
         return this.subnodes.length > 0;
     },
 
+    /**
+     * Description for updateSubnodesInfoForViewAfterChangesInSubnodes.
+     * @param {*}    parentUpdateData    Description.
+     */
     updateSubnodesInfoForViewAfterChangesInSubnodes:function(parentUpdateData) {
         // Делаем ничего, этот метод предназначен для NodeModelMVCDataTransferObject
         // чтоб там копии о сабнодах проапдейтить после treeDelete или insertSubnode
     },
 
+    /**
+     * Description for resetStructureDids.
+     */
     resetStructureDids:function() {
         this.dId = 0; //node difference ID (actualy a node structure)
         this.cdId = 0; //node content difference ID
@@ -1410,18 +1727,31 @@ var NodeModelBase = Class.extend({
         this.sdIdKnot = null; //сериализированный knot c did == sdId, который используется как база для наложения subnodes changes
     },
 
+    /**
+     * Description for isAnOpenTab.
+     */
     isAnOpenTab:function() {
         return false;
     },
 
+    /**
+     * Description for isAnOpenWindow.
+     */
     isAnOpenWindow:function() {
         return false;
     },
 
+    /**
+     * Description for isSavedOrOpenTabsOrganizer.
+     * @param {*}    forTabsInChromeWindowId    Description.
+     */
     isSavedOrOpenTabsOrganizer:function(forTabsInChromeWindowId) {
         return false;
     },
 
+    /**
+     * Description for getHoveringMenuActions.
+     */
     getHoveringMenuActions:function() {
         var r = this.hoveringMenuActions;
 
@@ -1436,6 +1766,10 @@ var NodeModelBase = Class.extend({
         return r;
     },
 
+    /**
+     * Description for notifyTreeModelAboutUpdate_invalidateDids.
+     * @param {*}    isNodeContentUpdated_falseIfOnlyTheStructure    Description.
+     */
     notifyTreeModelAboutUpdate_invalidateDids:function(isNodeContentUpdated_falseIfOnlyTheStructure) {
         var treeModel = this.getTreeModelFromRoot_invalidateDids(isNodeContentUpdated_falseIfOnlyTheStructure);
         if(treeModel) treeModel.hierarchyUpdated();
@@ -1453,6 +1787,9 @@ var NodeModelBase = Class.extend({
     // },
 
 
+    /**
+     * Description for notifyObservers.
+     */
     notifyObservers:function(/*Array - [callbackName, callbackArguments...]*/) {
         var treeModel = this.getTreeModelFromRoot();
         if(!treeModel) return; //We are not connected to the tree
@@ -1460,6 +1797,9 @@ var NodeModelBase = Class.extend({
         treeModel.viewsCommunicationInterface.notifyObserversInViews(this.idMVC, arguments);
     },
 
+    /**
+     * Description for notifyObservers_alsoUpdateCollapsedParents.
+     */
     notifyObservers_alsoUpdateCollapsedParents:function(/*Array - [callbackName, callbackArguments...]*/) {
         var treeModel = this.getTreeModelFromRoot();
         if(!treeModel) return; //We are not connected to the tree
@@ -1468,6 +1808,9 @@ var NodeModelBase = Class.extend({
     },
 
 
+    /**
+     * Description for notifyObservers_onNodeUpdated.
+     */
     notifyObservers_onNodeUpdated :function() {
         var treeModel = this.getTreeModelFromRoot();
         if(!treeModel) return; //We are not connected to the tree
@@ -1476,6 +1819,10 @@ var NodeModelBase = Class.extend({
     },
 
 
+    /**
+     * Description for notifyAllCollapsedInPathToRoot.
+     * @param {*}    observerName    Description.
+     */
     notifyAllCollapsedInPathToRoot:function(observerName) {
         // Раньше нотифицировали только первую ноду на пути к руту, но проблема в том что субноды у неё тоже могли быть свёрнуты и при этом для них хранится закешированный
         // и апдейтищийся при изменениях DOM! Не подключенный к экрану.
@@ -1495,6 +1842,10 @@ var NodeModelBase = Class.extend({
     //     });
     // },
 
+    /**
+     * Description for requestScrollNodeToViewInAutoscrolledViews.
+     * @param {*}    viewsCommunicationInterface    Description.
+     */
     requestScrollNodeToViewInAutoscrolledViews:function(viewsCommunicationInterface) {
         var nodeToScroll = this.getFirstCollapsedNodeInPathFromRootOrThisIfNotHiden();
 
@@ -1503,6 +1854,10 @@ var NodeModelBase = Class.extend({
         // nodeToScroll.notifyObservers("fromModel_requestScrollNodeToViewInAutoscrolledViews");
     },
 
+    /**
+     * Description for setCollapsing.
+     * @param {*}    newCollapsingState    Description.
+     */
     setCollapsing:function(newCollapsingState) {
         if(newCollapsingState === this.colapsed) return; // Do nothing if nothing changed
         if(this.subnodes.length == 0) newCollapsingState = false; // Если нет подузлов сворачивать не дадим
@@ -1517,11 +1872,17 @@ var NodeModelBase = Class.extend({
         var treeModel = this.notifyTreeModelAboutUpdate_invalidateDids(true/*isContentChange, false if only the structure*/); //"setCollapsing"
     },
 
+    /**
+     * Description for getCustomTitle.
+     */
     getCustomTitle:function() {
         return null; //return this.marks.customTitle; // It's actualy present only in tabs (saved or active)
     },
 
 
+    /**
+     * Description for getMarksClone.
+     */
     getMarksClone:function() {
         var r_marks = oneLevelObjectClone(this.marks);
         r_marks.relicons = this.marks.relicons.slice(0);
@@ -1529,6 +1890,10 @@ var NodeModelBase = Class.extend({
         return r_marks;
     },
 
+    /**
+     * Description for setNewMarksObject_notifyObserversAndPersitenceManager.
+     * @param {*}    immutableMarksObject_MustNotBeChangedInFuture    Description.
+     */
     setNewMarksObject_notifyObserversAndPersitenceManager:function(immutableMarksObject_MustNotBeChangedInFuture) {
         this.marks = immutableMarksObject_MustNotBeChangedInFuture;
 
@@ -1540,6 +1905,11 @@ var NodeModelBase = Class.extend({
         }
     },
 
+    /**
+     * Description for setCustomColor.
+     * @param {*}    colorStringActive    Description.
+     * @param {*}    colorStringSaved    Description.
+     */
     setCustomColor:function(colorStringActive, colorStringSaved) {
         var new_marks = this.getMarksClone();
 
@@ -1549,12 +1919,21 @@ var NodeModelBase = Class.extend({
         this.setNewMarksObject_notifyObserversAndPersitenceManager(new_marks);
     },
 
+    /**
+     * Description for setCursorHereOrToFirstCollapsedParent.
+     * @param {*}    port    Description.
+     * @param {*}    doNotScrollView    Description.
+     */
     setCursorHereOrToFirstCollapsedParent:function(port/*portToViewThatRequestAction*/, doNotScrollView) {
         var targetNode = this.getFirstCollapsedNodeInPathFromRootOrThisIfNotHiden();
 
         port.postMessage({command:"msg2view_setCursorHere", targetNodeIdMVC:targetNode.idMVC, doNotScrollView:doNotScrollView});
     },
 
+    /**
+     * Description for removeCursorStyles.
+     * @param {*}    ICursorOwner    Description.
+     */
     removeCursorStyles:function(ICursorOwner) {
         this.notifyObservers("fromModel_removeCursorStyles", ICursorOwner);
     },
@@ -1564,6 +1943,10 @@ var NodeModelBase = Class.extend({
     // Сюда приходят на удаление верхний элемент иерархии целиком, с кучей поднод, она ещё возвращается и с ней всякие 
     // манипуляции зачастую делаются с перевставкой последующей
     // к примеру табов с нотатками Если удалялось живое окно, ну или просто всех субнод
+    /**
+     * Description for removeSubTree.
+     * @param {*}    nodeToDelete    Description.
+     */
     removeSubTree:function(nodeToDelete) {
         // nextCursorHolderInCaseCursoredElementsAffectedIdMVC расчитывается как узел на следующей строке после удаленной иерархии или если нет такого (это последняя в дереве иерархия)
         // тогда это узел на строке перед ней
@@ -1605,6 +1988,9 @@ var NodeModelBase = Class.extend({
         return nodeToDelete;
     },
    
+    /**
+     * Description for removeSelfAndPromoteSubnodesInPlace.
+     */
     removeSelfAndPromoteSubnodesInPlace:function() {
 
         // nextCursorHolderInCaseCursoredElementsAffectedIdMVC - подсказка где будет курсор для тех потенциальных View в которых он стоял как раз на удаленном узле (паренте)
@@ -1651,6 +2037,9 @@ var NodeModelBase = Class.extend({
         return this/*deletedHierarchy*/;
     },    
 
+    /**
+     * Description for calculateParentsUpdatesData.
+     */
     calculateParentsUpdatesData:function() {
         // parentsUpdateData collection of objects with updates for parents
 
@@ -1673,6 +2062,10 @@ var NodeModelBase = Class.extend({
         return r;
     },
 
+    /**
+     * Description for removeSubTree_rawNoObserversNotify.
+     * @param {*}    nodeToDelete    Description.
+     */
     removeSubTree_rawNoObserversNotify:function(nodeToDelete) {
         var nodeToDeleteIndex = this.subnodes.indexOf(nodeToDelete);
         if(nodeToDeleteIndex < 0) throw "Error deleteSubnode() cannot find specified nodeToDelete in subnodes list";
@@ -1691,6 +2084,9 @@ var NodeModelBase = Class.extend({
         return allNodesIdMVCsOfDeletedHierarchy;
     },
 
+    /**
+     * Description for removeOwnTreeFromParent.
+     */
     removeOwnTreeFromParent:function() {
         if(!this.parent) {
             if(console)console.error("Trying to delete node without parent, (it's ok and expected during paste hierarchy) ");
@@ -1710,6 +2106,12 @@ var NodeModelBase = Class.extend({
     // tree.nodeDropMethodCall
     // doRecursiveDrop_
     // tree.moveCopyHierarchy
+    /**
+     * Description for insertSubnode.
+     * @param {*}    subnodeIndex    Description.
+     * @param {*}    newNode    Description.
+     * @param {*}    isInsertedDuringDeserializeFromDb    Description.
+     */
     insertSubnode:function(subnodeIndex, newNode, isInsertedDuringDeserializeFromDb) {
 
         let [newNodeIndex, isStartNewList] = this.rawInsertSubnodeNoObserversNotify(subnodeIndex, newNode);
@@ -1733,6 +2135,11 @@ var NodeModelBase = Class.extend({
         return newNode;
     },
 
+    /**
+     * Description for rawInsertSubnodeNoObserversNotify.
+     * @param {*}    subnodeIndex    Description.
+     * @param {*}    newNode    Description.
+     */
     rawInsertSubnodeNoObserversNotify:function(subnodeIndex, newNode) {
         if(!newNode){ console.error("ERROR - node.rawInsertSubnodeNoObserversNotify called without newNode"); return null; }
 
@@ -1759,6 +2166,13 @@ var NodeModelBase = Class.extend({
     },
 
     // insertCopyAsSubnode и метод ниже (deleteHierarchy) фактически обслуживают тока moveCopyHierarchy и предназначены для перестановки курсора верной
+    /**
+     * Description for insertCopyAsSubnode_MoveCursor.
+     * @param {*}    subnodeIndex    Description.
+     * @param {*}    newNode    Description.
+     * @param {*}    originalNode    Description.
+     * @param {*}    isMoveOperation    Description.
+     */
     insertCopyAsSubnode_MoveCursor:function(subnodeIndex, newNode, originalNode, isMoveOperation) {
         var r = this.insertSubnode(subnodeIndex, newNode, false);
 //      if(isMoveOperation) r.notifyObservers("fromModel_afterCopyPlacedDuringMove_TransferCursor");
@@ -1767,19 +2181,34 @@ var NodeModelBase = Class.extend({
 
     // Это вызывается ТОЛЬКО колапснутого узла на delete action (уже не тока)
     // Башой вопрос, что насчёт работы с курсором во всех других местах где вызывается removeOwnTreeFromParent, точно что не всюду это надо, но...
+    /**
+     * Description for deleteHierarchy_MoveCursor.
+     */
     deleteHierarchy_MoveCursor:function() {
         //this.notifyObservers("fromModel_onBeforeDeleteHierarchy_MoveCursor");
         return this.removeOwnTreeFromParent();
     },
 
+    /**
+     * Description for insertAsFirstSubnode.
+     * @param {*}    newNode    Description.
+     */
     insertAsFirstSubnode:function(newNode) {
         return this.insertSubnode(0, newNode); // moveToActiveTree метод всётаки использует -1 как сигнал для вставки в конец, так что insertSubnode(-1, должно всё равно работать как insertAsLastSubnode
     },
 
+    /**
+     * Description for insertAsLastSubnode.
+     * @param {*}    newNode    Description.
+     */
     insertAsLastSubnode:function(newNode) {
         return this.insertSubnode(-1, newNode); // moveToActiveTree метод всётаки использует -1 как сигнал для вставки в конец, так что insertSubnode(-1, должно всё равно работать как insertAsLastSubnode
     },
 
+    /**
+     * Description for insertParent.
+     * @param {*}    newParentToInsertBeforeAs    Description.
+     */
     insertParent:function(newParentToInsertBeforeAs) {
         var targetPoint = this.getTargetPointInParent();
         var ourTree = this.removeOwnTreeFromParent();
@@ -1787,16 +2216,28 @@ var NodeModelBase = Class.extend({
         return targetPoint.container.insertSubnode(targetPoint.position, newParentToInsertBeforeAs);
     },
 
+    /**
+     * Description for insertAsPreviousSibling.
+     * @param {*}    newSiblingNode    Description.
+     */
     insertAsPreviousSibling:function(newSiblingNode) {
         var insertIndex = this.parent.subnodes.indexOf(this);
         return this.parent.insertSubnode(insertIndex, newSiblingNode);
     },
 
+    /**
+     * Description for insertAsNextSibling.
+     * @param {*}    newSiblingNode    Description.
+     */
     insertAsNextSibling:function(newSiblingNode) {
         var insertIndex = this.parent.subnodes.indexOf(this) + 1;
         return this.parent.insertSubnode(insertIndex, newSiblingNode);
     },
 
+    /**
+     * Description for findAllTabsOrganizersInsideHierarchy.
+     * @param {*}    searchResults    Description.
+     */
     findAllTabsOrganizersInsideHierarchy:function(searchResults) {
         for(var i = 0; i < this.subnodes.length; i++) {
             var node = this.subnodes[i];
@@ -1805,6 +2246,9 @@ var NodeModelBase = Class.extend({
         }
     },
 
+    /**
+     * Description for findNodeOnPrevRow.
+     */
     findNodeOnPrevRow:function() {
         var parent = this.parent;
         if(!parent) return null;
@@ -1817,6 +2261,9 @@ var NodeModelBase = Class.extend({
         }
     },
 
+    /**
+     * Description for findPrevSibling.
+     */
     findPrevSibling:function() {
         var parent = this.parent;
         if(!parent) return null;
@@ -1829,6 +2276,9 @@ var NodeModelBase = Class.extend({
         }
     },
 
+    /**
+     * Description for findPrevSibling_ifAbsent_parent.
+     */
     findPrevSibling_ifAbsent_parent:function() {
         var r = this.findPrevSibling();
         if(!r)
@@ -1837,6 +2287,10 @@ var NodeModelBase = Class.extend({
             return r;
     },
 
+    /**
+     * Description for findNodeOnNextRow.
+     * @param {*}    stayInParentBounds    Description.
+     */
     findNodeOnNextRow:function(stayInParentBounds) {
         if(!this.colapsed && this.subnodes.length > 0) { // Есть сабноды и они видны, просто возвращаем первый элемент из сабнод
             return this.subnodes[0];
@@ -1845,6 +2299,10 @@ var NodeModelBase = Class.extend({
         }
     },
 
+    /**
+     * Description for findNextSibling_ifAbsent_anyParentsNextSibling.
+     * @param {*}    stayInParentBounds    Description.
+     */
     findNextSibling_ifAbsent_anyParentsNextSibling:function(stayInParentBounds) {
         var parent = this.parent;
         if(!parent) return null;
@@ -1856,12 +2314,19 @@ var NodeModelBase = Class.extend({
             return stayInParentBounds ? null : parent.findNextSibling_ifAbsent_anyParentsNextSibling(false);
     },
 
+    /**
+     * Description for findLastNodeInHierarhy.
+     */
     findLastNodeInHierarhy:function() {
         if(this.subnodes.length === 0) return this;
 
         return this.subnodes[this.subnodes.length-1].findLastNodeInHierarhy();
     },
 
+    /**
+     * Description for replaceSelfInTreeBy_mergeSubnodesAndMarks.
+     * @param {*}    nodeWhichReplaceThis    Description.
+     */
     replaceSelfInTreeBy_mergeSubnodesAndMarks:function(nodeWhichReplaceThis) {
         var parent = this.parent;
 
@@ -1895,6 +2360,10 @@ var NodeModelBase = Class.extend({
         // TODO возможно стоит сделать для view новый месадж - onNodeReplaced (и кстате fromModel_onNodeUpdated возможно стоит сделать через него)
     },
 
+    /**
+     * Description for mergeSubnodesAndCopyMarksFrom.
+     * @param {*}    source    Description.
+     */
     mergeSubnodesAndCopyMarksFrom:function(source) {
         for(var i = source.subnodes.length-1; i >=  0; i--)
             this.insertSubnode(0, source.subnodes[i].removeOwnTreeFromParent(/*подавляем parent present error*/));  // мы хотим чтоб сначало шли те субноды что были в this, а потом уже те что были в nodeWhichReplaceThis
@@ -1902,6 +2371,9 @@ var NodeModelBase = Class.extend({
         this.copyMarksAndCollapsedFrom(source);
     },
 
+    /**
+     * Description for flattenTabsHierarchy_skipTabsOrganizers.
+     */
     flattenTabsHierarchy_skipTabsOrganizers : function() {
         var parent = this;
         var currentNodeModel = parent.subnodes[0]; // can be undefined
@@ -1929,12 +2401,19 @@ var NodeModelBase = Class.extend({
             parent.insertAsFirstSubnode(node);
         }
 
+        /**
+         * Description for isLinkOrSeparatorOnLink.
+         * @param {*}    nodeModel    Description.
+         */
         function isLinkOrSeparatorOnLink(nodeModel) {
             return  nodeModel instanceof NodeTabBase ||
                    (nodeModel instanceof NodeSeparatorLine && nodeModel.parent instanceof NodeTabBase);
         }
     },
 
+    /**
+     * Description for liberateToLevelDownWithOwnHierarchy.
+     */
     liberateToLevelDownWithOwnHierarchy : function() {
         var parent = this.parent;
         this.removeOwnTreeFromParent();
@@ -1945,6 +2424,9 @@ var NodeModelBase = Class.extend({
     // -----------------------------------------------------------------------------------------------------------------
 
     // Должно быть вызвано после любого апдейта marks
+    /**
+     * Description for calculateIsProtectedFromGoneOnClose.
+     */
     calculateIsProtectedFromGoneOnClose:function() {
         // не false значение актуально тока для Active обектов (окон и табов)
 
@@ -1952,6 +2434,9 @@ var NodeModelBase = Class.extend({
     },
 
     // Вызывается тока из NodeActive (search this key for othere such comments)
+    /**
+     * Description for isCustomMarksPresent.
+     */
     isCustomMarksPresent:function() {
         return    this.marks.relicons.length > 0
                || this.marks.customFavicon     != undefined
@@ -1961,6 +2446,9 @@ var NodeModelBase = Class.extend({
     },
 
     // Вызывается тока из NodeActive (search this key for othere such comments)
+    /**
+     * Description for isSomethingExeptUnmarkedActiveTabPresentInDirectSubnodes.
+     */
     isSomethingExeptUnmarkedActiveTabPresentInDirectSubnodes:function() {
         for(var i = 0; i < this.subnodes.length; i++) {
             var directSubnode = this.subnodes[i];
@@ -1972,23 +2460,38 @@ var NodeModelBase = Class.extend({
     },
 
     // Единственные два обекта что это переопределяют это ActiveTab & ActiveWindow - они возвращают свои Saved аналоги
+    /**
+     * Description for cloneForCopyInActiveTree_withoutSubnodes.
+     */
     cloneForCopyInActiveTree_withoutSubnodes:function() {
         return this.copyConstructor_withoutSubnodes();
     },
 
 
+    /**
+     * Description for getIcon.
+     */
     getIcon:function() {
         return null;
     },
 
+    /**
+     * Description for getIconForHtmlExport.
+     */
     getIconForHtmlExport:function() {
         return null;
     },
 
+    /**
+     * Description for getNodeContentCssClass.
+     */
     getNodeContentCssClass:function() {
         return null;
     },
 
+    /**
+     * Description for getNodeTextCustomStyle.
+     */
     getNodeTextCustomStyle:function() {
         if(this.type === NodeTypesEnum.TAB || this.type === NodeTypesEnum.WINDOW)
             return this.marks.customColorActive ? "color:"+this.marks.customColorActive : null;
@@ -1996,39 +2499,69 @@ var NodeModelBase = Class.extend({
             return this.marks.customColorSaved  ? "color:"+this.marks.customColorSaved : null;
     },
 
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPromt    Description.
+     */
     getNodeText:function(isForEditPromt) {
         console.error("ERROR getNodeText is not overriden", this);
         return "";
     },
 
+    /**
+     * Description for getTooltipText.
+     */
     getTooltipText:function() {
         return "";
     },
 
+    /**
+     * Description for getHref.
+     */
     getHref:function() { // Also used to detect saved and open tabs nodes in flatten hierarchy command, as only them return non empty Href
         return "";
     },
 
+    /**
+     * Description for isProtectedFromGoneOnClose.
+     */
     isProtectedFromGoneOnClose:function() {
         return this.isProtectedFromGoneOnCloseCache;
     },
 
+    /**
+     * Description for isSelectedTab.
+     */
     isSelectedTab:function() {
         return false;
     },
 
+    /**
+     * Description for isFocusedWindow.
+     */
     isFocusedWindow:function() {
         return false;
     },
 
+    /**
+     * Description for countSubnodesStatsBlockData.
+     */
     countSubnodesStatsBlockData:function() {
         return this.countSubnodes({'nodesCount':0, 'activeWinsCount':0, 'activeTabsCount':0}); // Задаём эти поля с нулевыми значения тут, чтоб зафиксировать порядок выдачи для for in, иначе может быть другой порядок и табы окажутся перед окнами в выдаче
     },
 
+    /**
+     * Description for countSelf.
+     * @param {*}    statData    Description.
+     */
     countSelf:function(statData) {
         statData['nodesCount'] = statData['nodesCount'] ? statData['nodesCount']+1 : 1;
     },
 
+    /**
+     * Description for countSubnodes.
+     * @param {*}    statData    Description.
+     */
     countSubnodes:function(statData) {
         for(var i = 0; i < this.subnodes.length; i++) {
             this.subnodes[i].countSelf(statData);
@@ -2037,12 +2570,19 @@ var NodeModelBase = Class.extend({
         return statData;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() {
         console.error("ERROR NodeModelBase::copyConstructor_withoutSubnodes() was not overriden");
         return null;
     },
 
     // TODO Cut&Paste - deserializeMarksAndCollapsed
+    /**
+     * Description for copyMarksAndCollapsedFrom.
+     * @param {*}    sourceNode    Description.
+     */
     copyMarksAndCollapsedFrom:function(sourceNode) {
         // Этот метод всегда вызывается в рамках объкта который не вставлен дерев - и не имеет parent - тоесть
         // Почти всегда в copyConstructorah или аналогах, на тока что созданной ноде оператором new
@@ -2062,6 +2602,10 @@ var NodeModelBase = Class.extend({
     },
 
     // TODO Cut&Paste - copyMarksAndCollapsedFrom
+    /**
+     * Description for deserializeMarksAndCollapsed.
+     * @param {*}    serializedNodeData    Description.
+     */
     deserializeMarksAndCollapsed:function(serializedNodeData) {
         this.colapsed       = !!(serializedNodeData['colapsed']); // colapsed can be undefined
 
@@ -2111,6 +2655,9 @@ var NodeModelBase = Class.extend({
     // type не указан => это NodeTypesEnum.SAVEDTAB
     // marks & marks.relicons отсутствуют если они пусты
     // colapsed отстутствует если false
+    /**
+     * Description for serialize.
+     */
     serialize:function() {
         var r = {};
 
@@ -2143,12 +2690,18 @@ var NodeModelBase = Class.extend({
     },
 
     // Overriden in Tabs, Windows, and maybe other objects
+    /**
+     * Description for polymorficSerializeData.
+     */
     polymorficSerializeData:function() {
         var r = null;
         if(this.persistentData) r = oneLevelObjectClone(this.persistentData);
         return r;
     },
 
+    /**
+     * Description for serializeNodeBodyContent_forDiff.
+     */
     serializeNodeBodyContent_forDiff:function() {
         var normalserialize = this.serialize(); // TODO фигня и куча лишнего
 //           Тут проблема короче, сериалайз надо полностью переписывать на новый, с учотом таблиц элементов зареференсеных по внешним ключам
@@ -2170,6 +2723,9 @@ var NodeModelBase = Class.extend({
     // "cdId@dId&dId&dId&dId&dId&dId" - субноды закодированы прямо тут
     // "cdId#sdId"                    - субноды закодированы в sdId, изменений небыло
     // "cdId#sdId#sops"               - субноды закодированы в sdId + изменения
+    /**
+     * Description for serializeNodeStructureAndSubnodesChanges_forDiff.
+     */
     serializeNodeStructureAndSubnodesChanges_forDiff:function() {
         var r = [i2s36(this.cdId)];
         if(this.sdId) // Если this.sdId нету (zero) то subnodes list просто пустой, нет субнод
@@ -2197,11 +2753,19 @@ var NodeModelBase = Class.extend({
         return r.join(CDIDSDID_SUBNODESBASEMODIFICATIONS_SEPARATOR);
     },
 
+    /**
+     * Description for serializeNodeSubnodesList_forDiff.
+     */
     serializeNodeSubnodesList_forDiff:function() {
         return this.getSubnodesDidsArray().join(SUBNODES_DIDS_SEPARATOR);
     },
 
 
+    /**
+     * Description for serializeForDiff.
+     * @param {*}    startingDId    Description.
+     * @param {*}    differenceAccumulator    Description.
+     */
     serializeForDiff:function(startingDId, differenceAccumulator) {
         var knot = this.serializeNodeStructureAndSubnodesChanges_forDiff();
 
@@ -2217,6 +2781,9 @@ var NodeModelBase = Class.extend({
             addToCollectionUnderS36Key(differenceAccumulator, 'c', this.cdId, this.serializeNodeBodyContent_forDiff());
     },
 
+    /**
+     * Description for getSubnodesDidsArray.
+     */
     getSubnodesDidsArray:function() {
         // TODO может проще сразу did такие присваивать? нах нам по сто раз их конвертить туда сюда, проверить тока надо скорость сравнения и монотонность)
         // Монотонность можно проверить сгенерив рандомом много раз
@@ -2240,6 +2807,9 @@ var NodeModelBase = Class.extend({
         return r;
     },
 
+    /**
+     * Description for isNotCoveredByWindowActiveTabsPresentInHierarchy.
+     */
     isNotCoveredByWindowActiveTabsPresentInHierarchy:function() {
         // TODO вот это условие оно какоето левое, помойму явно не нужно тестировать ещё и this.isAnOpenWindow()
         if( this.isSavedOrOpenTabsOrganizer()/*return false for open popup windows*/ || this.isAnOpenWindow() ) return false; // Это Сам по себе Таб Холдер - нет смысла проверять его подузлы, он сам станет для них холдером
@@ -2254,6 +2824,10 @@ var NodeModelBase = Class.extend({
         return false;
     },
 
+    /**
+     * Description for getTreeModelFromRoot_invalidateDids.
+     * @param {*}    isCurrentNodeContentAffected    Description.
+     */
     getTreeModelFromRoot_invalidateDids:function(isCurrentNodeContentAffected) {
         if(isCurrentNodeContentAffected)
             this.cdId = 0;
@@ -2269,6 +2843,9 @@ var NodeModelBase = Class.extend({
         return testednode.treeModel; // Can be of course undefined
     },
 
+    /**
+     * Description for getTreeModelFromRoot.
+     */
     getTreeModelFromRoot:function() {
         var testednode = this;
 
@@ -2278,6 +2855,10 @@ var NodeModelBase = Class.extend({
     },
 
 
+    /**
+     * Description for isSupliedNodePresentInPathToRoot.
+     * @param {*}    nodeModel    Description.
+     */
     isSupliedNodePresentInPathToRoot:function(nodeModel) {
         var testednode = this;
         while(testednode.parent) {
@@ -2288,6 +2869,9 @@ var NodeModelBase = Class.extend({
         return false;
     },
 
+    /**
+     * Description for getPathToRoot.
+     */
     getPathToRoot:function() {
         // В serializeAsOperationsLog() также используется знание об этом алгоритме для более быстрого расчёта пути
         var rPath = [];
@@ -2301,10 +2885,17 @@ var NodeModelBase = Class.extend({
         return rPath.reverse(); // TODO НАХУЯ РЕВЕРСЕ? Этож тока замедляет работу
     },
 
+    /**
+     * Description for isOnRootSubnodesLevel.
+     */
     isOnRootSubnodesLevel:function() {
         return this.parent && this.parent.parent == null;
     },
 
+    /**
+     * Description for findFirstSavedOrOpenTabsOrganizerInPathToRoot.
+     * @param {*}    forTabInChromeWindowId    Description.
+     */
     findFirstSavedOrOpenTabsOrganizerInPathToRoot:function(forTabInChromeWindowId) {
         for(var testednode = this; testednode; testednode = testednode.parent)
             if( testednode.isSavedOrOpenTabsOrganizer(forTabInChromeWindowId) )
@@ -2313,6 +2904,9 @@ var NodeModelBase = Class.extend({
         return null;
     },
 
+    /**
+     * Description for getFirstCollapsedNodeInPathFromRootOrThisIfNotHiden.
+     */
     getFirstCollapsedNodeInPathFromRootOrThisIfNotHiden:function() {
         var r = this; // Вернет текущий узел если свернутых узлов нет
 
@@ -2323,18 +2917,29 @@ var NodeModelBase = Class.extend({
         return r;
     },
 
+    /**
+     * Description for findPathStartNodeInRoot.
+     */
     findPathStartNodeInRoot:function() {
         for(var testednode = this; testednode.parent.parent; testednode = testednode.parent) {}
 
         return testednode;
     },
 
+    /**
+     * Description for getTargetPointInParent.
+     */
     getTargetPointInParent:function() {
         var container = this.parent;
 
         return {'container':container, 'position':container.subnodes.indexOf(this)};
     },
 
+    /**
+     * Description for onNodeDblClicked.
+     * @param {*}    treeModel    Description.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     onNodeDblClicked:function(treeModel, portToViewThatRequestAction) {
     },
 
@@ -2342,11 +2947,19 @@ var NodeModelBase = Class.extend({
     // Методы актуальные только для Active окон и табов.
     // Сдесь они чтоб не делать лишних проверок при вызове их рекурсивно для всего дерева.
 
+    /**
+     * Description for performChromeRemove.
+     * @param {*}    protectFromDeleteOnChromeRemovedEvent    Description.
+     */
     performChromeRemove:function(protectFromDeleteOnChromeRemovedEvent) {
         // Актуально тока для Active обектов (окон и табов) - будет там перегружено
     },
 
     // Вызывается тока из NodeActive (search this key for othere such comments)
+    /**
+     * Description for protectFromDeleteOnClose.
+     * @param {*}    storeCloseTimeOnClose    Description.
+     */
     protectFromDeleteOnClose:function(storeCloseTimeOnClose) {
         // Актуально тока для Active обектов (окон и табов)
 
@@ -2357,10 +2970,16 @@ var NodeModelBase = Class.extend({
         this.notifyObservers_onNodeUpdated();
     },
 
+    /**
+     * Description for setTheWasSavedOnWinCloseFlagForAlternativeRestore.
+     */
     setTheWasSavedOnWinCloseFlagForAlternativeRestore:function() {
         // Актуально тока для Saved Tab обектов, но Open табы тоже юзают - они удаляют этот флаг в этом методе
     },
 
+    /**
+     * Description for supressUnexpectedIdErrorOnChromeRemovedEvent.
+     */
     supressUnexpectedIdErrorOnChromeRemovedEvent:function() {
         // Актуально тока для Active обектов (окон и табов) - будет там перегружено
     },
@@ -2391,6 +3010,11 @@ var NodeModelBase = Class.extend({
 //    }
 //}
 
+/**
+ * Description for forEachNodeInTree_noChangesInTree.
+ * @param {*}    nodes    Description.
+ * @param {*}    nodeObserverFn    Description.
+ */
 function forEachNodeInTree_noChangesInTree(nodes, nodeObserverFn)
 {
     for(var i = 0; i < nodes.length; ++i)
@@ -2406,6 +3030,11 @@ function forEachNodeInTree_noChangesInTree(nodes, nodeObserverFn)
 }
 
 // Стоит учесть что возврат false из калбека не останавливает сканирование а всего лишь скипает сканирование подузлов текущего узла
+/**
+ * Description for forEachNodeInTree_skipSubnodesTraversalOnFalse__noChangesInTree.
+ * @param {*}    nodes    Description.
+ * @param {*}    nodeObserverFn    Description.
+ */
 function forEachNodeInTree_skipSubnodesTraversalOnFalse__noChangesInTree(nodes, nodeObserverFn)
 {
     // Cut & Paste from forEachNodeInTree, but it is very used methods - so its really needed
@@ -2493,6 +3122,10 @@ var NodesTypesEnumStr2Num = (function(array) { var r = {}; for(var ijk = 0; ijk 
 var noFavIconUrl              = 'img/nofavicon.png';
 var chromeWindowRgbFavIconUrl = 'img/chrome-window-icon-rgb.png';
 
+/**
+ * Description for makeFaviconUrl.
+ * @param {*}    chromeTabObj    Description.
+ */
 function makeFaviconUrl(chromeTabObj) {
     // Сдесь можно бы было просто написать
     // return (chromeTabObj.favIconUrl)? chromeTabObj.favIconUrl : noFavIconUrl;
@@ -2524,6 +3157,10 @@ function makeFaviconUrl(chromeTabObj) {
 
 }
 
+/**
+ * Description for faviconURL.
+ * @param {*}    u    Description.
+ */
 function faviconURL(u) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
     url.searchParams.set("pageUrl", u);
@@ -2531,6 +3168,10 @@ function faviconURL(u) {
     return url.toString();
 }
 
+/**
+ * Description for httpsTheFavicon.
+ * @param {*}    favIconUrl    Description.
+ */
 function httpsTheFavicon(favIconUrl) {
     // bad solution: return favIconUrl.replace("http://","https://");
     // Replace favicon urls to turn off page contains insecure content warning - yet this might create worse problems,
@@ -2543,13 +3184,23 @@ function httpsTheFavicon(favIconUrl) {
 
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for NodeTabActive_focusThisTab_withoutScrollToView.
+ */
 function NodeTabActive_focusThisTab_withoutScrollToView() {
     focusTab(this.chromeTabObj.windowId, this.chromeTabObj.id, null, /*dontScrollToView*/true);
 }
+/**
+ * Description for NodeWindowActive_focusThisWindow_withoutScrollToView.
+ */
 function NodeWindowActive_focusThisWindow_withoutScrollToView() {
     focusWindow(this.chromeWindowObj.id, /*dontScrollToView*/true)
 }
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for deserializeNode.
+ * @param {*}    serializedNodeData    Description.
+ */
 function deserializeNode(serializedNodeData) {
 
     var r;
@@ -2625,6 +3276,10 @@ function deserializeNode(serializedNodeData) {
     return r;
 }
 
+/**
+ * Description for restoreHierarchyFromJSO.
+ * @param {*}    savedNode    Description.
+ */
 function restoreHierarchyFromJSO(savedNode) {
     var restoredNode = deserializeNode(savedNode['n']); // node
 
@@ -2635,6 +3290,10 @@ function restoreHierarchyFromJSO(savedNode) {
     return restoredNode;
 }
 
+/**
+ * Description for restoreTreeFromOperations.
+ * @param {*}    operations    Description.
+ */
 function restoreTreeFromOperations(operations) {
     var rootNode = null;
 
@@ -2655,6 +3314,12 @@ function restoreTreeFromOperations(operations) {
     return rootNode;
 }
 
+/**
+ * Description for insertNodeByPathDuringDeserialize.
+ * @param {*}    rootNode    Description.
+ * @param {*}    path    Description.
+ * @param {*}    newNode    Description.
+ */
 function insertNodeByPathDuringDeserialize(rootNode, path, newNode) {
     if(path.length < 1) console.error("ERROR insertSubnodeToPath - no path", path, this, newNode);
 
@@ -2672,6 +3337,10 @@ function insertNodeByPathDuringDeserialize(rootNode, path, newNode) {
 // Nodes
 
 var NodeSession = NodeModelBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    persistentData    Description.
+     */
     init:function(persistentData){
         this._super(NodeTypesEnum.SESSION, 'windowFrame');
 
@@ -2684,20 +3353,46 @@ var NodeSession = NodeModelBase.extend({
 
         delete this.hoveringMenuActions[hoveringMenuDeleteAction.id];
     },
+    /**
+     * Description for getIcon.
+     */
     getIcon:function() {return 'img/favicon.png'},
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPromt    Description.
+     */
     getNodeText:function(isForEditPromt) {return "Current Session"}, //i18n +
+    /**
+     * Description for getTooltipText.
+     */
     getTooltipText:function() {return ""},
 
+    /**
+     * Description for getNextDid_andAdvance.
+     */
     getNextDid_andAdvance:function()     { return this.persistentData['nextDId']++ },
+    /**
+     * Description for getNextDid_withoutAdvance.
+     */
     getNextDid_withoutAdvance:function() { return this.persistentData['nextDId']   },
+    /**
+     * Description for advanceNextDidToValue.
+     * @param {*}    v    Description.
+     */
     advanceNextDidToValue:function(v)    {
         var lastPreparedToSentDId = Number(v) || 1; // '', null, undefined, 0 -> 1
         if(lastPreparedToSentDId > this.persistentData['nextDId'])
             this.persistentData['nextDId'] = lastPreparedToSentDId;
     },
 
+    /**
+     * Description for getTreeId.
+     */
     getTreeId:function() {return this.persistentData['treeId'] },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { var r = new NodeGroup(); r.colapsed = false /*see comment*/; r.setCustomTitle('Tree'); return r; }, // support of root node drag & drop
                                                                                                                                                         // r.colapsed = true; - this is a quick fix for a problem of importing ~50000 nodes
                                                                                                                                                         // in case we insert them all in once, during masive DOM updates (and they meantime refired on every visible node insert,
@@ -2708,6 +3403,11 @@ var NodeSession = NodeModelBase.extend({
 });
 
 var NodeTabBase = NodeModelBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeTabObj    Description.
+     * @param {*}    nodeTypesEnumType    Description.
+     */
     init:function(chromeTabObj, nodeTypesEnumType){
         this._super(nodeTypesEnumType, 'tabFrame');
 
@@ -2718,17 +3418,43 @@ var NodeTabBase = NodeModelBase.extend({
         this.hoveringMenuActions[hoveringMenuEditTitleAction.id] = hoveringMenuEditTitleAction;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { console.error("ERROR NodeTabBase::copyConstructor_withoutSubnodes() was not overriden");
                                                  return (new NodeTabBase(this.chromeTabObj, this.type)).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for getIcon.
+     */
     getIcon:function() { return (this.chromeTabObj.status === "loading") ? 'img/loading.gif' : makeFaviconUrl(this.chromeTabObj); },
+    /**
+     * Description for getIconForHtmlExport.
+     */
     getIconForHtmlExport:function() { return this.chromeTabObj.favIconUrl; },
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPromt    Description.
+     */
     getNodeText:function(isForEditPromt) { return this.chromeTabObj.title; /* if no customTitle in marks */ },
+    /**
+     * Description for getTooltipText.
+     */
     getTooltipText:function() { return ""; /*todo if customTitle present in marks, then show there original title in tooltip */ },
+    /**
+     * Description for getHref.
+     */
     getHref:function() { return this.chromeTabObj.url; },
 
+    /**
+     * Description for getCustomTitle.
+     */
     getCustomTitle:function() { return this.marks.customTitle; },
 
+    /**
+     * Description for editTitle.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     editTitle:function(portToViewThatRequestAction) {
         var _this = this;
 
@@ -2736,6 +3462,10 @@ var NodeTabBase = NodeModelBase.extend({
          // On Ok this will result in request2bkg_onOkAfterSetNodeTabTextPrompt(msg,port); with msg.newText
     },
 
+    /**
+     * Description for setCustomTitle.
+     * @param {*}    customTitle    Description.
+     */
     setCustomTitle:function(customTitle) {
         var new_marks = this.getMarksClone();
 
@@ -2747,8 +3477,15 @@ var NodeTabBase = NodeModelBase.extend({
         }
     },
 
+    /**
+     * Description for isSelectedTab.
+     */
     isSelectedTab:function() { return this.chromeTabObj.active; },
 
+    /**
+     * Description for updateChromeTabObj.
+     * @param {*}    chromeTabObj    Description.
+     */
     updateChromeTabObj:function(chromeTabObj) {
 // Закоменчено так как проблема пропадающих тайтлов при востановлении засейванного таба вызвана не этим методом.
 // Код вообще годный, возможно есть смысл его раскоментить. Но юс кейсы когда бы он был реально нужен (приход пустого тайтла или урла) пока не найдены
@@ -2803,6 +3540,10 @@ var NodeTabBase = NodeModelBase.extend({
         if(!isSerializedPropertiesSame) this.notifyTreeModelAboutUpdate_invalidateDids(true /*isNodeContentUpdated_falseIfOnlyTheStructure*/); // "updateChromeTabObj"
     },
 
+    /**
+     * Description for serializeChromeTabObjMainPropertiesOnly.
+     * @param {*}    chromeTabObj    Description.
+     */
     serializeChromeTabObjMainPropertiesOnly:function(chromeTabObj){
         var r = oneLevelObjectClone(chromeTabObj);
 
@@ -2827,12 +3568,19 @@ var NodeTabBase = NodeModelBase.extend({
         return r;
     },
 
+    /**
+     * Description for polymorficSerializeData.
+     */
     polymorficSerializeData:function() {
         var r = null;
         if(this.chromeTabObj) r = this.serializeChromeTabObjMainPropertiesOnly(this.chromeTabObj);
         return r;
     },
 
+    /**
+     * Description for setChromeTabObjActive.
+     * @param {*}    isActive    Description.
+     */
     setChromeTabObjActive:function(isActive) {
         if(this.chromeTabObj.active === isActive) return;// Filer not needed updates, its realy need, for example during setingActiveTab i call this method over all tabs in window
 
@@ -2861,6 +3609,10 @@ var NodeTabBase = NodeModelBase.extend({
 // Этот узел может быть в двох состояниях - с присутствующим ID таба (только во время востановления сессии после рестарта плагина)
 // и без см onAfterCrashRestorationDone (хотя вобщето это onAfterCrashRestorationDone уже нужно выкинуть)
 var NodeTabSaved = NodeTabBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeTabObj    Description.
+     */
     init:function(chromeTabObj) {
         this._super(chromeTabObj, NodeTypesEnum.SAVEDTAB);
 
@@ -2871,9 +3623,15 @@ var NodeTabSaved = NodeTabBase.extend({
         if(this.chromeTabObj/*can be undefined*/) delete this.chromeTabObj.windowId;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeTabSaved(this.chromeTabObj)).copyMarksAndCollapsedFrom(this) },
 
     //TODO Cut&Paste from tree.insertFindTabsOrganizerOrInsertSavedWindowAndRequestItsActivationIfInsertedHierarchyRequireThis, отличие тока вместе вставки
+    /**
+     * Description for ensureActivatedSavedOrAlreadyOpenTabsOrganizerIsPresentInPathToRoot.
+     */
     ensureActivatedSavedOrAlreadyOpenTabsOrganizerIsPresentInPathToRoot:function() {
         var tabsOrganizer = this.parent.findFirstSavedOrOpenTabsOrganizerInPathToRoot();
         if(!tabsOrganizer) { // между SavedTab и корнем нет кандидатов на окно - надо создать
@@ -2890,6 +3648,11 @@ var NodeTabSaved = NodeTabBase.extend({
         return tabsOrganizer; // Кстате ему сразу закажут создание окна по возврату и конверт его в ActiveWindow если он SavedWindow
     },
 
+    /**
+     * Description for onNodeDblClicked.
+     * @param {*}    treeModel    Description.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     onNodeDblClicked:function(treeModel, portToViewThatRequestAction){
         if(treeModel.executeWaitedChromeOperations /*это активная сесия*/)
         {
@@ -2908,6 +3671,10 @@ var NodeTabSaved = NodeTabBase.extend({
         }
     },
 
+    /**
+     * Description for replaceSelfInTreeBy_mergeSubnodesAndMarks.
+     * @param {*}    replacer    Description.
+     */
     replaceSelfInTreeBy_mergeSubnodesAndMarks:function(replacer) {
         // Данный код при востановлении saved tabа, и замены его новым, делает так чтоб тайтл не пропадал на время loading, беря его прежнее значение
         if(replacer.chromeTabObj && !replacer.chromeTabObj.title && this.chromeTabObj.title)
@@ -2916,6 +3683,10 @@ var NodeTabSaved = NodeTabBase.extend({
         return this._super(replacer); // Онaже и дёргнет observers чтоб сделать update view, для уже новой ноды
     },
 
+    /**
+     * Description for set_f_isWhantRequestNewTabCreation.
+     * @param {*}    dontRestoreIfWasSavedOnLastWinSave    Description.
+     */
     set_f_isWhantRequestNewTabCreation:function(dontRestoreIfWasSavedOnLastWinSave) {
         if(dontRestoreIfWasSavedOnLastWinSave && this.chromeTabObj['wasSavedOnLastWinSave'] === true)
             this._f_isWhantRequestNewTabCreation = false;
@@ -2923,10 +3694,16 @@ var NodeTabSaved = NodeTabBase.extend({
             this._f_isWhantRequestNewTabCreation = true;
     },
 
+    /**
+     * Description for onAfterCrashRestorationDone.
+     */
     onAfterCrashRestorationDone:function() {
         delete this.chromeTabObj.id; delete this.chromeTabObj.windowId;
     },
 
+    /**
+     * Description for setTheWasSavedOnWinCloseFlagForAlternativeRestore.
+     */
     setTheWasSavedOnWinCloseFlagForAlternativeRestore:function() {
         if(this.chromeTabObj) this.chromeTabObj['wasSavedOnLastWinSave'] = true;
     },
@@ -2936,6 +3713,10 @@ var NodeTabSaved = NodeTabBase.extend({
 
 // chromeTabObj - {id:0, windowId:0, index:0, highlighted:false, selected:false, pinned:false, incognito:false, status:"complete/loading", favIconUrl:"", url:"", title:""}
 var NodeTabActive = NodeTabBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeTabObj    Description.
+     */
     init:function(chromeTabObj) {
         this._super(chromeTabObj, NodeTypesEnum.TAB);
 
@@ -2944,16 +3725,29 @@ var NodeTabActive = NodeTabBase.extend({
         this.setTheWasSavedOnWinCloseFlagForAlternativeRestore(); // To maintain this flag correctly if this node will be converted to saved because of crash
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeTabActive(this.chromeTabObj)).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for cloneForCopyInActiveTree_withoutSubnodes.
+     */
     cloneForCopyInActiveTree_withoutSubnodes:function() { return (new NodeTabSaved(this.chromeTabObj)).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for isAnOpenTab.
+     */
     isAnOpenTab:function() { return true },
 
     calculateIsProtectedFromGoneOnClose: NodeActiveBase_calculateIsProtectedFromGoneOnClose,
 
     onNodeDblClicked: NodeTabActive_focusThisTab_withoutScrollToView,
 
+    /**
+     * Description for onAlifeTabClosedByChrome_removeSelfAndPromoteSubnodesInPlace_orConvertToSavedIfMarksOrTextNodesPresent.
+     * @param {*}    closedWindowNode    Description.
+     */
     onAlifeTabClosedByChrome_removeSelfAndPromoteSubnodesInPlace_orConvertToSavedIfMarksOrTextNodesPresent: function(closedWindowNode/*only provided if isWindowClosing == true*/) {
         if( this.calculateIsProtectedFromGoneOnClose() || /*Regular tab close (The window might be actualy closed, but it is the tab close button which was pressed, not the whole winclose btn*/
             (closedWindowNode && closedWindowNode.isAllOpenTabsProtectedFromGoneOnWindowClose()) /*Это закрытие окна*/)
@@ -2980,11 +3774,20 @@ var NodeTabActive = NodeTabBase.extend({
         });
     },
 
+    /**
+     * Description for countSelf.
+     * @param {*}    statData    Description.
+     */
     countSelf:function(statData) {
         statData['nodesCount']      = statData['nodesCount']      ? statData['nodesCount']+1      : 1;
         statData['activeTabsCount'] = statData['activeTabsCount'] ? statData['activeTabsCount']+1 : 1;
     },
 
+    /**
+     * Description for updateChromeTabObjOrRequestConvertToSavedIfNotInActiveList.
+     * @param {*}    chromeActiveWindowObjectsList    Description.
+     * @param {*}    listOfTabNodesThatMustBeConvertedToSaved    Description.
+     */
     updateChromeTabObjOrRequestConvertToSavedIfNotInActiveList:function(chromeActiveWindowObjectsList, listOfTabNodesThatMustBeConvertedToSaved) {
         var ourChromeWindowObjInActiveList = findById(chromeActiveWindowObjectsList, this.chromeTabObj.windowId);
         if(ourChromeWindowObjInActiveList)
@@ -2999,12 +3802,19 @@ var NodeTabActive = NodeTabBase.extend({
         }
     },
 
+    /**
+     * Description for performChromeRemove.
+     * @param {*}    protectFromDeleteOnChromeRemovedEvent    Description.
+     */
     performChromeRemove:function (protectFromDeleteOnChromeRemovedEvent) {
         if(protectFromDeleteOnChromeRemovedEvent) this.protectFromDeleteOnClose(false); // Этот флаг не скопируется при clone операции. что наверно и правильно
 
         chrome.tabs.remove(this.chromeTabObj.id);
     },
 
+    /**
+     * Description for supressUnexpectedIdErrorOnChromeRemovedEvent.
+     */
     supressUnexpectedIdErrorOnChromeRemovedEvent:function() {
         supressUnexpectedRemovedTabIdErrorFor(this.chromeTabObj.id);
     },
@@ -3028,6 +3838,9 @@ var NodeTabActive = NodeTabBase.extend({
 //        return {'container':dropTarget.container.insertSubnode(dropTarget.position, r), 'position':-1};
 //    },
 
+    /**
+     * Description for setTheWasSavedOnWinCloseFlagForAlternativeRestore.
+     */
     setTheWasSavedOnWinCloseFlagForAlternativeRestore:function() {
         if(this.chromeTabObj) delete this.chromeTabObj['wasSavedOnLastWinSave'];
     },
@@ -3036,11 +3849,18 @@ var NodeTabActive = NodeTabBase.extend({
 });
 
 var NodeTabSavedAfterCrash = NodeTabSaved.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeTabObj    Description.
+     */
     init:function(chromeTabObj) {
         this._super(chromeTabObj);
         this.savedAfterCrashCssClass = true;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeTabSavedAfterCrash(this.chromeTabObj)).copyMarksAndCollapsedFrom(this) },
 
     EOC:null
@@ -3079,6 +3899,10 @@ var NodeTabSavedAfterCrash = NodeTabSaved.extend({
 //});
 
 var NodeNote = NodeModelBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    persistentData    Description.
+     */
     init:function(persistentData) {
         this._super(NodeTypesEnum.TEXTNOTE);
 
@@ -3093,15 +3917,31 @@ var NodeNote = NodeModelBase.extend({
         this.hoveringMenuActions[hoveringMenuEditTitleAction.id] = hoveringMenuEditTitleAction;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeNote(this.persistentData)).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPromt    Description.
+     */
     getNodeText:function(isForEditPromt) { return this.persistentData['note']; },
   //getNodeContentCssClass:function()    { return this.separators[this.persistentData['separatorIndx']].css;  },
 
+    /**
+     * Description for onNodeDblClicked.
+     * @param {*}    treeModel    Description.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     onNodeDblClicked:function(treeModel, portToViewThatRequestAction){
         this.editTitle(portToViewThatRequestAction);
     },
 
+    /**
+     * Description for editTitle.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     editTitle:function(portToViewThatRequestAction) {
         var _this = this;
 
@@ -3109,6 +3949,10 @@ var NodeNote = NodeModelBase.extend({
         // On Ok this will result in request2bkg_onOkAfterSetNodeNoteTextPrompt(msg,port); with msg.newText
     },
 
+    /**
+     * Description for setNodeTitle.
+     * @param {*}    newText    Description.
+     */
     setNodeTitle:function(newText) {
         this.persistentData['note'] = newText;
 
@@ -3130,6 +3974,10 @@ var NodeNote = NodeModelBase.extend({
 //     - Конструктор И КОПИ КОНСТРУКТОР чтоб принимали этот параметр
 // - дописали this.notifyTreeModelAboutUpdate(); чтоб дёргался персистент менаджер на изменения
 var NodeSeparatorLine = NodeModelBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    persistentData    Description.
+     */
     init:function(persistentData) {
         this._super(NodeTypesEnum.SEPARATORLINE);
 
@@ -3143,19 +3991,38 @@ var NodeSeparatorLine = NodeModelBase.extend({
         this.hoveringMenuActions[hoveringMenuEditTitleAction.id] = hoveringMenuEditTitleAction;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeSeparatorLine(this.persistentData)).copyMarksAndCollapsedFrom(this) },
 
     separators:[{text:"------------------------------------------------------------------------------------------------------", css:"b"},
                 {text:"==========================================================",                                             css:"a"},
                 {text:"- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ", css:"c"}],
 
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPromt    Description.
+     */
     getNodeText:function(isForEditPromt) { return this.separators[this.persistentData['separatorIndx']].text; },
+    /**
+     * Description for getNodeContentCssClass.
+     */
     getNodeContentCssClass:function()    { return this.separators[this.persistentData['separatorIndx']].css;  },
 
+    /**
+     * Description for onNodeDblClicked.
+     * @param {*}    treeModel    Description.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     onNodeDblClicked:function(treeModel, portToViewThatRequestAction){
         this.editTitle(portToViewThatRequestAction);
     },
 
+    /**
+     * Description for editTitle.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     editTitle:function(portToViewThatRequestAction) {
         var si = this.persistentData['separatorIndx'] + 1;
         if(si >= this.separators.length) si = 0;
@@ -3163,6 +4030,10 @@ var NodeSeparatorLine = NodeModelBase.extend({
         this.setSeparatorStyle(si);
     },
 
+    /**
+     * Description for setSeparatorStyle.
+     * @param {*}    separatorIndx    Description.
+     */
     setSeparatorStyle:function(separatorIndx) {
         if(this.persistentData['separatorIndx'] === separatorIndx) return;
 
@@ -3172,6 +4043,10 @@ var NodeSeparatorLine = NodeModelBase.extend({
         this.notifyTreeModelAboutUpdate_invalidateDids(true); // "NodeSeparatorLine::setSeparatorStyle"
     },
 
+    /**
+     * Description for setSeparatorStyleFromText.
+     * @param {*}    innerHtmlTextOfExportedSeparator    Description.
+     */
     setSeparatorStyleFromText:function(innerHtmlTextOfExportedSeparator) {
         for(var i = 0; i < this.separators.length; i++)
             if(this.separators[i].text == innerHtmlTextOfExportedSeparator)
@@ -3181,10 +4056,19 @@ var NodeSeparatorLine = NodeModelBase.extend({
     EOC:null
 });
 
+/**
+ * Description for posAndSizeToString.
+ * @param {*}    objWithPosAndSize    Description.
+ */
 function posAndSizeToString(objWithPosAndSize) {
     return objWithPosAndSize['top'] + '_' + objWithPosAndSize['left'] + '_' + objWithPosAndSize['width'] + '_' + objWithPosAndSize['height'];
 }
 
+/**
+ * Description for strToPosAndSize.
+ * @param {*}    str    Description.
+ * @param {*}    r    Description.
+ */
 function strToPosAndSize(str, r) {
     var a =  str.split('_');
     if( !isNaN( Number(a[0]) )) r['top'] = Number(a[0]);
@@ -3194,6 +4078,11 @@ function strToPosAndSize(str, r) {
 }
 
 
+/**
+ * Description for copyPositionAndSize.
+ * @param {*}    sourceChromeWindowObj    Description.
+ * @param {*}    targetChromeWindowObj    Description.
+ */
 function copyPositionAndSize(sourceChromeWindowObj, targetChromeWindowObj) {
     if(sourceChromeWindowObj && targetChromeWindowObj) {
         if(sourceChromeWindowObj['top']) targetChromeWindowObj['top'] = sourceChromeWindowObj['top'];
@@ -3215,6 +4104,11 @@ function copyPositionAndSize(sourceChromeWindowObj, targetChromeWindowObj) {
 //    state     ( enumerated string ["normal", "minimized", "maximized"] ) The state of this browser window.
 
 var NodeWindowBase = NodeModelBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    nodeTypesEnumType    Description.
+     * @param {*}    chromeWindowObj    Description.
+     */
     init:function(nodeTypesEnumType, chromeWindowObj) {
         this._super(nodeTypesEnumType, 'windowFrame');
 
@@ -3232,22 +4126,36 @@ var NodeWindowBase = NodeModelBase.extend({
         this.hoveringMenuActions[hoveringMenuEditTitleAction.id] = hoveringMenuEditTitleAction;
     },
 
+    /**
+     * Description for isSavedOrOpenTabsOrganizer.
+     */
     isSavedOrOpenTabsOrganizer:function() {
         return true;
     },
 
+    /**
+     * Description for getIcon.
+     */
     getIcon:function()     {
         var r = this.marks.customFavicon;
         if(r == undefined) r = this.defaultFavicon;
         return r;
     },
 
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPrompt    Description.
+     */
     getNodeText:function(isForEditPrompt) {
         var r = this.marks.customTitle;
         if(r == undefined) r = this.defaultTitle;
         return r;
     },
 
+    /**
+     * Description for editTitle.
+     * @param {*}    portToViewThatRequestAction    Description.
+     */
     editTitle:function(portToViewThatRequestAction) {
         var _this = this;
 
@@ -3255,6 +4163,10 @@ var NodeWindowBase = NodeModelBase.extend({
         // On Ok this will result in request2bkg_onOkAfterSetNodeWindowTextPrompt(msg,port); with msg.newText
     },
 
+    /**
+     * Description for setCustomTitle.
+     * @param {*}    customTitle    Description.
+     */
     setCustomTitle:function(customTitle) {
         var new_marks = this.getMarksClone();
 
@@ -3275,6 +4187,10 @@ var NodeWindowBase = NodeModelBase.extend({
         }
     },
 
+    /**
+     * Description for updateChromeWindowObj.
+     * @param {*}    chromeWindowObj    Description.
+     */
     updateChromeWindowObj:function(chromeWindowObj) {
         //id ( optional integer )                                                         - откидываем ?
         //focused ( boolean )                                                             - можно в кnot, хотя окно не дорогое к передаче, можно и тут оставить
@@ -3304,6 +4220,10 @@ var NodeWindowBase = NodeModelBase.extend({
         if(!isSerializedPropertiesSame) this.notifyTreeModelAboutUpdate_invalidateDids(true); // "NodeWindowBase::updateChromeWindowObj"
     },
 
+    /**
+     * Description for serializeChromeWindowObjMainPropertiesOnly.
+     * @param {*}    chromeWindowObj    Description.
+     */
     serializeChromeWindowObjMainPropertiesOnly:function(chromeWindowObj) {
         var r = oneLevelObjectClone(chromeWindowObj);
 
@@ -3324,21 +4244,34 @@ var NodeWindowBase = NodeModelBase.extend({
         return r;
     },
 
+    /**
+     * Description for polymorficSerializeData.
+     */
     polymorficSerializeData:function() {
         var r = null;
         if(this.chromeWindowObj) r = this.serializeChromeWindowObjMainPropertiesOnly(this.chromeWindowObj);
         return r;
     },
 
+    /**
+     * Description for fillCreatePropertiesByPositionAndSize.
+     * @param {*}    createProperties    Description.
+     */
     fillCreatePropertiesByPositionAndSize:function(createProperties) {
         if( this.chromeWindowObj )
             copyPositionAndSize(this.chromeWindowObj, createProperties);
     },
 
+    /**
+     * Description for findTabWithActiveRequestForCreation.
+     */
     findTabWithActiveRequestForCreation:function () {
         return this.findNodeInWindowSubtree_skipOnOthereWindowsSubtrees(function(node){return !!node._f_isWhantRequestNewTabCreation; });
     },
 
+    /**
+     * Description for findTabWithActiveRequestForMove.
+     */
     findTabWithActiveRequestForMove:function () {
         var _this = this;
         if(this._f_isWhantRequestTabsMove)
@@ -3347,10 +4280,18 @@ var NodeWindowBase = NodeModelBase.extend({
         return null
     },
 
+    /**
+     * Description for findAlifeTabInOwnTabsById.
+     * @param {*}    tabid    Description.
+     */
     findAlifeTabInOwnTabsById:function (tabid) {
         return this.findNodeInWindowSubtree_skipOnOthereWindowsSubtrees(function(node){return node.type === NodeTypesEnum.TAB && node.chromeTabObj.id === tabid});
     },
 
+    /**
+     * Description for findNodeInWindowSubtree_skipOnOthereWindowsSubtrees.
+     * @param {*}    isSearchedNodeDetector    Description.
+     */
     findNodeInWindowSubtree_skipOnOthereWindowsSubtrees:function (isSearchedNodeDetector) {
         var r = null;
         forEachNodeInTree_skipSubnodesTraversalOnFalse__noChangesInTree( this.subnodes,
@@ -3363,6 +4304,9 @@ var NodeWindowBase = NodeModelBase.extend({
         return r;
     },
 
+    /**
+     * Description for moveToTheEndOfTree.
+     */
     moveToTheEndOfTree:function () {
         var root = this.findPathStartNodeInRoot().parent;
         return root.insertAsLastSubnode( this.removeOwnTreeFromParent() ); // cannot chain, as removeOwnTreeFromParent() will be called first
@@ -3374,6 +4318,11 @@ var NodeWindowBase = NodeModelBase.extend({
 // Этот узел может быть в двох состояниях - с присутствующим ID окна (только во время востановления сессии после рестарта плагина)
 // и без см onAfterCrashRestorationDone (хотя вобщето это onAfterCrashRestorationDone уже нужно выкинуть)
 var NodeWindowSaved = NodeWindowBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeWindowObj    Description.
+     * @param {*}    customType    Description.
+     */
     init:function(chromeWindowObj, customType) { // customType заведён для NodeGroup
         // Fix for incorectly closured pre v0.4.34 builds
         if(chromeWindowObj) { // chromeWindowObj can be null there!! it is always present at list as dummy in this after super. but this is not this.chromeWindowObj !!!
@@ -3394,8 +4343,15 @@ var NodeWindowSaved = NodeWindowBase.extend({
         this.defaultFavicon = "img/chrome-window-icon-gray.png";
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeWindowSaved(this.chromeWindowObj, this.type)).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for getNodeText.
+     * @param {*}    isForEditPrompt    Description.
+     */
     getNodeText:function(isForEditPrompt) {
         var r = this._super(isForEditPrompt);
 
@@ -3410,6 +4366,12 @@ var NodeWindowSaved = NodeWindowBase.extend({
         return r;
     },
 
+    /**
+     * Description for onNodeDblClicked.
+     * @param {*}    treeModel    Description.
+     * @param {*}    portToViewThatRequestAction    Description.
+     * @param {*}    isAlternativeRestore    Description.
+     */
     onNodeDblClicked:function(treeModel, portToViewThatRequestAction, isAlternativeRestore){
         if(treeModel.executeWaitedChromeOperations /*это активная сесия*/)
         {
@@ -3441,6 +4403,9 @@ var NodeWindowSaved = NodeWindowBase.extend({
         }
     },
 
+    /**
+     * Description for onAfterCrashRestorationDone.
+     */
     onAfterCrashRestorationDone:function() {
         if(!!this.chromeWindowObj.id) delete this.chromeWindowObj.id;
     },
@@ -3450,12 +4415,19 @@ var NodeWindowSaved = NodeWindowBase.extend({
 
 // Будет востановлено просто как Saved при deserialize
 var NodeWindowSavedOnCloseAll = NodeWindowSaved.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeWindowObj    Description.
+     */
     init:function(chromeWindowObj) {
         chromeWindowObj['closeDate'] = Date.now();
         this._super(chromeWindowObj);
         this.additionalTextCss = "recentlySavedOnCloseAll";
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeWindowSavedOnCloseAll(this.chromeWindowObj)).copyMarksAndCollapsedFrom(this) },
 
     EOC:null
@@ -3463,18 +4435,28 @@ var NodeWindowSavedOnCloseAll = NodeWindowSaved.extend({
 
 // Будет востановлено просто как Saved при deserialize
 var NodeWindowSavedAfterCrash = NodeWindowSaved.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeWindowObj    Description.
+     */
     init:function(chromeWindowObj) {
         chromeWindowObj['crashDetectedDate'] = Date.now();
         this._super(chromeWindowObj);
         this.additionalTextCss = "recentlyCrashed";
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeWindowSavedAfterCrash(this.chromeWindowObj)).copyMarksAndCollapsedFrom(this) },
 
     EOC:null
 });
 
 var NodeGroup = NodeWindowSaved.extend({
+    /**
+     * Description for init.
+     */
     init:function() {
         this._super(null, NodeTypesEnum.GROUP);
 
@@ -3482,8 +4464,15 @@ var NodeGroup = NodeWindowSaved.extend({
         this.defaultFavicon = "img/group-icon.png";
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeGroup()).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for replaceSelfInTreeBy_mergeSubnodesAndMarks.
+     * @param {*}    replacer    Description.
+     */
     replaceSelfInTreeBy_mergeSubnodesAndMarks:function(replacer) {
         // Данный код при создании из группы окна подставляет ему прежнии Icon и Text, навсегда
         this.marks.customFavicon = this.getIcon();
@@ -3495,6 +4484,10 @@ var NodeGroup = NodeWindowSaved.extend({
 });
 
 var NodeWindowActive = NodeWindowBase.extend({
+    /**
+     * Description for init.
+     * @param {*}    chromeWindowObj    Description.
+     */
     init:function(chromeWindowObj) {
         this._super(NodeTypesEnum.WINDOW, chromeWindowObj);
 
@@ -3508,12 +4501,21 @@ var NodeWindowActive = NodeWindowBase.extend({
         // this._f_lastKnownActiveTabId_zombieTabWorkaround = 0; // Не должно сливаться в базу или приводить к перерендерингу view
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() { return (new NodeWindowActive(this.chromeWindowObj)).copyMarksAndCollapsedFrom(this) },
 
+    /**
+     * Description for cloneForCopyInActiveTree_withoutSubnodes.
+     */
     cloneForCopyInActiveTree_withoutSubnodes:function() { return (new NodeWindowSaved(this.chromeTabObj)).copyMarksAndCollapsedFrom(this) },
 
     calculateIsProtectedFromGoneOnClose: NodeActiveBase_calculateIsProtectedFromGoneOnClose,
 
+    /**
+     * Description for isAllOpenTabsProtectedFromGoneOnWindowClose.
+     */
     isAllOpenTabsProtectedFromGoneOnWindowClose:function() {
         var r =  !this.isOnRootSubnodesLevel() || this.calculateIsProtectedFromGoneOnClose();
 
@@ -3529,10 +4531,17 @@ var NodeWindowActive = NodeWindowBase.extend({
         return r;
     },
 
+    /**
+     * Description for isAnOpenWindow.
+     */
     isAnOpenWindow:function() {
         return true;
     },
 
+    /**
+     * Description for isSavedOrOpenTabsOrganizer.
+     * @param {*}    forTabInChromeWindowId    Description.
+     */
     isSavedOrOpenTabsOrganizer:function(forTabInChromeWindowId) {
         if(this.chromeWindowObj && this.chromeWindowObj.type && this.chromeWindowObj.type === "popup" && this.chromeWindowObj.id !== forTabInChromeWindowId/*для своих табов мы таки органайзер!*/)
             return false; // To prevent othere tabs moves or restoring in active popup window
@@ -3545,8 +4554,15 @@ var NodeWindowActive = NodeWindowBase.extend({
         return true;
     },
 
+    /**
+     * Description for isFocusedWindow.
+     */
     isFocusedWindow:function() { return this.chromeWindowObj.focused; },
 
+    /**
+     * Description for setChromeWindowObjFocused.
+     * @param {*}    newFocusedState    Description.
+     */
     setChromeWindowObjFocused:function(newFocusedState) {
         if(newFocusedState === this.chromeWindowObj.focused) return;
 
@@ -3559,11 +4575,20 @@ var NodeWindowActive = NodeWindowBase.extend({
 
     onNodeDblClicked: NodeWindowActive_focusThisWindow_withoutScrollToView,
 
+    /**
+     * Description for countSelf.
+     * @param {*}    statData    Description.
+     */
     countSelf:function(statData) {
         statData['nodesCount']      = statData['nodesCount']      ? statData['nodesCount']+1      : 1;
         statData['activeWinsCount'] = statData['activeWinsCount'] ? statData['activeWinsCount']+1 : 1;
     },
 
+    /**
+     * Description for performChromeRemove.
+     * @param {*}    protectFromDeleteOnChromeRemovedEvent    Description.
+     * @param {*}    storeCloseTime    Description.
+     */
     performChromeRemove:function (protectFromDeleteOnChromeRemovedEvent, storeCloseTime) {
         if(protectFromDeleteOnChromeRemovedEvent) {
             this.protectFromDeleteOnClose(storeCloseTime); // Этот флаг не скопируется при clone операции. что наверно и правильно
@@ -3593,6 +4618,10 @@ var NodeWindowActive = NodeWindowBase.extend({
 //        };
 
     // return true from iterator to stop iteration, this function will return tab on which they stoped in this case, or null if they never was stope
+    /**
+     * Description for iterateOverOurOwnOpenTabNodes.
+     * @param {*}    f    Description.
+     */
     iterateOverOurOwnOpenTabNodes: function(f) {
         var tabIndexInHierarchy = 0;
         return this.findNodeInWindowSubtree_skipOnOthereWindowsSubtrees( function(node){
@@ -3601,6 +4630,10 @@ var NodeWindowActive = NodeWindowBase.extend({
         });
     },
 
+    /**
+     * Description for getWindowTabIndexOfOpenTabIftheyPlacedDirectlyAfterGivenNode.
+     * @param {*}    nodeModel    Description.
+     */
     getWindowTabIndexOfOpenTabIftheyPlacedDirectlyAfterGivenNode:function(nodeModel) {
         var tabIndexInHierarchy = 0;
         this.findNodeInWindowSubtree_skipOnOthereWindowsSubtrees( function(node){
@@ -3613,6 +4646,10 @@ var NodeWindowActive = NodeWindowBase.extend({
         return tabIndexInHierarchy;
     },
 
+    /**
+     * Description for setActiveTab.
+     * @param {*}    tabId    Description.
+     */
     setActiveTab: function(tabId) {
         var _this = this;
         // ZOMBI TAB WORKAROUND var isNewActiveTabFound = false;
@@ -3662,6 +4699,9 @@ var NodeWindowActive = NodeWindowBase.extend({
 
     },
 
+    /**
+     * Description for reorderAndPerformReattachsAllTabsInChromeWindowAcordingToOrderInTabsOutlinerHierarchy.
+     */
     reorderAndPerformReattachsAllTabsInChromeWindowAcordingToOrderInTabsOutlinerHierarchy: function() {
         var targetWinId = this.chromeWindowObj.id;
 
@@ -3672,6 +4712,10 @@ var NodeWindowActive = NodeWindowBase.extend({
         });
     },
 
+    /**
+     * Description for findAlifeTabInOwnTabsByIndex.
+     * @param {*}    chromeTabIndexInWindow    Description.
+     */
     findAlifeTabInOwnTabsByIndex: function(chromeTabIndexInWindow) {
         return this.iterateOverOurOwnOpenTabNodes( function(openTabNode, tabIndexInHierarchy) {
             if(tabIndexInHierarchy === chromeTabIndexInWindow) return true;
@@ -3680,6 +4724,9 @@ var NodeWindowActive = NodeWindowBase.extend({
         });
     },
 
+    /**
+     * Description for onAlifeWindowClosedByChrome_removeSelfAndPromoteSubnodesInPlace_orConvertToSavedIfMarksOrTextNodesPresent.
+     */
     onAlifeWindowClosedByChrome_removeSelfAndPromoteSubnodesInPlace_orConvertToSavedIfMarksOrTextNodesPresent: function () {
         if( this.subnodes.length > 0 || this.calculateIsProtectedFromGoneOnClose() )
         {
@@ -3691,10 +4738,18 @@ var NodeWindowActive = NodeWindowBase.extend({
         }
     },
 
+    /**
+     * Description for supressUnexpectedIdErrorOnChromeRemovedEvent.
+     */
     supressUnexpectedIdErrorOnChromeRemovedEvent:function() {
         supressUnexpectedRemovedWindowIdErrorFor(this.chromeWindowObj.id);
     },
 
+    /**
+     * Description for fromChrome_onTabCreated.
+     * @param {*}    chromeTabObj    Description.
+     * @param {*}    tryRelateNewTabToOpener    Description.
+     */
     fromChrome_onTabCreated:function (chromeTabObj, tryRelateNewTabToOpener /*TreeStyleTab*/) {
         var newTabNode = new NodeTabActive(chromeTabObj);
 
@@ -3747,6 +4802,9 @@ var NodeWindowActive = NodeWindowBase.extend({
         return newTabNode;
     },
 
+    /**
+     * Description for fromChrome_onAlifeTabAppearInHierarchy.
+     */
     fromChrome_onAlifeTabAppearInHierarchy:function () {
          if(this.deleteEmptyTabIdAfterAnyMoveTabOrCreateTabSucceded !== undefined) // Can be 0, but very unlikely...
          {
@@ -3757,6 +4815,11 @@ var NodeWindowActive = NodeWindowBase.extend({
          }
     },
 
+    /**
+     * Description for updateChromeWindowObjOrConvertToSavedIfNoActiveTabNodesCreated.
+     * @param {*}    chromeActiveWindowObjectsList    Description.
+     * @param {*}    listOfWindowNodesThatMustBeConvertedToSaved    Description.
+     */
     updateChromeWindowObjOrConvertToSavedIfNoActiveTabNodesCreated:function(chromeActiveWindowObjectsList, listOfWindowNodesThatMustBeConvertedToSaved) {
         var ourChromeWindowObjInActiveList = findById(chromeActiveWindowObjectsList, this.chromeWindowObj.id);
 
@@ -3774,11 +4837,18 @@ var NodeWindowActive = NodeWindowBase.extend({
 });
 
 // =====================================================================================================================
+/**
+ * Description for NodeActiveBase_calculateIsProtectedFromGoneOnClose.
+ */
 function NodeActiveBase_calculateIsProtectedFromGoneOnClose() {
     return this.isProtectedFromGoneOnCloseCache = !!this._f_convertToSavedOnClose || this.isCustomMarksPresent() || this.isSomethingExeptUnmarkedActiveTabPresentInDirectSubnodes();
 }
 
 
+/**
+ * Description for ActiveTree_executeWaitedChromeOperations.
+ * @param {*}    nodesTree    Description.
+ */
 function ActiveTree_executeWaitedChromeOperations(nodesTree) {
 
 // TODO Подумать над usecase:
@@ -3833,6 +4903,10 @@ function ActiveTree_executeWaitedChromeOperations(nodesTree) {
 //    });
 //}
 
+/**
+ * Description for chrome_deleteLastEmptyTabInWindow.
+ * @param {*}    windowId    Description.
+ */
 function chrome_deleteLastEmptyTabInWindow(windowId) {
     chrome.tabs.getAllInWindow(windowId, function(tabsList) {
         if(tabsList.length > 0)
@@ -3844,6 +4918,10 @@ function chrome_deleteLastEmptyTabInWindow(windowId) {
     });
 }
 
+/**
+ * Description for chrome_openUrlInNewWindow.
+ * @param {*}    url    Description.
+ */
 function chrome_openUrlInNewWindow(url) {
 var createData =  {
         'url': url,
@@ -3864,6 +4942,11 @@ var hoveringMenuEditTitleAction = { 'id' : "editTitleAction" , 'performAction' :
 var hoveringMenuSetCursorAction = { 'id' : "setCursorAction" , 'performAction' : SetCursor_performAction };
 
 
+/**
+ * Description for performClose.
+ * @param {*}    node    Description.
+ * @param {*}    protectFromDeleteOnChromeRemovedEvent    Description.
+ */
 function performClose(node, protectFromDeleteOnChromeRemovedEvent) {
     node.performChromeRemove(protectFromDeleteOnChromeRemovedEvent);
     if(node.colapsed) { // Если нода свёрнуто то делаем эту операцию для всех подузлов
@@ -3873,10 +4956,20 @@ function performClose(node, protectFromDeleteOnChromeRemovedEvent) {
     }
 }
 
+/**
+ * Description for CloseAction_performAction.
+ * @param {*}    node    Description.
+ * @param {*}    portToViewThatRequestAction    Description.
+ */
 function CloseAction_performAction(node, portToViewThatRequestAction) {
     performClose(node, true); // В случае колaпснутого узла выполнить close для всех подузлов
 }
 
+/**
+ * Description for DeleteAction_performAction.
+ * @param {*}    node    Description.
+ * @param {*}    portToViewThatRequestAction    Description.
+ */
 function DeleteAction_performAction(node, portToViewThatRequestAction) {
     performClose(node, false); // В случае колaпснутого узла выполнить close без protectFromDelete для всех подузлов
 
@@ -3895,10 +4988,20 @@ function DeleteAction_performAction(node, portToViewThatRequestAction) {
     });
 }
 
+/**
+ * Description for EditTitle_performAction.
+ * @param {*}    node    Description.
+ * @param {*}    portToViewThatRequestAction    Description.
+ */
 function EditTitle_performAction(node, portToViewThatRequestAction) {
     node.editTitle(portToViewThatRequestAction);
 }
 
+/**
+ * Description for SetCursor_performAction.
+ * @param {*}    node    Description.
+ * @param {*}    portToViewThatRequestAction    Description.
+ */
 function SetCursor_performAction(node, portToViewThatRequestAction) {
     requestCaller_setCursorToNodeOrToFirstCollapsedParent(portToViewThatRequestAction, node, false);
     //node.setCursorHereOrToFirstCollapsedParent(treeView.globalViewId_ICursorOwner);
@@ -3919,6 +5022,11 @@ function SetCursor_performAction(node, portToViewThatRequestAction) {
 // возможно что это сделанно так как в рамках View, которое вообще ничерта не знает о модели, сложно (невозможно) создавать вообще модели нод.
 // Но View и не надо этого делать вообщето, она должна это попросить у модели дерева/бекграунд страницы
 var ActionLinkModelBase = Class.extend({
+    /**
+     * Description for init.
+     * @param {*}    nodeConstructor    Description.
+     * @param {*}    postInsertAction    Description.
+     */
     init:function(nodeConstructor, postInsertAction){
         this.nodeConstructor = nodeConstructor;
         this.postInsertAction = postInsertAction;
@@ -3930,24 +5038,40 @@ var ActionLinkModelBase = Class.extend({
         this.idMVC = "noidmvc_thisis_ActionLinkModelBase"; // чтоб не выкидывало false в isDropAlloved()
     },
 
+    /**
+     * Description for setDataForNodeConstructor.
+     * @param {*}    str    Description.
+     */
     setDataForNodeConstructor:function(str) {
         this.dataForNodeConstructor = str;
     },
 
+    /**
+     * Description for copyConstructor_withoutSubnodes.
+     */
     copyConstructor_withoutSubnodes:function() {
         // TODO вот тут творится жопа - происходит запоминание новой ноды, вставленной где просили, для того чтоб позже ей выполнить performAfterDropAction
         // При всё при этом это хак, ибо мы играем роль просто иерархии для копирования в новое место а не иерархии В НОВОМ МЕСТЕ
         return this.newNode = this.nodeConstructor(this.dataForNodeConstructor);
     },
 
+    /**
+     * Description for cloneForCopyInActiveTree_withoutSubnodes.
+     */
     cloneForCopyInActiveTree_withoutSubnodes:function() {
         return this.copyConstructor_withoutSubnodes();
     },
 
+    /**
+     * Description for isNotCoveredByWindowActiveTabsPresentInHierarchy.
+     */
     isNotCoveredByWindowActiveTabsPresentInHierarchy:function() {
         return false;
     },
 
+    /**
+     * Description for removeOwnTreeFromParent.
+     */
     removeOwnTreeFromParent:function() {
         /*do nothing*/
     },
@@ -3961,6 +5085,10 @@ var ActionLinkModelBase = Class.extend({
 //        в который оно вставляется (от там есть)
 //    },
 
+    /**
+     * Description for performAfterDropAction.
+     * @param {*}    port    Description.
+     */
     performAfterDropAction:function(port) {
         if(this.postInsertAction) this.postInsertAction(this.newNode, port, this.dataForNodeConstructor); // раньше это делали прямо в moveToActiveTree, но для NodeText это приводило к тому что DropFeedback горел пока было promt окно
 
@@ -3970,6 +5098,10 @@ var ActionLinkModelBase = Class.extend({
         this.newNode = null; // на всякий случай
     },
 
+    /**
+     * Description for performAfterDropActionForDragedModelHierarchy.
+     * @param {*}    port    Description.
+     */
     performAfterDropActionForDragedModelHierarchy:function(port) {
         this.performAfterDropAction(port);
         for(var i = 0; i < this.subnodes.length; i++)
@@ -3977,6 +5109,11 @@ var ActionLinkModelBase = Class.extend({
     }
 });
 
+/**
+ * Description for getOption.
+ * @async
+ * @param {*}    optionName    Description.
+ */
 async function getOption(optionName) {
     return (await chrome.storage.local.get(optionName))[optionName];
 }

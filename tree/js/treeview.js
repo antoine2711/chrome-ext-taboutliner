@@ -24,15 +24,25 @@ var tiles = {
 // --------------------------------------------------------------------------------------------
 var incorect_tiles_size_warning_alert_was_fires = false;
 
+/**
+ * Description for onClick_hoveringMenu_expandCollapseBtn.
+ */
 function onClick_hoveringMenu_expandCollapseBtn() {
     dispatchBubledCustomEvent(this, 'node_expand_collapse_anchor_activated');
 }
 
+/**
+ * Description for onClick_hoveringMenu_actionBtn.
+ */
 function onClick_hoveringMenu_actionBtn() {
     dispatchBubledCustomEvent(this, 'hovering_menu_action_btn_activated', {'actionId':this.id});
 }
 
 
+/**
+ * Description for makeHoveringMenu.
+ * @param {*}    window_    Description.
+ */
 function makeHoveringMenu(window_) {
     var r = window_.document.createElement("span"); r.className = "hoveringMenu_container";
 
@@ -42,6 +52,10 @@ function makeHoveringMenu(window_) {
     r._ref_hoveringMenu_expandCollapseBtn = document.createElement("div");  r._ref_hoveringMenu_expandCollapseBtn.className = "hoveringMenu_expandCollapseBtn";
     r._ref_hoveringMenu_expandCollapseBtn.onclick = onClick_hoveringMenu_expandCollapseBtn;
 
+    /**
+     * Description for r.addActionButton.
+     * @param {*}    action    Description.
+     */
     r.addActionButton = function(action) {
         if(!action) return;
 
@@ -51,6 +65,10 @@ function makeHoveringMenu(window_) {
         b.onclick = onClick_hoveringMenu_actionBtn;
         this._ref_actionButtonsContainer.appendChild(b);
     };
+    /**
+     * Description for r.setOwner.
+     * @param {*}    owner    Description.
+     */
     r.setOwner = function(owner) {
         this._ref_owner = owner;
 
@@ -73,6 +91,9 @@ function makeHoveringMenu(window_) {
             this.addActionButton(actions['closeAction']);
         }
     };
+    /**
+     * Description for r.getOwner.
+     */
     r.getOwner = function() {
         return this._ref_owner;
     };
@@ -85,6 +106,10 @@ function makeHoveringMenu(window_) {
     return r;
 }
 
+/**
+ * Description for makeDragFeedbackAsFirstChild.
+ * @param {*}    window_    Description.
+ */
 function makeDragFeedbackAsFirstChild(window_) {
     var i = window_.document.createElement("img");
     i.src = "tree/img/drag_feedback_as_first_child.png";
@@ -98,6 +123,10 @@ function makeDragFeedbackAsFirstChild(window_) {
     return r;
 }
 
+/**
+ * Description for makeDragFeedbackAsSibling.
+ * @param {*}    window_    Description.
+ */
 function makeDragFeedbackAsSibling(window_) {
     var i =  window_.document.createElement("img");
     i.src = "tree/img/drag_feedback_as_sibling.png";
@@ -147,6 +176,10 @@ function makeDragFeedbackAsSibling(window_) {
 //    return r;
 //}
 
+/**
+ * Description for findAbsolutePosition.
+ * @param {*}    obj    Description.
+ */
 function findAbsolutePosition(obj)
 {
     var box = obj.getBoundingClientRect(),
@@ -176,6 +209,11 @@ function findAbsolutePosition(obj)
 
 // parameters object is optional argument - collection of optional parameters wich if provided will substitute default values from tiles declaration.
 // Example with all suported data: {w:"100%", h:"100%", style:"background-color:#03C"}
+/**
+ * Description for makeTileDom.
+ * @param {*}    tile    Description.
+ * @param {*}    parameters    Description.
+ */
 function makeTileDom(tile, parameters)
 {
     var r = new Image();
@@ -186,6 +224,9 @@ function makeTileDom(tile, parameters)
     if(parameters && parameters.className) r.className     = parameters.className; else if(tile.className) r.className = tile.className;
 
     // Assert check of correctly set with and height in tile declaration
+    /**
+     * Description for r.onload.
+     */
     r.onload = function() {
         var warningsPresent = false;
 
@@ -212,6 +253,10 @@ function makeTileDom(tile, parameters)
 //======================================================================================================================
 
 //innerHTMLvsDOM?
+/**
+ * Description for makeRelIconDom.
+ * @param {*}    icontile    Description.
+ */
 function makeRelIconDom(icontile)
 {
     // <span id="icon_height_excluder" style="display:inline-block;height:0;"><img id="relicon" src="http://habrahabr.ru/favicon.ico" style="background-color:#30C; height:30px; width:30px; position:relative; top:-25px; "/></span>
@@ -232,6 +277,11 @@ function makeRelIconDom(icontile)
 }
 
 var tiles_line_horizontal_w100 = makeTileDom(tiles.line_horizontal, {w:"100%"});
+/**
+ * Description for makeRelLineWithIconsDom.
+ * @param {*}    window_    Description.
+ * @param {*}    icons    Description.
+ */
 function makeRelLineWithIconsDom(window_, icons)
 {
     // If no icons return simple one image line
@@ -279,6 +329,10 @@ function makeRelLineWithIconsDom(window_, icons)
 
     return r;
 }
+/**
+ * Description for NodeTextWithAnchorDom_createStatBlockInnerHtml.
+ * @param {*}    nodeModel    Description.
+ */
 function NodeTextWithAnchorDom_createStatBlockInnerHtml(nodeModel) {
     var subnodesStatistic = nodeModel.countSubnodesStatsBlockData();
     if(subnodesStatistic['nodesCount'] === subnodesStatistic['activeTabsCount']) delete subnodesStatistic['nodesCount']; // Нет нужды выводить две одинаковые цифры для свёрнутого окна
@@ -290,6 +344,12 @@ function NodeTextWithAnchorDom_createStatBlockInnerHtml(nodeModel) {
     return r;
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_updateNodeAnchorImageAndCollapsedStatDom.
+ * @param {*}    window_    Description.
+ * @param {*}    nodeModel    Description.
+ * @param {*}    isCursored    Description.
+ */
 function NodeTextWithAnchorDom_updateNodeAnchorImageAndCollapsedStatDom(window_, nodeModel, isCursored) {
     this.updateCssClasses(nodeModel, isCursored); // Will update "nosubnodes", "collapsedsubnodes", "expandedsubnodes"
 
@@ -309,6 +369,12 @@ function NodeTextWithAnchorDom_updateNodeAnchorImageAndCollapsedStatDom(window_,
     }
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_updateNodeTitle.
+ * @param {*}    nodeModel    Description.
+ * @param {*}    isCursored    Description.
+ * @param {*}    isFullTreeBuild    Description.
+ */
 function NodeTextWithAnchorDom_updateNodeTitle(nodeModel, isCursored, isFullTreeBuild) {
     var nodeIcon              = nodeModel.getIcon();
     var nodeIconForHtmlExport = nodeModel.getIconForHtmlExport();
@@ -335,6 +401,10 @@ function NodeTextWithAnchorDom_updateNodeTitle(nodeModel, isCursored, isFullTree
     this.updateCssClasses(nodeModel, isCursored); // will set css classes for focusedWindow, selectedTab, contentCssClasses, ....
 }
 
+/**
+ * Description for isSimleLeftClickWithoutKeybModifiers.
+ * @param {*}    event    Description.
+ */
 function isSimleLeftClickWithoutKeybModifiers(event){
     // Кросброузерная проверка на клик именно левой клавишей (event.which это стандарт -  1 - left, 2 - midle, 3 - right ) no IE его до IE9 не знает
     var isLeftClick =  (event.which == null) ? /* IE case */ (event.button <= 1) : /* All othere */ (event.which == 1);
@@ -342,6 +412,10 @@ function isSimleLeftClickWithoutKeybModifiers(event){
     return isLeftClick && !event.ctrlKey && !event.shiftKey;
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_preventDefaultOnSimpleLMBClick.
+ * @param {*}    event    Description.
+ */
 function NodeTextWithAnchorDom_preventDefaultOnSimpleLMBClick(event){
     // Prevent folowing a link on simple left click
     if( isSimleLeftClickWithoutKeybModifiers(event) )
@@ -349,6 +423,12 @@ function NodeTextWithAnchorDom_preventDefaultOnSimpleLMBClick(event){
     // а вот мидл клик, ctrl click & shift click  мы разрешаем, произойдёт открытие в новом табе или окне
 }
 
+/**
+ * Description for dispatchBubledCustomEvent.
+ * @param {*}    domElem    Description.
+ * @param {*}    eventType    Description.
+ * @param {*}    detail    Description.
+ */
 function dispatchBubledCustomEvent(domElem, eventType, detail) {
     var evt = document.createEvent('CustomEvent');
     evt.initCustomEvent(eventType, true/*canItBubble*/, true/*isItCancelable*/, detail /*detailAboutEvent - мона event выслать в результате которого породились*/);
@@ -365,6 +445,11 @@ function dispatchBubledCustomEvent(domElem, eventType, detail) {
     return isPreventDefaultFlagSet;
 }
 
+/**
+ * Description for isClickOnAnchorArea.
+ * @param {*}    nodeTextWithAnchorDomObjThis    Description.
+ * @param {*}    event    Description.
+ */
 function isClickOnAnchorArea(nodeTextWithAnchorDomObjThis, event) {
     // Нам надо фильтровать клик эвенты порождённые кликами на тексте и только реагировать на клики на бекграунде (где
     // нарисован анхор)
@@ -384,6 +469,10 @@ function isClickOnAnchorArea(nodeTextWithAnchorDomObjThis, event) {
     return nodeTextWithAnchorDomObjThis === event.srcElement && event.offsetX < 40; /*с offsetX имеется кросброузернонекомпатибельная жопа*/
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_detectAndFireExpandCollapseAnchorEvent.
+ * @param {*}    event    Description.
+ */
 function NodeTextWithAnchorDom_detectAndFireExpandCollapseAnchorEvent(event){
     // Чтоб отфильтровать клики всплывающие в bubling phase из самого тайтла мы можем либо в его onclick (тайтла)
     // цеплять к эвент обекту какойто флаг, что он уже обработан (не стоит делать e.stopPropagation(); так как этим мы
@@ -393,14 +482,26 @@ function NodeTextWithAnchorDom_detectAndFireExpandCollapseAnchorEvent(event){
         dispatchBubledCustomEvent(this, 'node_expand_collapse_anchor_activated');
 }
 
+/**
+ * Description for fireExpandCollapseAnchorEventOnSelf.
+ * @param {*}    event    Description.
+ */
 function fireExpandCollapseAnchorEventOnSelf(event){
     dispatchBubledCustomEvent(this, 'node_expand_collapse_anchor_activated');
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_onHover.
+ * @param {*}    event    Description.
+ */
 function NodeTextWithAnchorDom_onHover(event){
     dispatchBubledCustomEvent(this.parentNode, 'node_hovered'); // Warning! для оптимизации кидаем сразу на парент эвент - значит его на NodeTextWithAnchorDom ловить бесполезно
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_onActivated.
+ * @param {*}    event    Description.
+ */
 function NodeTextWithAnchorDom_onActivated(event){
     if( isSimleLeftClickWithoutKeybModifiers(event) && !isClickOnAnchorArea(this, event) ) {
         dispatchBubledCustomEvent(this.parentNode, 'node_activated', {'altKey': event['altKey']}); // Warning! для оптимизации кидаем сразу на парент эвент - значит его на NodeTextWithAnchorDom ловить бесполезно
@@ -408,18 +509,34 @@ function NodeTextWithAnchorDom_onActivated(event){
     }
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_onFocused.
+ * @param {*}    event    Description.
+ */
 function NodeTextWithAnchorDom_onFocused(event){
     dispatchBubledCustomEvent(this.parentNode, 'node_focused'); // Warning! для оптимизации кидаем сразу на парент эвент - значит его на NodeTextWithAnchorDom ловить бесполезно
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_isInEditMode.
+ */
 function NodeTextWithAnchorDom_isInEditMode() {
     return this._ref_nodeFaviconAndTextContainerDom.contentEditable === "true"; /*it can be "inherit" or "false", so check only for "true"*/
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_setEditMode.
+ * @param {*}    isEditMode    Description.
+ */
 function NodeTextWithAnchorDom_setEditMode(isEditMode) {
     return this._ref_nodeFaviconAndTextContainerDom.contentEditable = isEditMode ? "true" : "inherit"; // Se also -webkit-user-modify
 }
 
+/**
+ * Description for NodeTextWithAnchorDom_updateCssClasses.
+ * @param {*}    nodeModel    Description.
+ * @param {*}    isCursored    Description.
+ */
 function NodeTextWithAnchorDom_updateCssClasses(nodeModel, isCursored) {
     // Base Css Classes ------------------------------------------------------------------------------------------------
     var classes = "nodeTitleContainer "
@@ -445,6 +562,14 @@ function NodeTextWithAnchorDom_updateCssClasses(nodeModel, isCursored) {
 }
 
 //innerHTMLvsDOM?
+/**
+ * Description for makeNodeTextWithAnchorDom.
+ * @param {*}    window_    Description.
+ * @param {*}    nodeModel    Description.
+ * @param {*}    isOneClickToActivateMode    Description.
+ * @param {*}    isCursored    Description.
+ * @param {*}    isFullTreeBuild    Description.
+ */
 function makeNodeTextWithAnchorDom(window_, nodeModel, isOneClickToActivateMode, isCursored, isFullTreeBuild)
 {
     var rNodeTitleContainer = window_.document.createElement(nodeModel.isLink ? "a" : "div");
@@ -499,6 +624,9 @@ function makeNodeTextWithAnchorDom(window_, nodeModel, isOneClickToActivateMode,
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for SubnodesListView.
+ */
 var SubnodesListView = function(){
 
 };
@@ -571,6 +699,10 @@ var SubnodesListView = function(){
 
 var cursoredNodeCssClass = "currentNode";
 
+/**
+ * Description for getRowDomFromEvent_orNull.
+ * @param {*}    e    Description.
+ */
 function getRowDomFromEvent_orNull(e) {
     // Ищем до тех пор пока не наткнёмся на _ref_treeView
     for(var element = e.target; !!element.parentNode;  element = element.parentNode)
@@ -579,6 +711,17 @@ function getRowDomFromEvent_orNull(e) {
     return element.parentNode;
 }
 
+/**
+ * Description for TreeView.
+ * @param {*}    window_    Description.
+ * @param {*}    treeModel    Description.
+ * @param {*}    thisTreeTabIndex    Description.
+ * @param {*}    bottomMainPanelHeight    Description.
+ * @param {*}    isEnableContextMenu    Description.
+ * @param {*}    globalViewId    Description.
+ * @param {*}    backgroundport    Description.
+ * @param {*}    modelInstanceId    Description.
+ */
 function TreeView(window_, treeModel, thisTreeTabIndex, bottomMainPanelHeight, isEnableContextMenu, globalViewId, backgroundport, modelInstanceId) {
     // instanceUnicalClipboardDataMimeType - Used in drag and drop to distinct between own idMVC values and values that will come from ext instances in other Chrome profiles or Backup vies
     this.instanceUnicalClipboardDataMimeType = 'application/x-tabsoutliner-instaneid'+modelInstanceId+'-idmvc' // Warning! Must be all in lovercase!!!!
@@ -641,6 +784,10 @@ function TreeView(window_, treeModel, thisTreeTabIndex, bottomMainPanelHeight, i
 }
 
 
+/**
+ * Description for getNodeRowDomByIdMVC.
+ * @param {*}    idMVC    Description.
+ */
 function getNodeRowDomByIdMVC(idMVC) {
     return document.getElementById(idMVC);
 }
@@ -671,10 +818,17 @@ TreeView.prototype = {
     //     this.refToDataTransferObj = null; // To allow garbage collection
     // },
 
+    /**
+     * Description for getRowDomByIdMVC.
+     * @param {*}    idMVC    Description.
+     */
     getRowDomByIdMVC : function(idMVC) {
         return document.getElementById(idMVC);
     },
 
+    /**
+     * Description for connectContextMenu.
+     */
     connectContextMenu : function() {
         this.currentSessionRowDom.addEventListener('contextmenu', function(e) {
             if(e.shiftKey) return true; // Will show native context menu on ShiftKey+RMB, we cannot use Ctrl!!! as this is default MAC context menu shortcut, also using the ALT imedeately close the native context menu
@@ -690,6 +844,10 @@ TreeView.prototype = {
 
     },
 
+    /**
+     * Description for activateCurrentNode.
+     * @param {*}    isAlternativeRestore    Description.
+     */
     activateCurrentNode : function(isAlternativeRestore) {
         // ми сюда влетаем полько по контекстному меню или пробелу
         // а какогото хрена по дабл клику, f2 или карандашику все работает и без посещения background
@@ -697,27 +855,49 @@ TreeView.prototype = {
         this.backgroundport.postMessage({request:"request2bkg_activateNode", targetNodeIdMVC:this.cursoredNodeIdMVC, isAlternativeRestore:isAlternativeRestore });
     },
 
+    /**
+     * Description for activateHoveringMenuActionOnCurrentNode.
+     * @param {*}    actionId    Description.
+     */
     activateHoveringMenuActionOnCurrentNode : function( actionId ) {
         this.backgroundport.postMessage({request:"request2bkg_activateHoveringMenuActionOnNode", targetNodeIdMVC:this.cursoredNodeIdMVC, actionId:actionId });
     },
 
+    /**
+     * Description for editCurrentNodeNote.
+     */
     editCurrentNodeNote : function() {
         this.activateHoveringMenuActionOnCurrentNode('editTitleAction');
     },
 
+    /**
+     * Description for deleteCurrentNode.
+     */
     deleteCurrentNode : function() {
         this.activateHoveringMenuActionOnCurrentNode('deleteAction');
     },
 
+    /**
+     * Description for deleteCurrentHierarchy.
+     */
     deleteCurrentHierarchy : function() { //Called only during the clipboard CUT operation
         this.backgroundport.postMessage({request:"request2bkg_deleteHierarchy", targetNodeIdMVC:this.cursoredNodeIdMVC});
     },
 
+    /**
+     * Description for saveCloseCurrentNode.
+     */
     saveCloseCurrentNode : function() {
         this.activateHoveringMenuActionOnCurrentNode('closeAction');
     },
 
     // -------------------------------------------------------------
+    /**
+     * Description for moveHierarchy.
+     * @param {*}    hierarchyIdMVC    Description.
+     * @param {*}    whereRelativeToAnchorModel    Description.
+     * @param {*}    anchorModel    Description.
+     */
     moveHierarchy : function(hierarchyIdMVC, whereRelativeToAnchorModel, anchorModel) {
         if(!anchorModel || !hierarchyIdMVC) return;
 
@@ -725,36 +905,54 @@ TreeView.prototype = {
         this.backgroundport.postMessage({request:"request2bkg_moveHierarchy", dropTarget:dropTarget, hierarchyToMoveIdMVC:hierarchyIdMVC });
     },
 
+    /**
+     * Description for moveCurrentNode_levelDown.
+     */
     moveCurrentNode_levelDown : function() {
         let cursoredRowDom = this.getRowDomByIdMVC(this.cursoredNodeIdMVC);  if(!cursoredRowDom) return;
 
         this.moveHierarchy(this.cursoredNodeIdMVC, AS_NEXT_SIBLING, /*of*/ getParentRowDom(cursoredRowDom) /*model.parent*/);
     },
 
+    /**
+     * Description for moveCurrentNode_levelUp.
+     */
     moveCurrentNode_levelUp : function() {
         let cursoredRowDom = this.getRowDomByIdMVC(this.cursoredNodeIdMVC);  if(!cursoredRowDom) return;
 
         this.moveHierarchy(this.cursoredNodeIdMVC, AS_LAST_SUBNODE, /*of*/  findPrevSibling_RowDom(cursoredRowDom) /*model.findPrevSibling()*/);
     },
 
+    /**
+     * Description for moveCurrentNode_up.
+     */
     moveCurrentNode_up : function() {
         let cursoredRowDom = this.getRowDomByIdMVC(this.cursoredNodeIdMVC);  if(!cursoredRowDom) return;
 
         this.moveHierarchy(this.cursoredNodeIdMVC, AS_PREV_SIBLING, /*of*/  findPrevSibling_ifAbsent_parent_RowDom(cursoredRowDom) /*model.findPrevSibling_ifAbsent_parent()*/);
     },
 
+    /**
+     * Description for moveCurrentNode_down.
+     */
     moveCurrentNode_down : function() {
         let cursoredRowDom = this.getRowDomByIdMVC(this.cursoredNodeIdMVC);  if(!cursoredRowDom) return;
 
         this.moveHierarchy(this.cursoredNodeIdMVC, AS_NEXT_SIBLING, /*of*/  findNextSibling_ifAbsent_anyParentsNextSibling_RowDom(cursoredRowDom) /*model.findNextSibling_ifAbsent_anyParentsNextSibling(false)*/);
     },
 
+    /**
+     * Description for moveCurrentNode_asFirstSiblingInSameLevel.
+     */
     moveCurrentNode_asFirstSiblingInSameLevel : function() {
         let cursoredRowDom = this.getRowDomByIdMVC(this.cursoredNodeIdMVC);  if(!cursoredRowDom) return;
 
         this.moveHierarchy(this.cursoredNodeIdMVC, AS_FIRST_SUBNODE, /*of*/  getParentRowDom(cursoredRowDom) /*model.parent*/);
     },
 
+    /**
+     * Description for moveCurrentNode_asLastSiblingInSameLevel.
+     */
     moveCurrentNode_asLastSiblingInSameLevel : function() {
         let cursoredRowDom = this.getRowDomByIdMVC(this.cursoredNodeIdMVC);  if(!cursoredRowDom) return;
 
@@ -762,6 +960,9 @@ TreeView.prototype = {
     },
     // -------------------------------------------------------------
 
+    /**
+     * Description for actionFlattenTabsHierarchy.
+     */
     actionFlattenTabsHierarchy : function() {
         // For Window or Group or saved Window - this will flatten all its tabs
         // If called on tab - it's flaten the tabs above the current tab
@@ -772,10 +973,16 @@ TreeView.prototype = {
         this.backgroundport.postMessage({request:"request2bkg_actionFlattenTabsHierarchy", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
 
+    /**
+     * Description for actionMoveWindowToTheEndOfTree.
+     */
     actionMoveWindowToTheEndOfTree : function() {
         this.backgroundport.postMessage({request:"request2bkg_actionMoveWindowToTheEndOfTree", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
 
+    /**
+     * Description for actionOpenLinkInNewWindow.
+     */
     actionOpenLinkInNewWindow : function() {
         var model = this.ICursorOwner_getNodeModelAtCursor(); if(!model) return;
         var href = model.getHref(); if(!href) return;
@@ -798,6 +1005,9 @@ TreeView.prototype = {
         });
     },
 
+    /**
+     * Description for actionOpenLinkInNewTab.
+     */
     actionOpenLinkInNewTab : function() {
         var model = this.ICursorOwner_getNodeModelAtCursor(); if(!model) return;
         var href = model.getHref(); if(!href) return;
@@ -808,41 +1018,65 @@ TreeView.prototype = {
 
     // -------------------------------------------------------------
 
+    /**
+     * Description for addNoteAsParentOfCurrentNode.
+     */
     addNoteAsParentOfCurrentNode : function() {
         this.backgroundport.postMessage({request:"request2bkg_addNoteAsParentOfCurrentNode", targetNodeIdMVC:this.cursoredNodeIdMVC });
         //-> will initiate editing by model.editTitle() -> msg2view_activateNodeNoteEditTextPrompt
 
     },
 
+    /**
+     * Description for addNoteAsFirstSubnodeOfCurrentNode.
+     */
     addNoteAsFirstSubnodeOfCurrentNode : function() {
         this.backgroundport.postMessage({request:"request2bkg_addNoteAsFirstSubnodeOfCurrentNode", targetNodeIdMVC:this.cursoredNodeIdMVC });
         //-> will initiate editing by model.editTitle() -> msg2view_activateNodeNoteEditTextPrompt
     },
 
+    /**
+     * Description for addNoteAsLastSubnodeOfCurrentNode.
+     */
     addNoteAsLastSubnodeOfCurrentNode : function() {
         this.backgroundport.postMessage({request:"request2bkg_addNoteAsLastSubnodeOfCurrentNode", targetNodeIdMVC:this.cursoredNodeIdMVC });
         //-> will initiate editing by model.editTitle() -> msg2view_activateNodeNoteEditTextPrompt
     },
 
+    /**
+     * Description for addNoteAsPrevSiblingOfCurrentNode.
+     */
     addNoteAsPrevSiblingOfCurrentNode : function() {
         this.backgroundport.postMessage({request:"request2bkg_addNoteAsPrevSiblingOfCurrentNode", targetNodeIdMVC:this.cursoredNodeIdMVC });
         //-> will initiate editing by model.editTitle() -> msg2view_activateNodeNoteEditTextPrompt
     },
 
+    /**
+     * Description for addNoteAsNextSiblingOfCurrentNode.
+     */
     addNoteAsNextSiblingOfCurrentNode : function() {
         this.backgroundport.postMessage({request:"request2bkg_addNoteAsNextSiblingOfCurrentNode", targetNodeIdMVC:this.cursoredNodeIdMVC });
         //-> will initiate editing by model.editTitle() -> msg2view_activateNodeNoteEditTextPrompt
     },
 
+    /**
+     * Description for addNoteAtTheEndOfTree.
+     */
     addNoteAtTheEndOfTree : function() {
         this.backgroundport.postMessage({request:"request2bkg_addNoteAtTheEndOfTree"});
         //-> will initiate editing by model.editTitle() -> msg2view_activateNodeNoteEditTextPrompt
     },
 
+    /**
+     * Description for actionAddSeparatorBelove.
+     */
     actionAddSeparatorBelove : function() {
         this.backgroundport.postMessage({request:"request2bkg_actionAddSeparatorBelove", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
 
+    /**
+     * Description for actionAddGroupAbove.
+     */
     actionAddGroupAbove : function() {
         this.backgroundport.postMessage({request:"request2bkg_actionAddGroupAbove", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
@@ -859,10 +1093,16 @@ TreeView.prototype = {
     // -----------------------------------------------------------------------------------------------------------------
 
 
+    /**
+     * Description for moveCursor_toFirstSiblingInSameLevel.
+     */
     moveCursor_toFirstSiblingInSameLevel : function() {
         this.backgroundport.postMessage({request:"request2bkg_moveCursor_toFirstSiblingInSameLevel", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
 
+    /**
+     * Description for moveCursor_toLastSiblingInSameLevel.
+     */
     moveCursor_toLastSiblingInSameLevel : function() {
         this.backgroundport.postMessage({request:"request2bkg_moveCursor_toLastSiblingInSameLevel", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
@@ -870,40 +1110,68 @@ TreeView.prototype = {
 
     // --
 
+    /**
+     * Description for moveCursor_up.
+     * @param {*}    bySiblings    Description.
+     */
     moveCursor_up : function(bySiblings/*not implemented*/) {
         this.moveCursorUp(1);
     },
 
+    /**
+     * Description for moveCursor_pageUp.
+     */
     moveCursor_pageUp : function() {
         this.moveCursorUp(this.PAGE_UP_DOWN_REPEAT);
 
     },
 
+    /**
+     * Description for moveCursorUp.
+     * @param {*}    repeat    Description.
+     */
     moveCursorUp:function(repeat) {
         this.backgroundport.postMessage({request:"request2bkg_moveCursor_up", targetNodeIdMVC:this.cursoredNodeIdMVC, repeat:repeat });
     },
 
     // --
 
+    /**
+     * Description for moveCursor_down.
+     * @param {*}    bySiblings    Description.
+     */
     moveCursor_down : function(bySiblings/*not implemented*/) {
         this.moveCursorDown(1);
     },
 
+    /**
+     * Description for moveCursor_pageDown.
+     */
     moveCursor_pageDown : function() {
         this.moveCursorDown(this.PAGE_UP_DOWN_REPEAT);
     },
 
+    /**
+     * Description for moveCursorDown.
+     * @param {*}    repeat    Description.
+     */
     moveCursorDown:function(repeat) {
         this.backgroundport.postMessage({request:"request2bkg_moveCursor_down", targetNodeIdMVC:this.cursoredNodeIdMVC, repeat:repeat });
     },
 
     // --
 
+    /**
+     * Description for moveCursor_toFirstSubnode.
+     */
     moveCursor_toFirstSubnode : function() {
         this.backgroundport.postMessage({request:"request2bkg_moveCursor_toFirstSubnode_expandIfCollapsed", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
 
 
+    /**
+     * Description for moveCursor_toParent_butNotToRoot.
+     */
     moveCursor_toParent_butNotToRoot : function() {
         this.backgroundport.postMessage({request:"request2bkg_moveCursor_toParent_butNotToRoot", targetNodeIdMVC:this.cursoredNodeIdMVC });
     },
@@ -911,25 +1179,45 @@ TreeView.prototype = {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Description for togleCollapsedStateOfCursoredNode.
+     */
     togleCollapsedStateOfCursoredNode : function() {
         this.togleCollapsedStateOfNode(this.cursoredNodeIdMVC);
     },
 
+    /**
+     * Description for togleCollapsedStateOfNode.
+     * @param {*}    idMVC    Description.
+     */
     togleCollapsedStateOfNode : function(idMVC) {
         this.backgroundport.postMessage({request:"request2bkg_invertCollapsedState", targetNodeIdMVC:idMVC });
     },
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Description for isModalUiElementsActive.
+     * @param {*}    event    Description.
+     */
     isModalUiElementsActive :function(event) {
         var w_ =  event.target.ownerDocument.defaultView;
         return w_['modalEditPromptActive'] || w_['modalContextMenuActive'];
     },
 
+    /**
+     * Description for isNoteEditBoxActive.
+     * @param {*}    event    Description.
+     */
     isNoteEditBoxActive :function(event) {
         var w_ =  event.target.ownerDocument.defaultView;
         return w_['modalEditPromptActive'] ;
     },
 
+    /**
+     * Description for setDragClipboardData.
+     * @param {*}    dataTransferObj    Description.
+     * @param {*}    hierarchy    Description.
+     */
     setDragClipboardData : function(dataTransferObj, hierarchy) {
         // The order os setData is important for other programs
         // Read more there: https://developer.mozilla.org/en-US/docs/DragDrop/Recommended_Drag_Types
@@ -938,6 +1226,11 @@ TreeView.prototype = {
         //dataTransaForDataTransferObj(dataTransferObj);
     },
 
+    /**
+     * Description for setDragClipboardData_fromHtmlStructure.
+     * @param {*}    dataTransfer    Description.
+     * @param {*}    rowDom_hierarchyRoot    Description.
+     */
     setDragClipboardData_fromHtmlStructure : function(dataTransfer, rowDom_hierarchyRoot) {
         try{
 
@@ -979,14 +1272,27 @@ TreeView.prototype = {
                                                                                          // а нам нужно в возможном окне клоне таки правильно курсор отрисовывать
     },
 
+    /**
+     * Description for onDragStartedInSomeView.
+     * @param {*}    response    Description.
+     */
     onDragStartedInSomeView : function(response) {
         this.currentlyDragedIdMVC = response.currentlyDragedIdMVC;
     },
 
+    /**
+     * Description for comminicateCurrentlyDraggedIdMVCToAllViews.
+     * @param {*}    idMVC    Description.
+     */
     comminicateCurrentlyDraggedIdMVCToAllViews : function(idMVC) {
         this.backgroundport.postMessage({request:"request2bkg_communicateDragStartDataToOtherViews", currentlyDragedIdMVC:idMVC }); // -> will call onDragStartedInSomeView() in all Views
     },
 
+    /**
+     * Description for serializeHierarchyAsJSO.
+     * @param {*}    hierarchy    Description.
+     * @param {*}    serializeOpenNodesAsSaved    Description.
+     */
     serializeHierarchyAsJSO : function(hierarchy, serializeOpenNodesAsSaved) { // backward - restoreHierarchyFromJSO
         var r = {};
         (function doRecursiveSerialize_(nodeModel, container) {
@@ -1006,12 +1312,20 @@ TreeView.prototype = {
         return r;
     },    
 
+    /**
+     * Description for makeTransferableRepresentation_TabsOutlinerInterchangeFormat_fromHtml.
+     * @param {*}    hierarchy    Description.
+     */
     makeTransferableRepresentation_TabsOutlinerInterchangeFormat_fromHtml : function(hierarchy) { // For 'application/x-tabsoutliner-items'
         // Note that serializeOpenNodesAsSaved := true also play important role to nulify
         // dId, cdId, sdId, sdIdKnot properties
         return JSON.stringify(this.serializeHierarchyAsJSO(hierarchy, true /*serializeOpenNodesAsSaved*/));
     },
 
+    /**
+     * Description for makeTransferableRepresentation_UriList_Html_TextMultiline_fromHtml.
+     * @param {*}    rowDom_hierarchyRoot    Description.
+     */
     makeTransferableRepresentation_UriList_Html_TextMultiline_fromHtml : function(rowDom_hierarchyRoot) { // For 'text/uri-list'
         // Про 'text/uri-list' формат:
         // Вродебы что главный кейс для заполнения 'text/uri-list' это открыть веб страницу в броузере перетаскивание из дерева на строку табов
@@ -1069,6 +1383,10 @@ TreeView.prototype = {
         return rdata;
     },
 
+    /**
+     * Description for cut.
+     * @param {*}    event    Description.
+     */
     cut : function(event) {
         if( this.isNoteEditBoxActive(event) ) return true; // run Default implementation
 
@@ -1085,6 +1403,10 @@ TreeView.prototype = {
         event.preventDefault();
     },
 
+    /**
+     * Description for copy.
+     * @param {*}    event    Description.
+     */
     copy : function(event) {
         if( this.isNoteEditBoxActive(event) ) return true; // run Default implementation
 
@@ -1097,6 +1419,10 @@ TreeView.prototype = {
         event.preventDefault();
     },
 
+    /**
+     * Description for paste.
+     * @param {*}    event    Description.
+     */
     paste : function(event) {
         if( this.isNoteEditBoxActive(event) ) return true; // run Default implementation
 
@@ -1124,6 +1450,10 @@ TreeView.prototype = {
         event.preventDefault();
     },
 
+    /**
+     * Description for connectClipboardListeners.
+     * @param {*}    window_    Description.
+     */
     connectClipboardListeners : function(window_) {
         // в качестве target/srcElement у нас обычно прилетает window_.document.body,
         // но иногда - вот так:input#modalEditPrompt-editField.form_input
@@ -1148,6 +1478,10 @@ TreeView.prototype = {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Description for deleteAllMembers.
+     * @param {*}    window_    Description.
+     */
     deleteAllMembers : function(window_) {
         window_.removeEventListener("paste", this.binded_paste);
         window_.removeEventListener("copy", this.binded_copy);
@@ -1170,6 +1504,10 @@ TreeView.prototype = {
         this.hoveringMenu = null;
     },
 
+    /**
+     * Description for isRowDomCursored.
+     * @param {*}    rowDom    Description.
+     */
     isRowDomCursored : function( rowDom ) {
         return rowDom.id == this.cursoredNodeIdMVC;
     },
@@ -1182,15 +1520,26 @@ TreeView.prototype = {
     //     return this.ICursorOwner_getNodeModelAtCursor() === nodeModel;
     // },
 
+    /**
+     * Description for ICursorOwner_getNodeModelAtCursor.
+     */
     ICursorOwner_getNodeModelAtCursor : function() {
         var cursoredRowDom = this.getRowDomAtCursor();
         return !cursoredRowDom ? null : cursoredRowDom._ref_nodeModel;
     },
 
+    /**
+     * Description for getRowDomAtCursor.
+     */
     getRowDomAtCursor : function() {
         return this.getRowDomByIdMVC(this.cursoredNodeIdMVC);
     },
 
+    /**
+     * Description for scrollIntoViewIfOutOfView_byShortestPath.
+     * @param {*}    element    Description.
+     * @param {*}    window_    Description.
+     */
     scrollIntoViewIfOutOfView_byShortestPath:function(element, window_) {
         var isAboveVisibleArea = element.offsetTop < window_.pageYOffset;
         var bottomMainPanelHeight = 70;
@@ -1200,16 +1549,30 @@ TreeView.prototype = {
         if(isBelowVisibleArea) window_.scrollTo(0, element.offsetTop - window_.innerHeight + (element.offsetHeight + PADDING) + this.bottomMainPanelHeight); // element.scrollIntoView(false);
     },
 
+    /**
+     * Description for removeCursorStyles.
+     * @param {*}    rowDom    Description.
+     */
     removeCursorStyles: function(rowDom) {
         rowDom._ref_nodeTextWithAnchorDom.tabIndex = -1;
         rowDom.classList.remove(cursoredNodeCssClass);
         rowDom._ref_nodeTextWithAnchorDom.classList.remove(cursoredNodeCssClass);
     },
 
+    /**
+     * Description for setCursorToRowDomByIdMVC.
+     * @param {*}    idMVC    Description.
+     * @param {*}    doNotScrollView    Description.
+     */
     setCursorToRowDomByIdMVC : function(idMVC, doNotScrollView) {
         this.setCursorToRowDom(this.getRowDomByIdMVC(idMVC));
     },
 
+    /**
+     * Description for setCursorToRowDom.
+     * @param {*}    rowDom    Description.
+     * @param {*}    doNotScrollView    Description.
+     */
     setCursorToRowDom : 	function(rowDom, doNotScrollView) {
         if(!rowDom._ref_treeView) return; // Это не rowDom а чтото левое
 
@@ -1252,18 +1615,29 @@ TreeView.prototype = {
     //         this.setCursorToRowDom(rowDom);
     // },
 
+    /**
+     * Description for deferred_clearDragFeedback.
+     */
     deferred_clearDragFeedback : function() {
         var _this = this;
         window.clearTimeout( this.dragFeedbackDefferedDrawTimer );
         this.dragFeedbackDefferedDrawTimer = window.setTimeout( function() {_this.clearDragFeedback()} , 26);
     },
 
+    /**
+     * Description for deferred_showDragFeedback.
+     * @param {*}    rowDom    Description.
+     * @param {*}    dropPosition    Description.
+     */
     deferred_showDragFeedback : function(rowDom, dropPosition) {
         var _this = this;
         window.clearTimeout( this.dragFeedbackDefferedDrawTimer );
         this.dragFeedbackDefferedDrawTimer = window.setTimeout( function() {_this.showDragFeedback(rowDom, dropPosition)} , 26);
     },
 
+    /**
+     * Description for clearDragFeedback.
+     */
     clearDragFeedback : function() {
         this.currentDragFeedbackHolder = null;
 
@@ -1271,6 +1645,11 @@ TreeView.prototype = {
         // this.dragFeedback.style.visibility="hidden"; // сам элемент остаётся в дереве, ну и пох
     },
 
+    /**
+     * Description for showDragFeedback.
+     * @param {*}    rowDom    Description.
+     * @param {*}    dropPosition    Description.
+     */
     showDragFeedback : function(rowDom, dropPosition) {
         if(dropPosition === AS_FIRST_SUBNODE)
             this.showDragFeedback_asFirstSubnode(rowDom._ref_nodeTextWithAnchorDom); // ибо rowDom ещё включает в себя таблицу субнод!
@@ -1278,14 +1657,28 @@ TreeView.prototype = {
             this.showDragFeedback_asNextSibling(rowDom);
     },
 
+    /**
+     * Description for showDragFeedback_asNextSibling.
+     * @param {*}    dragFeedBackHolder    Description.
+     */
     showDragFeedback_asNextSibling : function(dragFeedBackHolder) {
        this._showDragFeedback(this.dragFeedbackAsSibling, dragFeedBackHolder)
     },
 
+    /**
+     * Description for showDragFeedback_asFirstSubnode.
+     * @param {*}    dragFeedBackHolder    Description.
+     */
     showDragFeedback_asFirstSubnode : function(dragFeedBackHolder) {
         this._showDragFeedback(this.dragFeedbackAsFirstChild, dragFeedBackHolder, dragFeedBackHolder.offsetWidth);
     },
 
+    /**
+     * Description for _showDragFeedback.
+     * @param {*}    dragFeedback    Description.
+     * @param {*}    dragFeedBackHolder    Description.
+     * @param {*}    width    Description.
+     */
     _showDragFeedback : function(dragFeedback, dragFeedBackHolder, width) {
         this.clearHoveringMenu(null);
 
@@ -1346,6 +1739,10 @@ TreeView.prototype = {
 //    },
 
 
+    /**
+     * Description for showHoveringMenu.
+     * @param {*}    nodeRowDom    Description.
+     */
     showHoveringMenu : function(nodeRowDom) {
         if(this.hoveringMenu.getOwner === nodeRowDom) return;
 
@@ -1363,12 +1760,20 @@ TreeView.prototype = {
         // this._showHoveringMenu(nodeRowDom/*._ref_nodeTextWithAnchorDom._ref_nodeFaviconAndTextContainerDom*/);
     },
 
+    /**
+     * Description for updateHoveringMenu.
+     * @param {*}    nodeRowDom    Description.
+     */
     updateHoveringMenu : function(nodeRowDom) {
         this.hoveringMenu.setOwner(null);
         this.showHoveringMenu(nodeRowDom);
     },
 
 
+    /**
+     * Description for clearHoveringMenu.
+     * @param {*}    ownerNodeView    Description.
+     */
     clearHoveringMenu : function(ownerNodeView) {
         this.hoveringMenu.setOwner(null);
 
@@ -1406,6 +1811,12 @@ TreeView.prototype = {
 //        domElement.insertBefore(this.hoveringMenu, domElement.firstChild);
 //    },
 
+    /**
+     * Description for performDrop.
+     * @param {*}    dropTarget    Description.
+     * @param {*}    dropAsCopy    Description.
+     * @param {*}    dataTransferContainer    Description.
+     */
     performDrop : function ( dropTarget, dropAsCopy, dataTransferContainer ) {
         // Just a sample how to display a content of droped  event.dataTransfer
 
@@ -1428,6 +1839,10 @@ TreeView.prototype = {
         // console.log(dataTransferContainerForMessage)
 
 
+        /**
+         * Description for convertDataTransferToObject.
+         * @param {*}    dataTransferContainer    Description.
+         */
         function convertDataTransferToObject(dataTransferContainer) {
             return dataTransferContainer.types.reduce((r, type) => { r[type] = dataTransferContainer.getData(type); return r }, {/*accumulator that will be filled and returned*/});
         }
@@ -1446,6 +1861,13 @@ TreeView.prototype = {
 
 
 //innerHTMLvsDOM?
+/**
+ * Description for makeSubnodesTableDom.
+ * @param {*}    window_    Description.
+ * @param {*}    MVCDataTransferObject_subnodesList    Description.
+ * @param {*}    treeView    Description.
+ * @param {*}    isFullTreeBuild    Description.
+ */
 function makeSubnodesTableDom(window_, MVCDataTransferObject_subnodesList, treeView, isFullTreeBuild)
 {
     var rTableDom = document.createElement("ul"); rTableDom.className = "subnodeslist";
@@ -1456,6 +1878,11 @@ function makeSubnodesTableDom(window_, MVCDataTransferObject_subnodesList, treeV
     return rTableDom;
 }
 
+/**
+ * Description for consoleLogCallbackParameters.
+ * @param {*}    message    Description.
+ * @param {*}    retvalue    Description.
+ */
 function consoleLogCallbackParameters(message, retvalue) {
     return function() {
         var a = [message];
@@ -1470,6 +1897,10 @@ function consoleLogCallbackParameters(message, retvalue) {
 }
 
 // Row methods =========================================================================================================
+/**
+ * Description for RowDom_fromModel_requestScrollNodeToViewInAutoscrolledViews.
+ * @param {*}    forThisWindowOnly    Description.
+ */
 function RowDom_fromModel_requestScrollNodeToViewInAutoscrolledViews(forThisWindowOnly) {
     if(this.ownerDocument.defaultView.isAutoscrollView) {
         dispatchBubledCustomEvent(window, 'before_scroll_node_to_view'); // Даём возможность функционалу ундо скрола запомнить текущую позицию
@@ -1483,10 +1914,18 @@ function RowDom_fromModel_requestScrollNodeToViewInAutoscrolledViews(forThisWind
 //     if(globalViewId_ICursorOwner === this._ref_treeView.globalViewId_ICursorOwner) this.setCursorHere(doNotScrollView);
 // }
 
+/**
+ * Description for RowDom_fromModel_removeCursorStyles.
+ * @param {*}    ICursorOwner    Description.
+ */
 function RowDom_fromModel_removeCursorStyles(ICursorOwner) {
     if(ICursorOwner === this._ref_treeView) this._ref_treeView.removeCursorStyles(this);
 }
 
+/**
+ * Description for RowDom_fromModel_onNodeUpdated.
+ * @param {*}    modelDataCopy    Description.
+ */
 function RowDom_fromModel_onNodeUpdated(modelDataCopy) {
     var isCursored = this.isUnderCursor();
 
@@ -1500,10 +1939,17 @@ function RowDom_fromModel_onNodeUpdated(modelDataCopy) {
 //     this.updateNodeAnchorImageAndCollapsedStatDom();
 // }
 
+/**
+ * Description for RowDom_updateNodeAnchorImageAndCollapsedStatDom.
+ */
 function RowDom_updateNodeAnchorImageAndCollapsedStatDom() {
     this._ref_nodeTextWithAnchorDom.updateNodeAnchorImageAndCollapsedStatDom(this.ownerDocument.defaultView, this._ref_nodeModel, this.isUnderCursor() );
 }
 
+/**
+ * Description for RowDom_updateNodeAnchorImageAndCollapsedStatDom_inAllParents.
+ * @param {*}    parentsUpdateData    Description.
+ */
 function RowDom_updateNodeAnchorImageAndCollapsedStatDom_inAllParents(parentsUpdateData) {
     // parentsUpdateData collection of objects with updates for parents
     // r[nodeModel.idMVC] = {
@@ -1519,6 +1965,11 @@ function RowDom_updateNodeAnchorImageAndCollapsedStatDom_inAllParents(parentsUpd
     }
 }
 
+/**
+ * Description for isElementIsPresentInParentsPathRoot.
+ * @param {*}    testedElement    Description.
+ * @param {*}    elemementToSearchInPathToRoot    Description.
+ */
 function isElementIsPresentInParentsPathRoot(testedElement, elemementToSearchInPathToRoot) {
     for(let e = testedElement; e; e = e.parent)
         if(e == elemementToSearchInPathToRoot) return true;
@@ -1526,6 +1977,10 @@ function isElementIsPresentInParentsPathRoot(testedElement, elemementToSearchInP
     return false;
 }
 
+/**
+ * Description for RowDom_fromModel_onSubnodesCollapsingStatusChanged.
+ * @param {*}    node_MVCDataTransferObject    Description.
+ */
 function RowDom_fromModel_onSubnodesCollapsingStatusChanged(node_MVCDataTransferObject) {
     //if(!this._ref_nodeModel.isSubnodesPresent()) return
     var nodeModel = new NodeModelMVCDataTransferObject(node_MVCDataTransferObject);
@@ -1551,11 +2006,17 @@ function RowDom_fromModel_onSubnodesCollapsingStatusChanged(node_MVCDataTransfer
             this.setCursorHere();
 }
 
+/**
+ * Description for RowDom_fromModel_onBeforeReplaced_RememberCursor.
+ */
 function RowDom_fromModel_onBeforeReplaced_RememberCursor() {
     // Нас вызывают на том узле который счас будет выкинут из дерева
     if( this.isUnderCursor()  )
         this._ref_treeView._ref_tmp_needSetCursorOnReplacer = true; // Удаляется в RowDom_fromModel_onAfterReplaced_SetCursor
 }
+/**
+ * Description for RowDom_fromModel_onAfterReplaced_SetCursor.
+ */
 function RowDom_fromModel_onAfterReplaced_SetCursor() {
     // Нас вызывают на том узле который был тока что вставлен вместо удалённого
     if(this._ref_treeView._ref_tmp_needSetCursorOnReplacer) {
@@ -1564,14 +2025,25 @@ function RowDom_fromModel_onAfterReplaced_SetCursor() {
     }
 }
 
+/**
+ * Description for RowDom_isUnderCursor.
+ */
 function RowDom_isUnderCursor() {
     return this._ref_treeView.isRowDomCursored(this)
 }
 
+/**
+ * Description for RowDom_setCursorHere.
+ * @param {*}    doNotScrollView    Description.
+ */
 function RowDom_setCursorHere(doNotScrollView) {
     this._ref_treeView.setCursorToRowDom(this, doNotScrollView);
 }
 
+/**
+ * Description for getRowDomTypedParent.
+ * @param {*}    htmlNode    Description.
+ */
 function getRowDomTypedParent(htmlNode) {
     var r = htmlNode.parentNode;
     while(r && !r._isRowDom) r = r.parentNode;
@@ -1592,16 +2064,28 @@ function getRowDomTypedParent(htmlNode) {
 //     }
 // }
 
+/**
+ * Description for RowDom_fromModel_afterCopyPlacedDuringMove_TransferCursor.
+ */
 function RowDom_fromModel_afterCopyPlacedDuringMove_TransferCursor() {
     //if( this.isUnderCursor() ) insertedCopy.setCursorHereOrToFirstCollapsedParent(this._ref_treeView.globalViewId_ICursorOwner, true/*doNotScrollView*/); // Мы не скролим Views во время D&D операций чтоб не терять позиции source окна (и других views) при драгах в клон за границы видимой области
 }
 
+/**
+ * Description for RowDom_remove_ref_subnodesDom.
+ * @param {*}    rowDom    Description.
+ */
 function RowDom_remove_ref_subnodesDom(rowDom) {
     if(rowDom._ref_subnodesDom && rowDom._ref_subnodesDom.parentElement) // Если узлы свёрнуты  this._ref_subnodesDom != null но он не добавлен в парент!
         rowDom._ref_subnodesDom.remove();
     rowDom._ref_subnodesDom = null;
 }
 
+/**
+ * Description for createSubnodesListWithFirstSubnode.
+ * @param {*}    parentRowDom    Description.
+ * @param {*}    newNode_MVCDataTransferObject    Description.
+ */
 function createSubnodesListWithFirstSubnode(parentRowDom, newNode_MVCDataTransferObject) {
     RowDom_remove_ref_subnodesDom(parentRowDom);
 
@@ -1614,6 +2098,14 @@ function createSubnodesListWithFirstSubnode(parentRowDom, newNode_MVCDataTransfe
         false);
 }
 
+/**
+ * Description for RowDom_fromModel_onSubnodeInserted.
+ * @param {*}    newNode_MVCDataTransferObject    Description.
+ * @param {*}    newNodeIndex    Description.
+ * @param {*}    isInsertedInLastRow    Description.
+ * @param {*}    isSubnodesWasEmptyBeforeInsert    Description.
+ * @param {*}    parentsUpdateData    Description.
+ */
 function RowDom_fromModel_onSubnodeInserted(newNode_MVCDataTransferObject, newNodeIndex, isInsertedInLastRow, isSubnodesWasEmptyBeforeInsert, parentsUpdateData) {
     var newNode_MVCDataTransferObject = new NodeModelMVCDataTransferObject(newNode_MVCDataTransferObject);
 
@@ -1686,6 +2178,15 @@ function RowDom_fromModel_onRemoveSubnodeAndPromoteItsSubnodessInPlace( nodeToDe
     removeNodeAndSetCursor(nodeToDelete, isSubnodesListEmpty, parentOfDeletedNode, parentsUpdateData, allNodesIdMVCsOfDeletedHierarchy, nextCursorHolderInCaseCursoredElementsAffectedIdMVC);
 }
 
+/**
+ * Description for removeNodeAndSetCursor.
+ * @param {*}    nodeToDelete    Description.
+ * @param {*}    isSubnodesListEmpty    Description.
+ * @param {*}    parentOfDeletedNode    Description.
+ * @param {*}    parentsUpdateData    Description.
+ * @param {*}    allNodesIdMVCsOfDeletedHierarchy    Description.
+ * @param {*}    nextCursorHolderInCaseCursoredElementsAffectedIdMVC    Description.
+ */
 function removeNodeAndSetCursor(nodeToDelete, isSubnodesListEmpty, parentOfDeletedNode, parentsUpdateData, allNodesIdMVCsOfDeletedHierarchy, nextCursorHolderInCaseCursoredElementsAffectedIdMVC) {
 
     // Remove the empty element
@@ -1720,17 +2221,29 @@ function removeNodeAndSetCursor(nodeToDelete, isSubnodesListEmpty, parentOfDelet
 //     if(deletedNodeWasUnderCursor) this._ref_treeView.setCursorToRowDomByIdMVC(nextCursorHolderInCaseCursoredElementsAffectedIdMVC,false);
 // }
 
+/**
+ * Description for RowDom_fromModel_onProtectedOnCloseAndStatBlockUpdate.
+ * @param {*}    updateData    Description.
+ */
 function RowDom_fromModel_onProtectedOnCloseAndStatBlockUpdate(updateData) {
     this._ref_nodeModel.updateSubnodesInfoForViewAfterChangesInSubnodes(updateData);
     this.updateNodeAnchorImageAndCollapsedStatDom();
 }
 
+/**
+ * Description for RowDom_fromHtml_onAnchorClicked.
+ * @param {*}    event    Description.
+ */
 function RowDom_fromHtml_onAnchorClicked(event){
     this._ref_treeView.togleCollapsedStateOfNode(this.id);
 
     event.stopPropagation(); // Или он во всех парентах засветится и всё свернётся
 }
 
+/**
+ * Description for RowDom_fromHtml_onHoveredMenuActionBtnClicked.
+ * @param {*}    event    Description.
+ */
 function RowDom_fromHtml_onHoveredMenuActionBtnClicked(event){
     // this тут это HTML object, LI обычно
     this._ref_treeView.backgroundport.postMessage({request:"request2bkg_activateHoveringMenuActionOnNode", targetNodeIdMVC:this.id, actionId:event['detail'].actionId });
@@ -1738,6 +2251,10 @@ function RowDom_fromHtml_onHoveredMenuActionBtnClicked(event){
     event.stopPropagation(); // Или он во всех парентах засветится и всё свернётся
 }
 
+/**
+ * Description for RowDom_fromHtml_onNodeTextWithAnchorDomHovered.
+ * @param {*}    event    Description.
+ */
 function RowDom_fromHtml_onNodeTextWithAnchorDomHovered(event) {
 // Раньше это делалось внутри makeNodeRowDom() так (с помощью клозуры):
 //rowDom._ref_nodeTextWithAnchorDom.onmouseover = function(event) { // Раньше было повешено сразу на rowDom. Но так плохо - меню скачет на парента неприятно когда мы попадаем в дырки между тайтлами субнод или после них
@@ -1760,6 +2277,10 @@ function RowDom_fromHtml_onNodeTextWithAnchorDomHovered(event) {
     event.stopPropagation();
 }
 
+/**
+ * Description for RowDom_fromHtml_onNodeTextWithAnchorDomActivated.
+ * @param {*}    event    Description.
+ */
 function RowDom_fromHtml_onNodeTextWithAnchorDomActivated(event) {
     // this тут это HTML object, LI обычно
     this._ref_treeView.backgroundport.postMessage({request:"request2bkg_activateNode", targetNodeIdMVC:this.id, isAlternativeRestore:(event['detail'] && event['detail']['altKey']) });
@@ -1767,6 +2288,10 @@ function RowDom_fromHtml_onNodeTextWithAnchorDomActivated(event) {
     event.stopPropagation();
 }
 
+/**
+ * Description for RowDom_fromHtml_onNodeTextWithAnchorDomFocused.
+ * @param {*}    event    Description.
+ */
 function RowDom_fromHtml_onNodeTextWithAnchorDomFocused(event) {
     if(!this.isUnderCursor()) // this prevent problems in node edit mode when user will click by mouse to move cursor in line
         this.setCursorHere();
@@ -1774,6 +2299,11 @@ function RowDom_fromHtml_onNodeTextWithAnchorDomFocused(event) {
     event.stopPropagation();
 }
 
+/**
+ * Description for RowDom_updateNodeCssClasses.
+ * @param {*}    newNode_MVCDataTransferObject    Description.
+ * @param {*}    isCursored    Description.
+ */
 function RowDom_updateNodeCssClasses(newNode_MVCDataTransferObject, isCursored) {
     var classes = "nodeTitleAndSubnodesContainer " + newNode_MVCDataTransferObject.titleCssClass + "NTASC NTASC-" + newNode_MVCDataTransferObject.titleBackgroundCssClass; // TODO Все вот эти + "NTASC" жуткие вообщето можно откинуть и секономить на времени и временных объектах на слейку, тоже самое с NTC
     if(newNode_MVCDataTransferObject.getNodeContentCssClass()) classes += " NCC-NTASC-" + newNode_MVCDataTransferObject.getNodeContentCssClass();
@@ -1784,6 +2314,13 @@ function RowDom_updateNodeCssClasses(newNode_MVCDataTransferObject, isCursored) 
 
 
 //innerHTMLvsDOM?
+/**
+ * Description for makeNodeRowDom.
+ * @param {*}    window_    Description.
+ * @param {*}    newNode_MVCDataTransferObject    Description.
+ * @param {*}    treeView    Description.
+ * @param {*}    isFullTreeBuild    Description.
+ */
 function makeNodeRowDom(window_, newNode_MVCDataTransferObject, treeView, isFullTreeBuild)
 {
     var rowDom = document.createElement("li"); // rowDom.className = "nodeTitleAndSubnodesContainer " + nodeModel.titleCssClass + "NTASC " + nodeModel.titleBackgroundCssClass + "NTASC";
@@ -1853,24 +2390,45 @@ function makeNodeRowDom(window_, newNode_MVCDataTransferObject, treeView, isFull
     return rowDom;
 }
 
+/**
+ * Description for getChildElement.
+ * @param {*}    ancestorElement    Description.
+ * @param {*}    index    Description.
+ */
 function getChildElement(ancestorElement, index) {
     return (ancestorElement.childNodes.length > index)? ancestorElement.childNodes[index] : null;
 }
 
+/**
+ * Description for filterOutFavIconsInHtml.
+ * @param {*}    htmlText    Description.
+ */
 function filterOutFavIconsInHtml(htmlText)
 {
     return htmlText.replace(/<img[^>]*>/g, '');
 }
 
+/**
+ * Description for getOwnPositionInParentRowDomSubnodes.
+ * @param {*}    rowDom    Description.
+ */
 function getOwnPositionInParentRowDomSubnodes(rowDom) {
     let parentSubnodeRowDomElements = [...getLevelOneSubnodesRowDomElements(getParentRowDom(rowDom))];
     return parentSubnodeRowDomElements.indexOf(rowDom);
 }
 
+/**
+ * Description for getLevelOneSubnodesRowDomElements.
+ * @param {*}    rowDom    Description.
+ */
 function getLevelOneSubnodesRowDomElements(rowDom) {
     return rowDom.querySelectorAll(`#${rowDom.id} > ul > li`);
 }
 
+/**
+ * Description for getParentRowDom.
+ * @param {*}    rowDom    Description.
+ */
 function getParentRowDom(rowDom) {
     do {
         rowDom = rowDom.parentNode;
@@ -1880,6 +2438,10 @@ function getParentRowDom(rowDom) {
 
 }
 
+/**
+ * Description for findPrevSibling_RowDom.
+ * @param {*}    rowDom    Description.
+ */
 function findPrevSibling_RowDom(rowDom) {
     var parent = getParentRowDom(rowDom);
     if(!parent) return null;
@@ -1895,6 +2457,10 @@ function findPrevSibling_RowDom(rowDom) {
 
 }
 
+/**
+ * Description for findPrevSibling_ifAbsent_parent_RowDom.
+ * @param {*}    rowDom    Description.
+ */
 function findPrevSibling_ifAbsent_parent_RowDom(rowDom) {
     var r = findPrevSibling_RowDom(rowDom);
     if(!r) // это когда мы первая субнода у нашего парента
@@ -1903,6 +2469,10 @@ function findPrevSibling_ifAbsent_parent_RowDom(rowDom) {
         return r;
 }
 
+/**
+ * Description for findNextSibling_ifAbsent_anyParentsNextSibling_RowDom.
+ * @param {*}    rowDom    Description.
+ */
 function findNextSibling_ifAbsent_anyParentsNextSibling_RowDom(rowDom) {
     var parent = getParentRowDom(rowDom);
     if(!parent) return null;
@@ -1923,6 +2493,11 @@ var AS_PREV_SIBLING  = "AS_PREV_SIBLING";
 var AS_NEXT_SIBLING  = "AS_NEXT_SIBLING";
 
 
+/**
+ * Description for selectDropTarget.
+ * @param {*}    dropPosition    Description.
+ * @param {*}    hoveredRowDom    Description.
+ */
 function selectDropTarget(dropPosition, hoveredRowDom) {
     var r = {};
 
@@ -1943,9 +2518,19 @@ function selectDropTarget(dropPosition, hoveredRowDom) {
     return r;
 }
 
+/**
+ * Description for isDropAllowed.
+ * @param {*}    dropTarget    Description.
+ * @param {*}    dropedNodeModelIdMVC    Description.
+ */
 function isDropAllowed(dropTarget, dropedNodeModelIdMVC) {
     if(!dropedNodeModelIdMVC) return false;
 
+    /**
+     * Description for isSameNodeOrPresentInPathToRoot.
+     * @param {*}    dropTargetContainerIdMVC    Description.
+     * @param {*}    dropedNodeModelIdMVC    Description.
+     */
     function isSameNodeOrPresentInPathToRoot(dropTargetContainerIdMVC, dropedNodeModelIdMVC) {
         for(var testnode = getNodeRowDomByIdMVC(dropTargetContainerIdMVC); testnode; testnode = testnode.parentNode )
             if(testnode.id === dropedNodeModelIdMVC) return true;
@@ -1959,6 +2544,10 @@ function isDropAllowed(dropTarget, dropedNodeModelIdMVC) {
     return true; // dropTarget.container.isDropAllowed(dropTarget.position, dropedNodeModel); // false возвращает только сепаратор пока что... На самом деле все возращали true
 }
 
+/**
+ * Description for getParentRowDomIdOrNull.
+ * @param {*}    hoveredRowDom    Description.
+ */
 function getParentRowDomIdOrNull(hoveredRowDom) {
     var parentRowDom = getParentRowDom(hoveredRowDom); // can be null if no parent
 
@@ -1967,10 +2556,20 @@ function getParentRowDomIdOrNull(hoveredRowDom) {
 
 
 
+/**
+ * Description for isUrlStartWithValidSchema.
+ * @param {*}    url    Description.
+ */
 function isUrlStartWithValidSchema(url) {
     return /^[A-z0-9-.+]+:\S/.test(url); //\S - non whitespace character, most of the time this will be "/", but mailto:user might have "u"
 }
 
+/**
+ * Description for isElementPresentInPathFromTo.
+ * @param {*}    element    Description.
+ * @param {*}    from    Description.
+ * @param {*}    to    Description.
+ */
 function isElementPresentInPathFromTo(element, from, to) {
     for(var i = from; i && i != to; i = i.parentNode)
         if(i == element)
@@ -1979,6 +2578,10 @@ function isElementPresentInPathFromTo(element, from, to) {
     return false;
 }
 
+/**
+ * Description for connectDragControllers.
+ * @param {*}    rowDom    Description.
+ */
 function connectDragControllers( rowDom )
 {
     // rowDom ВЛОЖЕННЫ ДРУГ В ДРУГА!!! поэтому все эвенты без event.stopPropagation(); мы увидим и в нодах анцесторах
@@ -2085,6 +2688,10 @@ function connectDragControllers( rowDom )
 var TO_DD_HTML_INTERCHANGE_BEG = '<!--tabsoutlinerdata:begin';
 var TO_DD_HTML_INTERCHANGE_END = 'tabsoutlinerdata:end-->';
 
+/**
+ * Description for DD_ondragstart.
+ * @param {*}    event    Description.
+ */
 function DD_ondragstart(event) {
     console.log("DD_ondragstart"); //REMOVE
 
@@ -2136,11 +2743,19 @@ function DD_ondragstart(event) {
     return true; // Запускаем дефолтную реализация - она нам рисуночек сбахает кстате красивый для драга, в любом случае драг не начнётся если тут вернуть false
 }
 
+/**
+ * Description for DD_ondrag.
+ * @param {*}    event    Description.
+ */
 function DD_ondrag(event) {
     //consoleLogCallbackParameters("modelid:"+this._ref_nodeModel.id+" ondrag")();
     event.stopPropagation();
 }
 
+/**
+ * Description for DD_ondragleave.
+ * @param {*}    event    Description.
+ */
 function DD_ondragleave(event) {
     //console.log("modelid:" + this._ref_nodeModel.id + " ondragleave",  event.target === this, event.target.id, event.target.className);
     event.stopPropagation();
@@ -2150,6 +2765,10 @@ function DD_ondragleave(event) {
 }
 
 // Тут ещё нужно будет при MOVE (а не copy) операциях В ДРУГОЕ ОКНО! ремовать источник если дроп был успешен
+/**
+ * Description for DD_ondragend.
+ * @param {*}    event    Description.
+ */
 function DD_ondragend(event) {
     // Remove Self On Move - you can use the event.dataTransfer.dropEffect in ondragend to determine that drop operation is realy occurred (in anothere window!)
     // and remove draged element in case this was move operation - google this phrase for details.
@@ -2161,6 +2780,10 @@ function DD_ondragend(event) {
 }
 
 // Должна выдавать в ondragenter & ondragover синхронно одно и тоже, чтоб курсор не фликал
+/**
+ * Description for DD_selectDragAndDropCursor.
+ * @param {*}    event    Description.
+ */
 function DD_selectDragAndDropCursor(event)
 {
     // Вобщето этот метод надо вынести в treeView
@@ -2181,6 +2804,10 @@ function DD_selectDragAndDropCursor(event)
     }
 }
 
+/**
+ * Description for DD_ondragover.
+ * @param {*}    event    Description.
+ */
 function DD_ondragover(event) {
     // console.log("modelid:" + this._ref_nodeModel.id + " ondragover", event, this === event.target, event.target.id, event.target.className);
     event.stopPropagation();
@@ -2202,6 +2829,11 @@ function DD_ondragover(event) {
 
 }
 
+/**
+ * Description for selectDropPosition_AS_FIRST_SUBNODE_or_AS_NEXT_SIBLING.
+ * @param {*}    rowDom    Description.
+ * @param {*}    event    Description.
+ */
 function selectDropPosition_AS_FIRST_SUBNODE_or_AS_NEXT_SIBLING(rowDom, event) {
     var dropPosition = isElementPresentInPathFromTo( rowDom._ref_nodeTextWithAnchorDom, event.srcElement, rowDom ) ? AS_FIRST_SUBNODE : AS_NEXT_SIBLING;
 
@@ -2226,6 +2858,10 @@ function selectDropPosition_AS_FIRST_SUBNODE_or_AS_NEXT_SIBLING(rowDom, event) {
 }
 
 
+/**
+ * Description for DD_ondragenter.
+ * @param {*}    event    Description.
+ */
 function DD_ondragenter(event) {
     event.stopPropagation(); // Вверху например для того чтоб какойто exception ниже это не отменил
 
@@ -2293,6 +2929,10 @@ function DD_ondragenter(event) {
     }
 }
 
+/**
+ * Description for DD_ondrop.
+ * @param {*}    event    Description.
+ */
 function DD_ondrop(event) {
     //console.log("modelid:" + this._ref_nodeModel.id + " ondrop");
     event.stopPropagation();
@@ -2314,6 +2954,15 @@ function DD_ondrop(event) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for appendSubnodesDomIfSubnodesVisible.
+ * @param {*}    window_    Description.
+ * @param {*}    rowDom    Description.
+ * @param {*}    isCollapsed    Description.
+ * @param {*}    MVCDataTransferObject_subnodesList    Description.
+ * @param {*}    treeView    Description.
+ * @param {*}    isFullTreeBuild    Description.
+ */
 function appendSubnodesDomIfSubnodesVisible(window_, rowDom, isCollapsed, MVCDataTransferObject_subnodesList, treeView, isFullTreeBuild)
 {
     if(!isCollapsed && MVCDataTransferObject_subnodesList.length > 0) {
@@ -2321,6 +2970,14 @@ function appendSubnodesDomIfSubnodesVisible(window_, rowDom, isCollapsed, MVCDat
     }
 }
 
+/**
+ * Description for getSubnodesDom_makeIfNotPresent.
+ * @param {*}    window_    Description.
+ * @param {*}    rowDom    Description.
+ * @param {*}    MVCDataTransferObject_subnodesList    Description.
+ * @param {*}    treeView    Description.
+ * @param {*}    isFullTreeBuild    Description.
+ */
 function getSubnodesDom_makeIfNotPresent(window_, rowDom, MVCDataTransferObject_subnodesList, treeView, isFullTreeBuild)
 {
     if( !rowDom._ref_subnodesDom )
@@ -2331,7 +2988,16 @@ function getSubnodesDom_makeIfNotPresent(window_, rowDom, MVCDataTransferObject_
 
 // Simple Show/Hide behaviour without any animations -------------------------------------------------------------------------------
 var simpleShowHideCollapsing = {
+    /**
+     * Description for doCollapsingAndRemove.
+     * @param {*}    animatedelem    Description.
+     */
     doCollapsingAndRemove          :  function (animatedelem)         { animatedelem.parentNode.removeChild( animatedelem ); },
+    /**
+     * Description for doAppendIfNotPresentThenExpand.
+     * @param {*}    parent    Description.
+     * @param {*}    animatedelem    Description.
+     */
     doAppendIfNotPresentThenExpand :  function (parent, animatedelem) { parent.appendChild( animatedelem ); }
 };
 

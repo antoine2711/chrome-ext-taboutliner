@@ -5,6 +5,11 @@ document.getElementById('testBtn').onclick = function() {
 
 
 // Messaging testing (beg) ---------------------------------------------------------------------------------------------------------------------
+/**
+ * Description for setChildTextNode.
+ * @param {*}    elementId    Description.
+ * @param {*}    text    Description.
+ */
 function setChildTextNode(elementId, text) {
   document.getElementById(elementId).innerText = text;
 }
@@ -26,6 +31,9 @@ for(var i = 0; i <= 62000; i++) {
 })();
 
 // Tests the roundtrip time of sendMessage().
+/**
+ * Description for testMessage.
+ */
 function testMessage() {
    setChildTextNode("resultsRequest", "running...");
 
@@ -46,6 +54,9 @@ function testMessage() {
 }
 
 // Tests the roundtrip time of Port.postMessage() after opening a channel.
+/**
+ * Description for testConnect.
+ */
 function testConnect() {
     setChildTextNode("resultsConnect", "running...");
 

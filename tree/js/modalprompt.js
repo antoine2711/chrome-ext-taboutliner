@@ -3,7 +3,16 @@
 "use strict";
 
 // remove element from body and remeber it in closure
+/**
+ * Description for initModalPrompt.
+ * @param {*}    window_    Description.
+ * @param {*}    modalPromtId    Description.
+ */
 function initModalPrompt(window_, modalPromtId) {
+    /**
+     * Description for createModalDialogDom.
+     * @param {*}    document    Description.
+     */
     function createModalDialogDom(document) {
         //--><div id=modalEditPrompt class="modal" style="display:none"><!--
         //    --><input id=modalEditPrompt-editField class="form_input" type="text" value="Initial Value" tabindex=0 placeholder="Enter Node Text" ><!--
@@ -19,6 +28,10 @@ function initModalPrompt(window_, modalPromtId) {
         return div;
     }
 
+    /**
+     * Description for onBlur_preventFocusLoss.
+     * @param {*}    e    Description.
+     */
     function onBlur_preventFocusLoss(e) {
        // Prevent focus lost on tab key or click outside
        e.stopPropagation();
@@ -46,6 +59,10 @@ function initModalPrompt(window_, modalPromtId) {
     removeModal(window_); // Убираем из DOM чтоб он там не мешался
 
     // TODO As window as document i can get from event listeners event object, when i call this method not need to closure them
+    /**
+     * Description for removeModal.
+     * @param {*}    window_    Description.
+     */
     function removeModal(window_) {
         delete window_['modalEditPromptActive'];
 
@@ -55,6 +72,11 @@ function initModalPrompt(window_, modalPromtId) {
 
     // TODO not need to closure modalBg & modalElement - i can pass them when calling this function, and before this i can just create them - not need to store them
     // Yet actualy - isnt it will just create more garbage? Most likely yes. Not need to closure them there anyway.
+    /**
+     * Description for showModal.
+     * @param {*}    window_    Description.
+     * @param {*}    defaultText    Description.
+     */
     function showModal(window_, defaultText) {
         window_['modalEditPromptActive'] = true; // document.defaultView - is the window
 
@@ -97,6 +119,10 @@ function initModalPrompt(window_, modalPromtId) {
             if(editField) editField.select(); // This must be in setTimeout, читай комент в showModal()
         },1);
 
+        /**
+         * Description for removeEventListeners.
+         * @param {*}    window_    Description.
+         */
         function removeEventListeners(window_) {
             window_.document.removeEventListener('click', onCancellTouch, false );
             window_.document.removeEventListener('touchstart', onCancellTouch, false);
@@ -106,6 +132,10 @@ function initModalPrompt(window_, modalPromtId) {
             if(editField) editField.removeEventListener('blur', onBlur_preventFocusLoss, false);  // Тут был очень неприятный баг с хромом, на removeModal этот эвент срабытывал и потом основное окно не получало onkeydown эвентов до тех пор пока мы по нему не кликали
         }
 
+        /**
+         * Description for onWindowKeyDown.
+         * @param {*}    e    Description.
+         */
         function onWindowKeyDown(e) {
             if (e.keyCode == 27/*Esc*/)
                 onCancellTouch(e);
@@ -114,6 +144,10 @@ function initModalPrompt(window_, modalPromtId) {
                 onOkTouch(e);
         }
 
+        /**
+         * Description for onCancellTouch.
+         * @param {*}    e    Description.
+         */
         function onCancellTouch(e) {
             var window_ = e.target.ownerDocument.defaultView;
 
@@ -122,6 +156,10 @@ function initModalPrompt(window_, modalPromtId) {
             removeModal(window_);
         }
 
+        /**
+         * Description for onOkTouch.
+         * @param {*}    e    Description.
+         */
         function onOkTouch(e) {
             var window_ = e.target.ownerDocument.defaultView;
 

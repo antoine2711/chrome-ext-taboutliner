@@ -95,6 +95,11 @@ class NodeModelMVCDataTransferObject {
 //
 //kind: "string"
 //type: "text/html"
+/**
+ * Description for getItemFromDragDataStoreByMimeType.
+ * @param {*}    dataTransfer    Description.
+ * @param {*}    mimeType    Description.
+ */
 function getItemFromDragDataStoreByMimeType(dataTransfer, mimeType) {
     var items = dataTransfer['items']; // .items become magled by closure compiler, so we need put them in ""
     if(items)
@@ -150,6 +155,11 @@ function processDragDataStore(dataTransferContainer,
 }
 
 
+/**
+ * Description for makeDragModelFromJson.
+ * @param {*}    jsonDataObj    Description.
+ * @param {*}    treeModel    Description.
+ */
 function makeDragModelFromJson( jsonDataObj, treeModel ) {
     try {
         var actionLinkModelParent =  treeModel[ jsonDataObj['type'] ]();
@@ -175,18 +185,34 @@ function makeDragModelFromJson( jsonDataObj, treeModel ) {
     }
 }
 
+/**
+ * Description for makeDragModelFromUriList.
+ * @param {*}    dragedUriList    Description.
+ * @param {*}    linkText    Description.
+ * @param {*}    treeModel    Description.
+ */
 function makeDragModelFromUriList(dragedUriList, linkText, treeModel) {
     var actionLinkModel = treeModel[ 'link_' ]();
     actionLinkModel.setDataForNodeConstructor({'url':dragedUriList, 'title':linkText});
     return actionLinkModel;
 }
 
+/**
+ * Description for makeDragModelFromText.
+ * @param {*}    dragedTextPlain    Description.
+ * @param {*}    treeModel    Description.
+ */
 function makeDragModelFromText(dragedTextPlain, treeModel) {
     var actionLinkModel = treeModel[ 'textline_' ]();
     actionLinkModel.setDataForNodeConstructor({'title': /*restrictDragedText*/dragedTextPlain.substring(0,1024) });
     return actionLinkModel;
 }
 
+/**
+ * Description for makeDragModelFromUriListMimeType.
+ * @param {*}    dataTransferContainer    Description.
+ * @param {*}    treeModel    Description.
+ */
 function makeDragModelFromUriListMimeType(dataTransferContainer, treeModel) {
     let dragedModel;
 
@@ -212,6 +238,11 @@ function makeDragModelFromUriListMimeType(dataTransferContainer, treeModel) {
 
 }
 
+/**
+ * Description for makeDragModelFromTextHtmlMimeType.
+ * @param {*}    dataTransferContainer    Description.
+ * @param {*}    treeModel    Description.
+ */
 function makeDragModelFromTextHtmlMimeType(dataTransferContainer, treeModel) {
     let dragedModel;
 
@@ -321,6 +352,12 @@ function makeDragModelFromTextHtmlMimeType(dataTransferContainer, treeModel) {
 //     return dragedModel;
 // },
 
+/**
+ * Description for prepareDragedModel.
+ * @param {*}    dataTransferContainer    Description.
+ * @param {*}    instanceUnicalClipboardDataMimeType    Description.
+ * @param {*}    treeModel    Description.
+ */
 function prepareDragedModel(dataTransferContainer, instanceUnicalClipboardDataMimeType, treeModel) {
     // handleThisInstanceMimeType,
     // handleTabsOutlinerActionLinkMimeType,
