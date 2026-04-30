@@ -32,6 +32,7 @@ function setAuthToken_backupTreeToGdrive() {
     chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
         if(token) {
             backupTreeToGdrive(!!backupOperationInitiatorId_);
+            console.log("token = "+ token);
         } else {
             console.error("Auth token undefined. chrome.runtime.lastError:", chrome.runtime.lastError);
             // Some examples of possible errors:
@@ -68,6 +69,8 @@ function getTreeDataForGdriveBackup() {
  */
 function backupTreeToGdrive(isBackupUserInitiated) {
     console.log("Start GDrive backup");
+    //console.log("fileIdToOverwrite = "+ (typeof fileIdToOverwrite !== 'undefined' ? fileIdToOverwrite : 'non défini'));
+    debugger;
 
     listFile( function(fileIdToOverwrite) {
         insertFileInApplicationDataFolderOnGdrive(fileIdToOverwrite, getTreeDataForGdriveBackup(), isBackupUserInitiated)
